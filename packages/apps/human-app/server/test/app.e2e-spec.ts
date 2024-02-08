@@ -2,8 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
-import { ConfigModule } from '@nestjs/config';
-import { describe } from '@jest/globals';
 import { generateWorkerSignupRequestBody } from './fixtures/user-worker.fixture';
 import { SignupWorkerData } from '../src/modules/user-worker/interfaces/worker-registration.interface';
 
@@ -14,13 +12,7 @@ describe('Human APP (e2e) tests', () => {
   beforeAll(async () => {
     requestBodyForWorkerSignup = generateWorkerSignupRequestBody();
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        AppModule,
-        ConfigModule.forRoot({
-          isGlobal: true,
-          envFilePath: ['.env'],
-        }),
-      ],
+      imports: [AppModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
