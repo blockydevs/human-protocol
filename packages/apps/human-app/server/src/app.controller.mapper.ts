@@ -2,12 +2,13 @@ import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { createMap, Mapper } from '@automapper/core';
 import {
-  SignupWorkerCommand,
-  SignupWorkerDto,
-} from './interfaces/worker-registration.interface';
+  SignupOperatorCommand,
+  SignupOperatorDto,
+} from './modules/operator/interfaces/operator-registration.interface';
+import { SignupWorkerCommand, SignupWorkerDto } from "./modules/user-worker/interfaces/worker-registration.interface";
 
 @Injectable()
-export class WorkerProfile extends AutomapperProfile {
+export class ControllerProfile extends AutomapperProfile {
   constructor(@InjectMapper() mapper: Mapper) {
     super(mapper);
   }
@@ -15,6 +16,7 @@ export class WorkerProfile extends AutomapperProfile {
   override get profile() {
     return (mapper: Mapper) => {
       createMap(mapper, SignupWorkerDto, SignupWorkerCommand);
+      createMap(mapper, SignupOperatorDto, SignupOperatorCommand);
     };
   }
 }
