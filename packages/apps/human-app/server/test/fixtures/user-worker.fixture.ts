@@ -1,4 +1,4 @@
-import { UserType } from 'src/common/enums/user';
+import { UserType } from '../../src/common/enums/user';
 
 export function generateWorkerSignupRequestBody() {
   const randomElement = Math.floor(Math.random() * 1000);

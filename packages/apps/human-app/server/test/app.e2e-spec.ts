@@ -5,12 +5,13 @@ import { AppModule } from '../src/app.module';
 import { ConfigModule } from '@nestjs/config';
 import { describe } from '@jest/globals';
 import { generateWorkerSignupRequestBody } from './fixtures/user-worker.fixture';
+import { SignupWorkerData } from '../src/modules/user-worker/interfaces/worker-registration.interface';
 
 describe('Human APP (e2e) tests', () => {
   let app: INestApplication;
-  let requestBodyForWorkerSignup: any;
+  let requestBodyForWorkerSignup: SignupWorkerData;
 
-  before(async () => {
+  beforeAll(async () => {
     requestBodyForWorkerSignup = generateWorkerSignupRequestBody();
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
