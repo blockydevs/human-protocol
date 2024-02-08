@@ -6,11 +6,6 @@
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
-  "globals": {
-    "ts-jest": {
-      "useESM": true
-    }
-  },
   "transformIgnorePatterns": [
     "/node_modules/(?!(@nestjs/config|uuid)).+\\.js$"
   ]
