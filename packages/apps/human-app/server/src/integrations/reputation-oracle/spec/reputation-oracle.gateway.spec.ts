@@ -8,6 +8,7 @@ import nock from 'nock';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { SignupOperatorCommand } from '../../../modules/user-operator/interfaces/operator-registration.interface';
 import { gatewayConfigServiceMock } from '../../../common/config/gateway-config.service.mock';
+import { ethers } from 'ethers';
 
 describe('ReputationOracleGateway', () => {
   let service: ReputationOracleGateway;
@@ -102,11 +103,15 @@ describe('ReputationOracleGateway', () => {
   });
 
   describe('sendOperatorSignup', () => {
-    it('should successfully call the reputation oracle operator signup endpoint', async () => {
-      const command = new SignupOperatorCommand(
-        '0x2348237487df12f123a455234',
-        '0x23u4dfa32423daf2314',
+    let exampleCommand: SignupOperatorCommand;
+    beforeEach(async () => {
+      const wallet = ethers.Wallet.createRandom();
+      exampleCommand = new SignupOperatorCommand(
+        wallet.address,
+        await wallet.signMessage('signup'),
       );
+    });
+    it('should successfully call the reputation oracle operator signup endpoint', async () => {
       const expectedData = {
         email: 'asfdsafdd@asdf.cvd',
         password: 'asdfasdf2133!!dasfA',
@@ -117,7 +122,9 @@ describe('ReputationOracleGateway', () => {
         .post('/auth/web3/signup', expectedData)
         .reply(201, '');
 
-      await expect(service.sendOperatorSignup(command)).resolves.not.toThrow();
+      await expect(
+        service.sendOperatorSignup(exampleCommand),
+      ).resolves.not.toThrow();
       expect(httpService.request).toHaveBeenCalled();
     });
   });
