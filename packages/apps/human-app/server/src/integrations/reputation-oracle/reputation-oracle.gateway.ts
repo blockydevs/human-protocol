@@ -10,12 +10,13 @@ import {
 import {
   SignupOperatorCommand,
   SignupOperatorData,
-} from '../../modules/operator/interfaces/operator-registration.interface';
+} from '../../modules/user-operator/interfaces/operator-registration.interface';
 import { GatewayConfigService } from '../../common/config/gateway-config.service';
 import { GatewayConfig } from '../../common/interfaces/endpoint.interface';
 import { ExternalApiName } from '../../common/enums/external-api-name';
 import { EndpointName } from '../../common/enums/endpoint-name';
 import { AxiosRequestConfig } from 'axios';
+import { RequestDataType } from './reputation-oracle.interface';
 
 @Injectable()
 export class ReputationOracleGateway {
@@ -29,9 +30,9 @@ export class ReputationOracleGateway {
       ExternalApiName.REPUTATION_ORACLE,
     );
   }
-  private getEndpointOptions<dataType>(
+  private getEndpointOptions(
     endpointName: EndpointName,
-    data: dataType,
+    data: RequestDataType,
   ) {
     const { method, endpoint, headers } =
       this.reputationOracleConfig.endpoints[endpointName];
@@ -67,7 +68,7 @@ export class ReputationOracleGateway {
       SignupWorkerData,
     );
 
-    const options = this.getEndpointOptions<SignupWorkerData>(
+    const options = this.getEndpointOptions(
       EndpointName.WORKER_SIGNUP,
       signupWorkerData,
     );
@@ -80,7 +81,7 @@ export class ReputationOracleGateway {
       SignupOperatorCommand,
       SignupOperatorData,
     );
-    const options = this.getEndpointOptions<SignupOperatorData>(
+    const options = this.getEndpointOptions(
       EndpointName.OPERATOR_SIGNUP,
       signupOperatorData,
     );
