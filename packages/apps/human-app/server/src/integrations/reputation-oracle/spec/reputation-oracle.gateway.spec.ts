@@ -113,8 +113,8 @@ describe('ReputationOracleGateway', () => {
     });
     it('should successfully call the reputation oracle operator signup endpoint', async () => {
       const expectedData = {
-        email: 'asfdsafdd@asdf.cvd',
-        password: 'asdfasdf2133!!dasfA',
+        address: exampleCommand.address,
+        signature: exampleCommand.signature,
         type: 'OPERATOR',
       };
 
