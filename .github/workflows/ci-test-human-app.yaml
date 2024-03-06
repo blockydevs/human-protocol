@@ -20,6 +20,8 @@ jobs:
       - run: npm install --global yarn && yarn
         name: Install dependencies
       - name: Set environment variables
+        run: |
+          echo "Setting secrets for testing"
         env:
           REPUTATION_ORACLE_URL: ${{ secrets.REPUTATION_ORACLE_URL }}
           E2E_TESTING_EMAIL_ADDRESS: ${{ secrets.E2E_TESTING_EMAIL_ADDRESS }}
