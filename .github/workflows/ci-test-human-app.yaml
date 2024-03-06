@@ -15,6 +15,14 @@ jobs:
   job-app-server-test:
     name: Human App Server Test
     runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     env:
       REPUTATION_ORACLE_URL: ${{ secrets.REPUTATION_ORACLE_URL }}
       E2E_TESTING_EMAIL_ADDRESS: ${{ secrets.E2E_TESTING_EMAIL_ADDRESS }}
@@ -22,11 +30,12 @@ jobs:
       E2E_TESTING_EXCHANGE_ORACLE_URL: ${{ secrets.E2E_TESTING_EXCHANGE_ORACLE_URL }}
       E2E_TESTING_ESCROW_ADDRESS: ${{ secrets.E2E_TESTING_ESCROW_ADDRESS }}
       E2E_TESTING_ESCROW_CHAIN_ID: ${{ secrets.E2E_TESTING_ESCROW_CHAIN_ID }}
+      REDIS_URL: redis://localhost:6379
     steps:
       - uses: actions/checkout@v4
       - run: npm install --global yarn && yarn
         name: Install dependencies
-      - run: "yarn human-app-server:test"
+      - run: yarn human-app-server:test
         name: Run Job Human App unit tests
-      - run: "yarn human-app-server:test:e2e"
+      - run: yarn human-app-server:test-e2e
         name: Run Job Human App e2e tests
