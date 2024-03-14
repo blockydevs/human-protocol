@@ -15,8 +15,6 @@ jobs:
   job-app-server-test:
     name: Human App Server Test
     runs-on: ubuntu-latest
-    env:
-      REPUTATION_ORACLE_URL: ${{ secrets.REPUTATION_ORACLE_URL }}
     steps:
       - uses: actions/checkout@v4
       - run: npm install --global yarn && yarn
