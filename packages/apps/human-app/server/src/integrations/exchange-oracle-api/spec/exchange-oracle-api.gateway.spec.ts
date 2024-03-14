@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpService } from '@nestjs/axios';
-import { ExternalApiGateway } from '../external-api.gateway';
+import { ExchangeOracleApiGateway } from '../exchange-oracle-api.gateway';
 import {
   oracleStatsCommandFixture,
-  statisticsOracleUrl,
+  statisticsExchangeOracleUrl,
   userStatsCommandFixture,
 } from '../../../modules/statistics/spec/statistics.fixtures';
 import { AutomapperModule } from '@automapper/nestjs';
@@ -17,14 +17,14 @@ import {
   jobsFetchParamsCommandFixture,
   jobsFetchParamsDataFixtureAsString,
 } from '../../../modules/job-assignment/spec/job-assignment.fixtures';
-import { ExternalApiProfile } from '../external-api.mapper';
+import { ExchangeOralceApiProfile } from '../exchange-oracle-api.mapper';
 import {
   jobsDiscoveryParamsCommandFixture,
   paramsDataFixtureAsString,
 } from '../../../modules/jobs-discovery/spec/jobs-discovery.fixtures';
 
-describe('ExternalApiGateway', () => {
-  let gateway: ExternalApiGateway;
+describe('ExchangeOracleApiGateway', () => {
+  let gateway: ExchangeOracleApiGateway;
   let httpService: HttpService;
 
   beforeEach(async () => {
@@ -35,8 +35,8 @@ describe('ExternalApiGateway', () => {
         }),
       ],
       providers: [
-        ExternalApiProfile,
-        ExternalApiGateway,
+        ExchangeOralceApiProfile,
+        ExchangeOracleApiGateway,
         {
           provide: HttpService,
           useValue: {
@@ -46,7 +46,7 @@ describe('ExternalApiGateway', () => {
       ],
     }).compile();
 
-    gateway = module.get<ExternalApiGateway>(ExternalApiGateway);
+    gateway = module.get<ExchangeOracleApiGateway>(ExchangeOracleApiGateway);
     httpService = module.get<HttpService>(HttpService);
   });
 
@@ -57,7 +57,7 @@ describe('ExternalApiGateway', () => {
   describe('fetchUserStatistics', () => {
     it('should successfully call the requested url for user statistics', async () => {
       const command = userStatsCommandFixture;
-      nock(statisticsOracleUrl)
+      nock(statisticsExchangeOracleUrl)
         .get('/stats/assignment')
         .matchHeader('Authorization', `Bearer ${command.token}`)
         .reply(200);
@@ -68,7 +68,7 @@ describe('ExternalApiGateway', () => {
   describe('fetchOracleStatistics', () => {
     it('should successfully call the requested url for oracle statistics', async () => {
       const command = oracleStatsCommandFixture;
-      nock(statisticsOracleUrl).get('/stats').reply(200);
+      nock(statisticsExchangeOracleUrl).get('/stats').reply(200);
       await gateway.fetchOracleStatistics(command);
       expect(httpService.request).toHaveBeenCalled();
     });

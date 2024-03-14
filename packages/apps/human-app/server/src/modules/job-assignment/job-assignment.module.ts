@@ -1,10 +1,10 @@
 import { JobAssignmentService } from './job-assignment.service';
 import { JobAssignmentProfile } from './job-assignment.mapper';
 import { Module } from '@nestjs/common';
-import { ExternalApiModule } from '../../integrations/external-api/external-api.module';
+import { ExchangeOracleApiModule } from '../../integrations/exchange-oracle-api/exchange-oracle-api.module';
 
 @Module({
-  imports: [ExternalApiModule],
+  imports: [ExchangeOracleApiModule],
   providers: [JobAssignmentService, JobAssignmentProfile],
   exports: [JobAssignmentService],
 })

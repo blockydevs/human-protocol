@@ -1,10 +1,10 @@
 import { JobsDiscoveryService } from './jobs-discovery.service';
 import { JobsDiscoveryProfile } from './jobs-discovery.mapper';
 import { Module } from '@nestjs/common';
-import { ExternalApiModule } from '../../integrations/external-api/external-api.module';
+import { ExchangeOracleApiModule } from '../../integrations/exchange-oracle-api/exchange-oracle-api.module';
 
 @Module({
-  imports: [ExternalApiModule],
+  imports: [ExchangeOracleApiModule],
   providers: [JobsDiscoveryService, JobsDiscoveryProfile],
   exports: [JobsDiscoveryService],
 })
