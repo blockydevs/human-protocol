@@ -8,17 +8,17 @@ import {
 import { ExchangeOracleGateway } from '../../integrations/exchange-oracle/exchange-oracle.gateway';
 @Injectable()
 export class JobAssignmentService {
-  constructor(private readonly externalApiGateway: ExchangeOracleGateway) {}
+  constructor(private readonly gateway: ExchangeOracleGateway) {}
 
   async processJobAssignment(
     command: JobAssignmentCommand,
   ): Promise<JobAssignmentResponse> {
-    return this.externalApiGateway.postNewJobAssignment(command);
+    return this.gateway.postNewJobAssignment(command);
   }
 
   async processGetAssignedJobs(
     command: JobsFetchParamsCommand,
   ): Promise<JobsFetchResponse> {
-    return this.externalApiGateway.fetchAssignedJobs(command);
+    return this.gateway.fetchAssignedJobs(command);
   }
 }

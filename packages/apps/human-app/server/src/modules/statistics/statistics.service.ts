@@ -16,7 +16,7 @@ import { ExchangeOracleGateway } from '../../integrations/exchange-oracle/exchan
 export class StatisticsService {
   constructor(
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
-    private externalApiGateway: ExchangeOracleGateway,
+    private gateway: ExchangeOracleGateway,
     private configService: EnvironmentConfigService,
   ) {}
   async getOracleStats(
@@ -29,7 +29,7 @@ export class StatisticsService {
       return cachedStatistics;
     }
     const response: OracleStatisticsResponse =
-      await this.externalApiGateway.fetchOracleStatistics(command);
+      await this.gateway.fetchOracleStatistics(command);
     await this.cacheManager.set(
       url,
       response,
@@ -46,7 +46,7 @@ export class StatisticsService {
     if (cachedStatistics) {
       return cachedStatistics;
     }
-    const response = this.externalApiGateway.fetchUserStatistics(command);
+    const response = this.gateway.fetchUserStatistics(command);
     await this.cacheManager.set(
       userCacheKey,
       response,

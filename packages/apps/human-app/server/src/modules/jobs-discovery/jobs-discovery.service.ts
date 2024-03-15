@@ -6,11 +6,11 @@ import {
 import { ExchangeOracleGateway } from '../../integrations/exchange-oracle/exchange-oracle.gateway';
 @Injectable()
 export class JobsDiscoveryService {
-  constructor(private readonly externalApiGateway: ExchangeOracleGateway) {}
+  constructor(private readonly gateway: ExchangeOracleGateway) {}
 
   async processJobsDiscovery(
     command: JobsDiscoveryParamsCommand,
   ): Promise<JobsDiscoveryResponse> {
-    return this.externalApiGateway.fetchDiscoveredJobs(command);
+    return this.gateway.fetchDiscoveredJobs(command);
   }
 }
