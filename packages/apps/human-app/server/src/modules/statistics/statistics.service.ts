@@ -46,7 +46,7 @@ export class StatisticsService {
     if (cachedStatistics) {
       return cachedStatistics;
     }
-    const response = this.gateway.fetchUserStatistics(command);
+    const response = await this.gateway.fetchUserStatistics(command);
     await this.cacheManager.set(
       userCacheKey,
       response,
