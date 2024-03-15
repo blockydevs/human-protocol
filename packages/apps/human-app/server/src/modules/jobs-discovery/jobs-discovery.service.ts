@@ -3,10 +3,10 @@ import {
   JobsDiscoveryParamsCommand,
   JobsDiscoveryResponse,
 } from './interfaces/jobs-discovery.interface';
-import { ExchangeOracleApiGateway } from '../../integrations/exchange-oracle-api/exchange-oracle-api.gateway';
+import { ExchangeOracleGateway } from '../../integrations/exchange-oracle/exchange-oracle.gateway';
 @Injectable()
 export class JobsDiscoveryService {
-  constructor(private readonly externalApiGateway: ExchangeOracleApiGateway) {}
+  constructor(private readonly externalApiGateway: ExchangeOracleGateway) {}
 
   async processJobsDiscovery(
     command: JobsDiscoveryParamsCommand,

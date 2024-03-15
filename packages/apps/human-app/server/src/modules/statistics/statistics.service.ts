@@ -10,13 +10,13 @@ import {
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { EnvironmentConfigService } from '../../common/config/environment-config.service';
-import { ExchangeOracleApiGateway } from '../../integrations/exchange-oracle-api/exchange-oracle-api.gateway';
+import { ExchangeOracleGateway } from '../../integrations/exchange-oracle/exchange-oracle.gateway';
 
 @Injectable()
 export class StatisticsService {
   constructor(
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
-    private externalApiGateway: ExchangeOracleApiGateway,
+    private externalApiGateway: ExchangeOracleGateway,
     private configService: EnvironmentConfigService,
   ) {}
   async getOracleStats(

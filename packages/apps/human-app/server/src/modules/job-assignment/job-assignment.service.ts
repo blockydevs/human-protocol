@@ -5,10 +5,10 @@ import {
   JobAssignmentCommand,
   JobsFetchResponse,
 } from './interfaces/job-assignment.interface';
-import { ExchangeOracleApiGateway } from '../../integrations/exchange-oracle-api/exchange-oracle-api.gateway';
+import { ExchangeOracleGateway } from '../../integrations/exchange-oracle/exchange-oracle.gateway';
 @Injectable()
 export class JobAssignmentService {
-  constructor(private readonly externalApiGateway: ExchangeOracleApiGateway) {}
+  constructor(private readonly externalApiGateway: ExchangeOracleGateway) {}
 
   async processJobAssignment(
     command: JobAssignmentCommand,

@@ -30,7 +30,7 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 
 @Injectable()
-export class ExchangeOracleApiGateway {
+export class ExchangeOracleGateway {
   constructor(
     private httpService: HttpService,
     @InjectMapper() private mapper: Mapper,

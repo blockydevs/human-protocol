@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpService } from '@nestjs/axios';
-import { ExchangeOracleApiGateway } from '../exchange-oracle-api.gateway';
+import { ExchangeOracleGateway } from '../exchange-oracle.gateway';
 import {
   oracleStatsCommandFixture,
   statisticsExchangeOracleUrl,
@@ -17,14 +17,14 @@ import {
   jobsFetchParamsCommandFixture,
   jobsFetchParamsDataFixtureAsString,
 } from '../../../modules/job-assignment/spec/job-assignment.fixtures';
-import { ExchangeOralceApiProfile } from '../exchange-oracle-api.mapper';
+import { ExchangeOracleProfile } from '../exchange-oracle.mapper';
 import {
   jobsDiscoveryParamsCommandFixture,
   paramsDataFixtureAsString,
 } from '../../../modules/jobs-discovery/spec/jobs-discovery.fixtures';
 
 describe('ExchangeOracleApiGateway', () => {
-  let gateway: ExchangeOracleApiGateway;
+  let gateway: ExchangeOracleGateway;
   let httpService: HttpService;
 
   beforeEach(async () => {
@@ -35,8 +35,8 @@ describe('ExchangeOracleApiGateway', () => {
         }),
       ],
       providers: [
-        ExchangeOralceApiProfile,
-        ExchangeOracleApiGateway,
+        ExchangeOracleProfile,
+        ExchangeOracleGateway,
         {
           provide: HttpService,
           useValue: {
@@ -46,7 +46,7 @@ describe('ExchangeOracleApiGateway', () => {
       ],
     }).compile();
 
-    gateway = module.get<ExchangeOracleApiGateway>(ExchangeOracleApiGateway);
+    gateway = module.get<ExchangeOracleGateway>(ExchangeOracleGateway);
     httpService = module.get<HttpService>(HttpService);
   });
 

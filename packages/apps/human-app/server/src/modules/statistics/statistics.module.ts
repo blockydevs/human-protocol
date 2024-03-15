@@ -1,9 +1,9 @@
 import { StatisticsService } from './statistics.service';
 import { Module } from '@nestjs/common';
-import { ExchangeOracleApiModule } from '../../integrations/exchange-oracle-api/exchange-oracle-api.module';
+import { ExchangeOracleModule } from '../../integrations/exchange-oracle/exchange-oracle.module';
 
 @Module({
-  imports: [ExchangeOracleApiModule],
+  imports: [ExchangeOracleModule],
   providers: [StatisticsService],
   exports: [StatisticsService],
 })

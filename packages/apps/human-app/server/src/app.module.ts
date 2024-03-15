@@ -21,7 +21,7 @@ import { JobAssignmentController } from './modules/job-assignment/job-assignment
 import { JobAssignmentModule } from './modules/job-assignment/job-assignment.module';
 import { StatisticsModule } from './modules/statistics/statistics.module';
 import { StatisticsController } from './modules/statistics/statistics.controller';
-import { ExchangeOracleApiModule } from './integrations/exchange-oracle-api/exchange-oracle-api.module';
+import { ExchangeOracleModule } from './integrations/exchange-oracle/exchange-oracle.module';
 
 @Module({
   imports: [
@@ -40,7 +40,7 @@ import { ExchangeOracleApiModule } from './integrations/exchange-oracle-api/exch
     JobsDiscoveryModule,
     JobAssignmentModule,
     ReputationOracleModule,
-    ExchangeOracleApiModule,
+    ExchangeOracleModule,
     CommonConfigModule,
     OracleDiscoveryModule,
     StatisticsModule,
