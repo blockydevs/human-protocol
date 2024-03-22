@@ -1,5 +1,5 @@
 import {
-  Body,
+  Query,
   Controller,
   Get,
   UsePipes,
@@ -24,9 +24,9 @@ export class OracleDiscoveryController {
   @ApiTags('Oracle-Discovery')
   @Get('/oracles')
   @ApiOperation({ summary: 'Oracles discovery' })
-  @UsePipes(new ValidationPipe())
+  @UsePipes(new ValidationPipe({ transform: true }))
   public getOracles(
-    @Body() oracleDiscoveryDto: OracleDiscoveryDto,
+    @Query() oracleDiscoveryDto: OracleDiscoveryDto,
   ): Promise<OracleDiscoveryResponse[]> {
     const oracleDiscoveryCommand = this.mapper.map(
       oracleDiscoveryDto,
