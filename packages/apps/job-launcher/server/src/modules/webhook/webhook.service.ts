@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   ChainId,
   EscrowClient,
@@ -22,6 +28,9 @@ import { ErrorWebhook } from '../../common/constants/errors';
 import { WebhookEntity } from './webhook.entity';
 import { WebhookDataDto } from './webhook.dto';
 import { CaseConverter } from '../../common/utils/case-converter';
+import { EventType } from '../../common/enums/webhook';
+import { JobService } from '../job/job.service';
+import { BadRequestException } from '@nestjs/common';
 @Injectable()
 export class WebhookService {
   private readonly logger = new Logger(WebhookService.name);
@@ -30,6 +39,7 @@ export class WebhookService {
     @Inject(Web3Service)
     private readonly web3Service: Web3Service,
     private readonly webhookRepository: WebhookRepository,
+    private readonly jobService: JobService,
     public readonly configService: ConfigService,
     public readonly httpService: HttpService,
   ) {}
@@ -74,12 +84,12 @@ export class WebhookService {
     }
 
     // Make the HTTP request to the webhook.
-    const { data } = await firstValueFrom(
-      await this.httpService.post(webhookUrl, webhookData, config),
+    const { status } = await firstValueFrom(
+      this.httpService.post(webhookUrl, webhookData, config),
     );
 
     // Check if the request was successful.
-    if (!data) {
+    if (status !== HttpStatus.OK) {
       this.logger.log(ErrorWebhook.NotSent, WebhookService.name);
       throw new NotFoundException(ErrorWebhook.NotSent);
     }
@@ -134,5 +144,26 @@ export class WebhookService {
       webhookEntity.retriesCount = webhookEntity.retriesCount + 1;
     }
     this.webhookRepository.updateOne(webhookEntity);
+  }
+
+  public async handleWebhook(wehbook: WebhookDataDto): Promise<void> {
+    switch (wehbook.eventType) {
+      case EventType.ESCROW_COMPLETED:
+        await this.jobService.completeJob(wehbook);
+        break;
+
+      case EventType.TASK_CREATION_FAILED:
+        await this.jobService.escrowFailedWebhook(wehbook);
+        break;
+
+      case EventType.ESCROW_FAILED:
+        await this.jobService.escrowFailedWebhook(wehbook);
+        break;
+
+      default:
+        throw new BadRequestException(
+          `Invalid webhook event type: ${wehbook.eventType}`,
+        );
+    }
   }
 }
