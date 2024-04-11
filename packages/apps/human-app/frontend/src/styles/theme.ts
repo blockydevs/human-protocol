@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 import type { ThemeOptions } from '@mui/material';
-import { colorPalette, commonColors } from '@/styles/color-palette';
+import { colorPalette } from '@/styles/color-palette';
 
 declare module '@mui/material/Typography' {
   interface TypographyPropsVariantOverrides {
@@ -221,8 +221,8 @@ export const theme: ThemeOptions = {
           fontSize: '14px',
           fontWeight: 500,
           '&.Mui-disabled': {
-            backgroundColor: commonColors.grey,
-            color: commonColors.white,
+            backgroundColor: colorPalette.primary.contrastText,
+            color: colorPalette.text.secondary,
           },
         },
       },
@@ -231,7 +231,7 @@ export const theme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&.Mui-checked': {
-            color: commonColors.grey,
+            color: colorPalette.primary.main,
           },
         },
       },
