@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs';
-import { colorPalette } from '@/styles/color-palette';
+import { commonColors } from '@/styles/color-palette';
 
 interface ModalHeaderElementProps {
   isVisible: boolean;
@@ -27,7 +27,7 @@ export function ModalHeader({ breadcrumb, closeButton }: ModalHeaderProps) {
             <Button
               data-testid="button-close-modal"
               onClick={closeButton.onClick}
-              sx={{ color: colorPalette.black }}
+              sx={{ color: commonColors.black }}
             >
               <Box
                 sx={{
@@ -35,8 +35,8 @@ export function ModalHeader({ breadcrumb, closeButton }: ModalHeaderProps) {
                   borderRadius: '50%',
                   display: 'flex',
                   justifySelf: 'center',
-                  color: colorPalette.black,
-                  backgroundColor: colorPalette.granite.light,
+                  color: commonColors.black,
+                  backgroundColor: commonColors.grey,
                 }}
               >
                 <CloseIcon fontSize="small" />

@@ -1,46 +1,41 @@
-export const colorPalette = {
-  primary: {
-    main: '#320A8D',
-    light: '#E8F0FA',
-    dark: '#0E4C92',
-  },
+export const commonColors = {
+  primary: '#320A8D',
+  primaryLight: '#6309FF',
+  primaryLightSoft: '#8409FF',
   white: '#FFFFFF',
+  grey: '#CBCFE6',
   black: '#000000',
-  ink: {
-    main: '#383838',
-    light: '#9C9C9C',
-    dark: '#606060',
+} as const;
+
+export const colorPalette = {
+  text: {
+    primary: commonColors.primary,
+    secondary: '#858EC6',
+    disabled: '#CBCFE6',
   },
-  pale: {
-    main: '#33414E',
-    light: '#707A83',
-    dark: '#141A1F',
+  primary: {
+    main: commonColors.primary,
+    light: commonColors.primaryLight,
+    dark: '#100735',
+    contrastText: '#F9FAFF',
   },
-  success: {
-    main: '#3C9223',
-    light: '#ECF4EB',
-    dark: '#2A6619',
-  },
-  warning: {
-    main: '#E1AD01',
-    light: '#FCF7E5',
-    dark: '#AE8600',
+  secondary: {
+    main: commonColors.primaryLight,
+    dark: '#4506B2',
+    light: commonColors.primaryLightSoft,
+    contrastText: commonColors.white,
   },
   error: {
-    main: '#fa1875',
-    light: '#F5E5E5',
-    dark: '#6F0404',
+    main: '#FA2A75',
+    dark: '#F20D5F',
+    light: '#FF5995',
+    contrastText: commonColors.white,
   },
-  cloud: {
-    main: '#EBEBEB',
-    light: '#F6F9FC',
-    dark: '#082B54',
+  success: {
+    main: '#0AD397',
+    dark: '#0E976E',
+    light: '#00EDA6',
+    contrastText: commonColors.white,
   },
-  ocean: {
-    main: '#4DE2FC',
-  },
-  granite: {
-    main: '#303030',
-    light: '#F2F3F5',
-  },
+  // for 'warning', 'info' native colors from MUI were pointed as expected
 } as const;

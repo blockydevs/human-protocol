@@ -2,7 +2,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
 import Link from '@mui/material/Link';
-import { colorPalette } from '@/styles/color-palette';
+import { commonColors } from '@/styles/color-palette';
 
 interface BreadcrumbsProps {
   onClick: () => void;
@@ -17,7 +17,7 @@ export function Breadcrumbs({ onClick }: BreadcrumbsProps) {
       onClick={onClick}
       sx={{
         display: 'flex',
-        color: colorPalette.pale.light,
+        color: commonColors.grey,
         flexDirection: 'row',
         alignItems: 'center',
         gap: 0.5,
