@@ -9,8 +9,10 @@ import { WorkerProfilePage } from '@/pages/worker/profile.page';
 import { SignInOperatorPage } from '@/pages/operator/sign-in.page';
 import { SignUpOperatorPage } from '@/pages/operator/sign-up.page';
 import { routerPaths } from '@/router/router-paths';
-import { SendResetLinkWorkerPage } from '@/pages/worker/send-reset-link/send-reset-link.page';
 import { SendResetLinkWorkerSuccessPage } from '@/pages/worker/send-reset-link/send-reset-link-success.page';
+import { ResetPasswordWorkerPage } from '@/pages/worker/reset-password/reset-password.page';
+import { SendResetLinkWorkerPage } from '@/pages/worker/send-reset-link/send-reset-link.page';
+import { ResetPasswordWorkerSuccessPage } from '@/pages/worker/reset-password/reset-password-success.page';
 
 export const unprotectedRoutes: RouteProps[] = [
   {
@@ -28,14 +30,6 @@ export const unprotectedRoutes: RouteProps[] = [
   {
     path: routerPaths.worker.signUp,
     element: <SignUpWorkerPage />,
-  },
-  {
-    path: routerPaths.worker.sendResetLink,
-    element: <SendResetLinkWorkerPage />,
-  },
-  {
-    path: routerPaths.worker.sendResetLinkSuccess,
-    element: <SendResetLinkWorkerSuccessPage />,
   },
   {
     path: routerPaths.operator.signIn,
@@ -59,5 +53,21 @@ export const protectedRoutes: RouteProps[] = [
   {
     path: '/worker/profile',
     element: <WorkerProfilePage />,
+  },
+  {
+    path: routerPaths.worker.sendResetLink,
+    element: <SendResetLinkWorkerPage />,
+  },
+  {
+    path: routerPaths.worker.sendResetLinkSuccess,
+    element: <SendResetLinkWorkerSuccessPage />,
+  },
+  {
+    path: routerPaths.worker.resetPassword,
+    element: <ResetPasswordWorkerPage />,
+  },
+  {
+    path: routerPaths.worker.resetPasswordSuccess,
+    element: <ResetPasswordWorkerSuccessPage />,
   },
 ];

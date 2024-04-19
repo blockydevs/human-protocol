@@ -116,6 +116,20 @@
       "btn": "Sign In",
       "paragraph4": "<1>Having trouble?</1> Please <2>Contact Support</2>"
     },
+    "resetPassword": {
+      "fields": {
+        "createNewPassword": "Create New Password",
+        "confirm": "Confirm New Password"
+      },
+      "title": "Reset password",
+      "description": "Please enter your new password below.",
+      "btn": "Reset password"
+    },
+    "resetPasswordSuccess": {
+      "title": "Password changed",
+      "description": "Your password has been changed successfully.",
+      "btn": "Sign In"
+    },
     "profile": {
       "profileHeader": "Profile",
       "email": "Email",
