@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { Trans } from 'react-i18next';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Grid from '@mui/material/Grid';
@@ -8,7 +7,6 @@ import Typography from '@mui/material/Typography';
 import { t } from 'i18next';
 import omit from 'lodash/omit';
 import { useParams } from 'react-router-dom';
-import { FetchError } from '@/api/fetcher';
 import { Button } from '@/components/ui/button';
 import { Password } from '@/components/data-entry/password/password';
 import { FormCard } from '@/components/ui/form-card';
@@ -27,20 +25,8 @@ import {
   resetPasswordDtoSchema,
   useResetPasswordMutation,
 } from '@/api/servieces/worker/reset-password';
-
-function formattedResetPasswordErrorMessage(unknownError: unknown) {
-  if (
-    unknownError instanceof FetchError &&
-    (unknownError.status === 403 || unknownError.status === 401)
-  ) {
-    return <Trans>auth.login.errors.unauthorized</Trans>;
-  }
-
-  if (unknownError instanceof Error) {
-    return <Trans>errors.withInfoCode</Trans>;
-  }
-  return <Trans>errors.unknown</Trans>;
-}
+import { Alert } from '@/components/ui/alert';
+import { defaultErrorMessage } from '@/shared/helpers/default-error-message';
 
 const passwordChecks: PasswordCheck[] = [
   {
@@ -98,9 +84,11 @@ export function ResetPasswordWorkerPage() {
   return (
     <FormCard
       alert={
-        isResetPasswordWorkerError
-          ? formattedResetPasswordErrorMessage(resetPasswordWorkerError)
-          : undefined
+        isResetPasswordWorkerError ? (
+          <Alert color="error" severity="error" sx={{ width: '100%' }}>
+            {defaultErrorMessage(resetPasswordWorkerError)}
+          </Alert>
+        ) : undefined
       }
       backArrowPath={routerPaths.homePage}
       title={t('worker.resetPassword.title')}
