@@ -13,6 +13,8 @@ import { SendResetLinkWorkerSuccessPage } from '@/pages/worker/send-reset-link/s
 import { ResetPasswordWorkerPage } from '@/pages/worker/reset-password/reset-password.page';
 import { SendResetLinkWorkerPage } from '@/pages/worker/send-reset-link/send-reset-link.page';
 import { ResetPasswordWorkerSuccessPage } from '@/pages/worker/reset-password/reset-password-success.page';
+import { EmailVerificationWorkerPage } from '@/pages/worker/email-verification/email-verification.page';
+import { SendEmailVerificationWorkerPage } from '@/pages/worker/email-verification/send-email-verification.page';
 
 export const unprotectedRoutes: RouteProps[] = [
   {
@@ -53,6 +55,14 @@ export const protectedRoutes: RouteProps[] = [
   {
     path: '/worker/profile',
     element: <WorkerProfilePage />,
+  },
+  {
+    path: routerPaths.worker.emailVerification,
+    element: <EmailVerificationWorkerPage />,
+  },
+  {
+    path: routerPaths.worker.sendEmailVerification,
+    element: <SendEmailVerificationWorkerPage />,
   },
   {
     path: routerPaths.worker.sendResetLink,

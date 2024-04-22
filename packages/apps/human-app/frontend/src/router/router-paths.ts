@@ -8,6 +8,8 @@ export const routerPaths = {
     resetPasswordSuccess: '/worker/reset-password-success',
     sendResetLink: '/worker/send-reset-link',
     sendResetLinkSuccess: '/worker/send-reset-link-success',
+    emailVerification: '/verify',
+    sendEmailVerification: '/worker/send-email-verification',
   },
   operator: {
     signIn: '/operator/sign-in',
