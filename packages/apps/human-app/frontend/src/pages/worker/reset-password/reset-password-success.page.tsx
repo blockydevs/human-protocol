@@ -1,23 +1,14 @@
-import { useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import { t } from 'i18next';
 import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import { Button } from '@/components/ui/button';
-import { FormCard } from '@/components/ui/form-card';
-import { useBackgroundColorStore } from '@/hooks/use-background-store';
 import { routerPaths } from '@/router/router-paths';
+import { PageCard } from '@/components/ui/page-card';
 
 export function ResetPasswordWorkerSuccessPage() {
-  const { setGrayBackground } = useBackgroundColorStore();
-
-  useEffect(() => {
-    setGrayBackground();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- call this effect once
-  }, []);
-
   return (
-    <FormCard title={t('worker.resetPasswordSuccess.title')}>
+    <PageCard title={t('worker.resetPasswordSuccess.title')}>
       <Grid container gap="2rem">
         <Typography variant="body1">
           {t('worker.resetPasswordSuccess.description')}
@@ -32,6 +23,6 @@ export function ResetPasswordWorkerSuccessPage() {
           {t('worker.resetPasswordSuccess.btn')}
         </Button>
       </Grid>
-    </FormCard>
+    </PageCard>
   );
 }

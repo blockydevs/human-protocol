@@ -1,24 +1,13 @@
-import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Grid from '@mui/material/Grid';
-import { z } from 'zod';
 import Typography from '@mui/material/Typography';
 import { t } from 'i18next';
 import omit from 'lodash/omit';
 import { useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Password } from '@/components/data-entry/password/password';
-import { FormCard } from '@/components/ui/form-card';
-import {
-  password8Chars,
-  passwordLowercase,
-  passwordNumeric,
-  passwordSpecialCharacter,
-  passwordUppercase,
-} from '@/shared/helpers/regex';
-import type { PasswordCheck } from '@/components/data-entry/password/password-check-label';
-import { useBackgroundColorStore } from '@/hooks/use-background-store';
+import { PageCard } from '@/components/ui/page-card';
 import { routerPaths } from '@/router/router-paths';
 import type { ResetPasswordDto } from '@/api/servieces/worker/reset-password';
 import {
@@ -27,38 +16,10 @@ import {
 } from '@/api/servieces/worker/reset-password';
 import { Alert } from '@/components/ui/alert';
 import { defaultErrorMessage } from '@/shared/helpers/default-error-message';
-
-const passwordChecks: PasswordCheck[] = [
-  {
-    requirementsLabel: t('validation.password8Chars'),
-    schema: z.string().regex(password8Chars),
-  },
-  {
-    requirementsLabel: t('validation.passwordUppercase'),
-    schema: z.string().regex(passwordUppercase),
-  },
-  {
-    requirementsLabel: t('validation.passwordLowercase'),
-    schema: z.string().regex(passwordLowercase),
-  },
-  {
-    requirementsLabel: t('validation.passwordNumeric'),
-    schema: z.string().regex(passwordNumeric),
-  },
-  {
-    requirementsLabel: t('validation.passwordSpecialCharacter'),
-    schema: z.string().regex(passwordSpecialCharacter),
-  },
-];
+import { passwordChecks } from '@/components/data-entry/password/password-checks';
 
 export function ResetPasswordWorkerPage() {
-  const { setGrayBackground } = useBackgroundColorStore();
   const { token } = useParams();
-
-  useEffect(() => {
-    setGrayBackground();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- call this effect once
-  }, []);
 
   const methods = useForm<ResetPasswordDto>({
     defaultValues: {
@@ -82,7 +43,7 @@ export function ResetPasswordWorkerPage() {
   };
 
   return (
-    <FormCard
+    <PageCard
       alert={
         isResetPasswordWorkerError ? (
           <Alert color="error" severity="error" sx={{ width: '100%' }}>
@@ -124,6 +85,6 @@ export function ResetPasswordWorkerPage() {
           </Grid>
         </form>
       </FormProvider>
-    </FormCard>
+    </PageCard>
   );
 }
