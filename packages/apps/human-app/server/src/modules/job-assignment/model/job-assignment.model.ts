@@ -16,17 +16,17 @@ import { Type } from 'class-transformer';
 export class JobAssignmentDto {
   @AutoMap()
   @IsString()
-  @ApiProperty({ example: 'string' })
+  @ApiProperty()
   address: string;
   @AutoMap()
   @IsString()
-  @ApiProperty({ example: 'string' })
+  @ApiProperty()
   escrow_address: string;
   @AutoMap()
   @IsNumber()
   @Type(() => Number)
-  @ApiPropertyOptional()
-  chain_id = 80002;
+  @ApiPropertyOptional({ default: 80002 })
+  chain_id: number;
 }
 
 export class JobAssignmentParams {
@@ -85,9 +85,8 @@ export class JobsFetchParamsDto extends PageableDto {
   @IsNumber()
   @IsOptional()
   @Type(() => Number)
-  @ApiPropertyOptional()
-  chain_id = 80002;
-  @AutoMap()
+  @ApiPropertyOptional({ default: 80002 })
+  chain_id: number;
   @IsEnum(JobType)
   @IsOptional()
   @ApiPropertyOptional({ enum: JobType })
