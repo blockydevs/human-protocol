@@ -14,7 +14,7 @@ const VerifyEmailSuccessResponseSchema = z.unknown();
 async function verifyEmailMutationFn(data: VerifyDto) {
   return apiClient(apiPaths.worker.verifyEmail.path, {
     successSchema: VerifyEmailSuccessResponseSchema,
-    options: { body: JSON.stringify(data) },
+    options: { method: 'POST', body: JSON.stringify(data) },
   });
 }
 

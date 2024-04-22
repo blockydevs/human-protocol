@@ -32,7 +32,7 @@ function resetPasswordMutationFn(
 ) {
   return apiClient(apiPaths.worker.resetPassword.path, {
     successSchema: ResetPasswordSuccessResponseSchema,
-    options: { body: JSON.stringify(data) },
+    options: { method: 'POST', body: JSON.stringify(data) },
   });
 }
 
