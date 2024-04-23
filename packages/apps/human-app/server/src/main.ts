@@ -12,11 +12,11 @@ async function bootstrap() {
 
   const configService: ConfigService = app.get(ConfigService);
   const envConfigService = new EnvironmentConfigService(configService);
-  if (envConfigService.isInDevelopmentMode) {
+  envConfigService.checkMandatoryConfig();
+  if (envConfigService.isCorsEnabled) {
     app.enableCors({
-      origin: ['http://localhost', 'http://localhost:5173'],
-      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-      allowedHeaders: 'Content-Type, Accept',
+      origin: envConfigService.corsEnabledOrigin,
+      allowedHeaders: envConfigService.corsAllowedHeaders,
     });
   }
   const config = new DocumentBuilder()
