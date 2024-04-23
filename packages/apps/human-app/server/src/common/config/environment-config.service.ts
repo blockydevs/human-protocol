@@ -60,7 +60,7 @@ export class EnvironmentConfigService {
     );
   }
   get rpcUrl(): string {
-    return this.configService.get<string>('RPC_URL', '') // @TODO: add default
+    return this.configService.get<string>('RPC_URL', '');
   }
 }
 
