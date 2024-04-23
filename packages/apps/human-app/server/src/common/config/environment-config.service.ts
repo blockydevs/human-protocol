@@ -4,30 +4,27 @@ import { EnvironmentVariableMissingError } from '../interfaces/custom-exceptions
 const DEFAULT_CACHE_TTL_ORACLE_STATS = 12 * 60 * 60;
 const DEFAULT_CACHE_TTL_USER_STATS = 15 * 60;
 const DEFAULT_CACHE_TTL_ORACLE_DISCOVERY = 24 * 60 * 60;
-const DEFAULT_CORS_ALLOWED_ORIGIN = 'http://localhost:5173'
-const DEFAULT_CORS_ALLOWED_HEADERS = 'Content-Type, Accept'
+const DEFAULT_CORS_ALLOWED_ORIGIN = 'http://localhost:5173';
+const DEFAULT_CORS_ALLOWED_HEADERS = 'Content-Type, Accept';
 @Injectable()
 export class EnvironmentConfigService {
   constructor(private configService: ConfigService) {}
   get host(): string {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.configService.get<string>('HOST')!;
+    return this.conditionallyReturnMandatoryEnvVariable<string>('HOST');
   }
   get port(): number {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.configService.get<number>('PORT')!;
+    return this.conditionallyReturnMandatoryEnvVariable<number>('PORT');
   }
   get reputationOracleUrl(): string {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.configService.get<string>('REPUTATION_ORACLE_URL')!;
+    return this.conditionallyReturnMandatoryEnvVariable<string>(
+      'REPUTATION_ORACLE_URL',
+    );
   }
   get cachePort(): number {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.configService.get<number>('REDIS_PORT')!;
+    return this.conditionallyReturnMandatoryEnvVariable<number>('REDIS_PORT');
   }
   get cacheHost(): string {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.configService.get<string>('REDIS_HOST')!;
+    return this.conditionallyReturnMandatoryEnvVariable<string>('REDIS_HOST');
   }
   get cacheTtlOracleStats(): number {
     return this.configService.get<number>(
@@ -50,8 +47,7 @@ export class EnvironmentConfigService {
     );
   }
   get rpcUrl(): string {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.configService.get<string>('RPC_URL')!;
+    return this.conditionallyReturnMandatoryEnvVariable<string>('RPC_URL');
   }
   get isCorsEnabled(): boolean {
     return this.configService.get<boolean>('CORS_ENABLED', false);
@@ -67,6 +63,13 @@ export class EnvironmentConfigService {
       'CORS_ALLOWED_HEADERS',
       DEFAULT_CORS_ALLOWED_HEADERS
     );
+  }
+  conditionallyReturnMandatoryEnvVariable<T>(envName: string): T {
+    const value = this.configService.get<T>(envName);
+    if (!value) {
+      throw new EnvironmentVariableMissingError(envName);
+    }
+    return value;
   }
   checkMandatoryConfig(): void {
     const mandatoryVariables = [
