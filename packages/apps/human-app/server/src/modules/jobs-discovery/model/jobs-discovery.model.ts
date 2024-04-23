@@ -42,6 +42,7 @@ export class JobsDiscoveryParamsDto extends PageableDto {
   @IsEnum(JobDiscoveryFieldName, { each: true })
   @ApiPropertyOptional({ enum: JobDiscoveryFieldName, isArray: true })
   fields: JobDiscoveryFieldName[];
+  @AutoMap()
   @ApiPropertyOptional({ enum: JobStatus })
   @IsEnum(JobStatus)
   @IsOptional()

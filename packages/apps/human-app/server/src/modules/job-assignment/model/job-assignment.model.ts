@@ -92,6 +92,7 @@ export class JobsFetchParamsDto extends PageableDto {
   @Type(() => Number)
   @ApiPropertyOptional({ default: 80002 })
   chain_id: number;
+  @AutoMap()
   @IsString()
   @IsOptional()
   @ApiPropertyOptional()
