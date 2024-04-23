@@ -9,7 +9,6 @@ import {
 import {
   AssignmentSortField,
   AssignmentStatus,
-  JobType,
 } from '../../../common/enums/global-common.interface';
 import { Type } from 'class-transformer';
 
@@ -76,6 +75,12 @@ export class JobsFetchParamsDto extends PageableDto {
   @AutoMap()
   @ApiProperty()
   address: string;
+  @AutoMap()
+  @Type(() => Number)
+  @IsOptional()
+  @IsNumber()
+  @ApiPropertyOptional()
+  assignment_id: number;
   @IsOptional()
   @AutoMap()
   @IsString()
@@ -87,10 +92,10 @@ export class JobsFetchParamsDto extends PageableDto {
   @Type(() => Number)
   @ApiPropertyOptional({ default: 80002 })
   chain_id: number;
-  @IsEnum(JobType)
+  @IsString()
   @IsOptional()
-  @ApiPropertyOptional({ enum: JobType })
-  job_type: JobType;
+  @ApiPropertyOptional()
+  job_type: string;
   @AutoMap()
   @IsOptional()
   @IsEnum(AssignmentStatus)
@@ -109,11 +114,13 @@ export class JobsFetchParams extends PageableParams {
   @AutoMap()
   chainId: number;
   @AutoMap()
-  jobType: JobType;
+  jobType: string;
   @AutoMap()
   status: AssignmentStatus;
   @AutoMap()
   sortField: AssignmentSortField;
+  @AutoMap()
+  assignmentId: number;
 }
 export class JobsFetchParamsCommand {
   @AutoMap()
@@ -134,6 +141,8 @@ export class JobsFetchParamsDetails {
 export class JobsFetchParamsData extends PageableData {
   @AutoMap()
   escrow_address: string;
+  @AutoMap()
+  assignment_id: number;
   @AutoMap()
   chain_id: number;
   @AutoMap()
