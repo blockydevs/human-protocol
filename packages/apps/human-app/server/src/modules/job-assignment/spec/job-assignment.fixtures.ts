@@ -17,7 +17,7 @@ import {
   AssignmentSortField,
   AssignmentStatus,
   SortOrder,
-} from '../../../common/enums/global-common.interface';
+} from '../../../common/enums/global-common';
 const EXCHANGE_ORACLE_URL = 'https://www.example.com/api';
 const EXCHANGE_ORACLE_ADDRESS = '0x34df642';
 const ESCROW_ADDRESS = 'test_address';

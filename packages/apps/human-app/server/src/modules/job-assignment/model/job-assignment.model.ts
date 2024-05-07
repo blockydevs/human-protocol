@@ -9,7 +9,7 @@ import {
 import {
   AssignmentSortField,
   AssignmentStatus,
-} from '../../../common/enums/global-common.interface';
+} from '../../../common/enums/global-common';
 import { Type } from 'class-transformer';
 
 export class JobAssignmentDto {

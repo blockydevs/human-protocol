@@ -6,7 +6,7 @@ import {
   JobDiscoveryFieldName,
   JobDiscoverySortField,
   JobStatus,
-} from '../../../common/enums/global-common.interface';
+} from '../../../common/enums/global-common';
 import {
   PageableData,
   PageableDto,
