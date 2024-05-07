@@ -5,7 +5,7 @@ import { statisticsServiceMock } from './statistics.service.mock';
 import {
   oracleStatsCommandFixture,
   oracleStatsResponseFixture,
-  statisticsExchangeOracleAddress, statisticsExchangeOracleUrl,
+  statisticsExchangeOracleAddress,
   statisticsToken,
   userStatsCommandFixture,
   userStatsResponseFixture,
@@ -40,7 +40,7 @@ describe('StatisticsController', () => {
       const dto: OracleStatisticsDto = {
         address: statisticsExchangeOracleAddress,
       };
-      const result = await controller.getOracleStatistics(dto);
+      const result = await controller.getOracleStatistics(dto, statisticsToken);
 
       expect(statisticsServiceMock.getOracleStats).toHaveBeenCalledWith(
         oracleStatsCommandFixture,

@@ -1,9 +1,11 @@
 import {
-  UserStatisticsCommand, UserStatisticsDetails,
+  UserStatisticsCommand,
+  UserStatisticsDetails,
   UserStatisticsResponse,
 } from '../model/user-statistics.model';
 import {
-  OracleStatisticsCommand, OracleStatisticsDetails,
+  OracleStatisticsCommand,
+  OracleStatisticsDetails,
   OracleStatisticsResponse,
 } from '../model/oracle-statistics.model';
 import { AxiosRequestConfig } from 'axios';
@@ -21,7 +23,7 @@ const ASSIGNMENTS_COMPLETED_ORACLE = 154363;
 const ASSIGNMENTS_REJECTED_ORACLE = 231;
 const ASSIGNMENTS_EXPIRED_ORACLE = 434;
 const EXCHANGE_ORACLE_ADDRESS = '0x32df932';
-const EXCHANGE_ORACLE_URL = 'https://test.oracle.com'
+const EXCHANGE_ORACLE_URL = 'https://test.oracle.com';
 const TOKEN = 'test-token';
 export const statisticsToken = TOKEN;
 export const statisticsExchangeOracleAddress = EXCHANGE_ORACLE_ADDRESS;
@@ -55,9 +57,11 @@ export const userStatsDetailsFixture: UserStatisticsDetails = {
 
 export const oracleStatsCommandFixture: OracleStatisticsCommand = {
   address: EXCHANGE_ORACLE_ADDRESS,
+  token: TOKEN,
 };
 export const oracleStatsDetailsFixture: OracleStatisticsDetails = {
   exchangeOracleUrl: EXCHANGE_ORACLE_URL,
+  token: TOKEN,
 };
 export const requestContextFixture = {
   token: TOKEN,
@@ -73,4 +77,7 @@ export const userStatsOptionsFixture: AxiosRequestConfig = {
 export const oracleStatsOptionsFixture: AxiosRequestConfig = {
   method: 'GET',
   url: `${EXCHANGE_ORACLE_URL}/stats`,
+  headers: {
+    Authorization: `Bearer ${TOKEN}`,
+  },
 };

@@ -92,7 +92,9 @@ describe('ExchangeOracleApiGateway', () => {
   describe('fetchOracleStatistics', () => {
     it('should successfully call the requested url for oracle statistics', async () => {
       const details = oracleStatsDetailsFixture;
-      nock(statisticsExchangeOracleUrl).get('/stats').reply(200);
+      nock(statisticsExchangeOracleUrl).get('/stats')
+        .matchHeader('Authorization', `Bearer ${details.token}`)
+        .reply(200);
       await gateway.fetchOracleStatistics(details);
       expect(httpService.request).toHaveBeenCalledWith(
         expect.objectContaining({
