@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { KVStoreClient } from '@human-protocol/sdk';
+import { KVStoreClient, KVStoreKeys } from '@human-protocol/sdk';
 import { KvStoreGateway } from '../kv-store-gateway.service';
 import { EnvironmentConfigService } from '../../../common/config/environment-config.service';
 import { ethers } from 'ethers';
@@ -11,6 +11,9 @@ jest.mock('@human-protocol/sdk', () => ({
         get: jest.fn().mockResolvedValue('https://example.com'),
       }),
     ),
+  },
+  KVStoreKeys: {
+    url: 'url',
   },
 }));
 
@@ -73,6 +76,11 @@ describe('KvStoreGateway', () => {
       expect(service['kvStoreClient'].get).toHaveBeenCalledWith(
         testAddress,
         'url',
+      );
+
+      expect(service['kvStoreClient'].get).toHaveBeenCalledWith(
+        testAddress,
+        KVStoreKeys.url,
       );
 
       expect(result).toBe(expectedUrl);
