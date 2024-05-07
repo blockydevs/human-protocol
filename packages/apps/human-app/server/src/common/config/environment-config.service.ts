@@ -1,6 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
-import { EnvironmentVariableMissingError } from '../interfaces/custom-exceptions.interface';
+import { EnvVariableMissingError } from '../exceptions/env-variable-missing-error';
 const DEFAULT_CACHE_TTL_ORACLE_STATS = 12 * 60 * 60;
 const DEFAULT_CACHE_TTL_USER_STATS = 15 * 60;
 const DEFAULT_CACHE_TTL_ORACLE_DISCOVERY = 24 * 60 * 60;
@@ -67,7 +67,7 @@ export class EnvironmentConfigService {
   conditionallyReturnMandatoryEnvVariable<T>(envName: string): T {
     const value = this.configService.get<T>(envName);
     if (!value) {
-      throw new EnvironmentVariableMissingError(envName);
+      throw new EnvVariableMissingError(envName);
     }
     return value;
   }
@@ -89,7 +89,7 @@ export class EnvironmentConfigService {
     });
 
     if (missingVariables.length > 0) {
-      throw new EnvironmentVariableMissingError(missingVariables.join(', '));
+      throw new EnvVariableMissingError(missingVariables.join(', '));
     }
   }
 }
