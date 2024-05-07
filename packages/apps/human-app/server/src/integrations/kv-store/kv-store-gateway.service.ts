@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { EnvironmentConfigService } from '../../common/config/environment-config.service';
 import { ethers } from 'ethers';
 import { KVStoreClient } from '@human-protocol/sdk';
