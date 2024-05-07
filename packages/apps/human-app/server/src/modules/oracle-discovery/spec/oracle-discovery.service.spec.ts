@@ -61,7 +61,6 @@ describe('OracleDiscoveryService', () => {
       { address: 'mockAddress2', role: 'validator' },
     ];
     const command: OracleDiscoveryCommand = {
-      address: 'mockAddress',
       chainId: 80001,
     };
     jest.spyOn(cacheManager, 'get').mockResolvedValue(mockData);
@@ -69,7 +68,6 @@ describe('OracleDiscoveryService', () => {
     const result = await oracleDiscoveryService.processOracleDiscovery(command);
 
     expect(result).toEqual(mockData);
-    expect(cacheManager.get).toHaveBeenCalledWith(command.address);
     expect(OperatorUtils.getReputationNetworkOperators).not.toHaveBeenCalled();
   });
 
@@ -79,9 +77,9 @@ describe('OracleDiscoveryService', () => {
       { address: 'mockAddress2', role: 'validator' },
     ];
     const command: OracleDiscoveryCommand = {
-      address: 'mockAddress',
       chainId: 80001,
     };
+    const address = configService.reputationOracleAddress.toLowerCase();
     jest.spyOn(cacheManager, 'get').mockResolvedValue(undefined);
     jest
       .spyOn(OperatorUtils, 'getReputationNetworkOperators')
@@ -90,15 +88,15 @@ describe('OracleDiscoveryService', () => {
     const result = await oracleDiscoveryService.processOracleDiscovery(command);
 
     expect(result).toEqual(mockData);
-    expect(cacheManager.get).toHaveBeenCalledWith(command.address);
+    expect(cacheManager.get).toHaveBeenCalledWith(command.chainId.toString());
     expect(cacheManager.set).toHaveBeenCalledWith(
-      command.address,
+      command.chainId.toString(),
       mockData,
       configService.cacheTtlOracleDiscovery,
     );
     expect(OperatorUtils.getReputationNetworkOperators).toHaveBeenCalledWith(
       command.chainId,
-      command.address,
+      address,
       EXCHANGE_ORACLE,
     );
   });

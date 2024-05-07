@@ -20,6 +20,11 @@ export class EnvironmentConfigService {
       'REPUTATION_ORACLE_URL',
     );
   }
+  get reputationOracleAddress(): string {
+    return this.conditionallyReturnMandatoryEnvVariable<string>(
+      'REPUTATION_ORACLE_ADDRESS',
+    );
+  }
   get cachePort(): number {
     return this.conditionallyReturnMandatoryEnvVariable<number>('REDIS_PORT');
   }
@@ -61,7 +66,7 @@ export class EnvironmentConfigService {
   get corsAllowedHeaders(): string {
     return this.configService.get<string>(
       'CORS_ALLOWED_HEADERS',
-      DEFAULT_CORS_ALLOWED_HEADERS
+      DEFAULT_CORS_ALLOWED_HEADERS,
     );
   }
   conditionallyReturnMandatoryEnvVariable<T>(envName: string): T {
@@ -76,6 +81,7 @@ export class EnvironmentConfigService {
       'HOST',
       'PORT',
       'REPUTATION_ORACLE_URL',
+      'REPUTATION_ORACLE_ADDRESS',
       'REDIS_PORT',
       'REDIS_HOST',
       'RPC_URL',
