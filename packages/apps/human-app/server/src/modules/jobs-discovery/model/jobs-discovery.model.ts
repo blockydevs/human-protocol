@@ -9,11 +9,11 @@ import {
 } from '../../../common/enums/global-common';
 import {
   PageableData,
-  PageableDto,
+  PageableClasses,
   PageableParams,
-} from '../../../common/interfaces/pageable.interface';
+} from '../../../common/utils/pageable-classes';
 
-export class JobsDiscoveryParamsDto extends PageableDto {
+export class JobsDiscoveryParamsDto extends PageableClasses {
   @AutoMap()
   @IsString()
   @ApiProperty()

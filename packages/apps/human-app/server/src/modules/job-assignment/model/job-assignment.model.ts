@@ -3,9 +3,9 @@ import { AutoMap } from '@automapper/classes';
 import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 import {
   PageableData,
-  PageableDto,
+  PageableClasses,
   PageableParams,
-} from '../../../common/interfaces/pageable.interface';
+} from '../../../common/utils/pageable-classes';
 import {
   AssignmentSortField,
   AssignmentStatus,
@@ -71,7 +71,7 @@ export class JobAssignmentResponse {
   expires_at: string;
 }
 
-export class JobsFetchParamsDto extends PageableDto {
+export class JobsFetchParamsDto extends PageableClasses {
   @AutoMap()
   @ApiProperty()
   address: string;
