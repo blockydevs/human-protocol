@@ -65,7 +65,7 @@ describe('JobAssignmentService', () => {
 
       expect(
         kvStoreGatewayMock.getExchangeOracleUrlByAddress,
-      ).toHaveBeenCalledWith(command.address);
+      ).toHaveBeenCalledWith(command.data.escrowAddress);
       expect(
         exchangeOracleGatewayMock.postNewJobAssignment,
       ).toHaveBeenCalledWith(details);

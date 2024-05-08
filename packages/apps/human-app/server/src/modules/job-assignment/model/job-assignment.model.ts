@@ -16,10 +16,6 @@ export class JobAssignmentDto {
   @AutoMap()
   @IsString()
   @ApiProperty()
-  address: string;
-  @AutoMap()
-  @IsString()
-  @ApiProperty()
   escrow_address: string;
   @AutoMap()
   @IsNumber()
@@ -39,8 +35,6 @@ export class JobAssignmentCommand {
   data: JobAssignmentParams;
   @AutoMap()
   token: string;
-  @AutoMap()
-  address: string;
 }
 
 export class JobAssignmentDetails {

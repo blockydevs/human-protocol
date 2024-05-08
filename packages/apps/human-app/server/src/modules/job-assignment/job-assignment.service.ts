@@ -23,7 +23,9 @@ export class JobAssignmentService {
     command: JobAssignmentCommand,
   ): Promise<JobAssignmentResponse> {
     const exchangeOracleUrl =
-      await this.kvStoreGateway.getExchangeOracleUrlByAddress(command.address);
+      await this.kvStoreGateway.getExchangeOracleUrlByAddress(
+        command.data.escrowAddress,
+      );
     const details = this.mapper.map(
       command,
       JobAssignmentCommand,
