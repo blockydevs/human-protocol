@@ -59,9 +59,9 @@ and transformation of data. NestJS provides many built-in pipes, so check the do
 - **Filters**: Classes implementing the `ExceptionFilter` interface, used to handle exceptions.
 - **Interceptors**: Used to bind extra logic before or after method execution or to extend the behavior of the method.
 
-### Interfaces 
+### Model 
 
-Interfaces are used to define the shape and responsibilities of the data:
+Models are used to define the shape and responsibilities of the data:
 
 - **Dto (Data Transfer Object)**: Data sent from/to the frontend.
 - **Command**: Datatype used for data manipulation in business logic.
