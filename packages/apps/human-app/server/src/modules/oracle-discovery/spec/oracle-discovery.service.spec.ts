@@ -9,7 +9,7 @@ import {
 } from '../model/oracle-discovery.model';
 import { EnvironmentConfigService } from '../../../common/config/environment-config.service';
 import { CommonConfigModule } from '../../../common/config/common-config.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 jest.mock('@human-protocol/sdk', () => ({
   OperatorUtils: {
@@ -22,6 +22,17 @@ describe('OracleDiscoveryService', () => {
   let oracleDiscoveryService: OracleDiscoveryService;
   let cacheManager: Cache;
   let configService: EnvironmentConfigService;
+
+  const mockConfigService = {
+    getOrThrow: jest.fn().mockImplementation((key: string) => {
+      switch (key) {
+        case 'REPUTATION_ORACLE_ADDRESS':
+          return 'Mock_Reputation_Oracle_Address';
+        default:
+          return null;
+      }
+    }),
+  };
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -40,6 +51,10 @@ describe('OracleDiscoveryService', () => {
             get: jest.fn(),
             set: jest.fn(),
           },
+        },
+        {
+          provide: ConfigService,
+          useValue: mockConfigService,
         },
       ],
     }).compile();
