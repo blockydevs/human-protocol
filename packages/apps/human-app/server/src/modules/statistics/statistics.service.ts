@@ -26,9 +26,9 @@ export class StatisticsService {
   async getOracleStats(
     command: OracleStatisticsCommand,
   ): Promise<OracleStatisticsResponse> {
-    const oracleCacheKey = command.address + command.token;
+    const url = command.address;
     const cachedStatistics: OracleStatisticsResponse | undefined =
-      await this.cacheManager.get(oracleCacheKey);
+      await this.cacheManager.get(url);
     if (cachedStatistics) {
       return cachedStatistics;
     }
@@ -36,12 +36,11 @@ export class StatisticsService {
       await this.kvStoreGateway.getExchangeOracleUrlByAddress(command.address);
     const details = {
       exchangeOracleUrl: exchangeOracleUrl,
-      token: command.token,
     } as OracleStatisticsDetails;
     const response: OracleStatisticsResponse =
       await this.exchangeOracleGateway.fetchOracleStatistics(details);
     await this.cacheManager.set(
-      oracleCacheKey,
+      url,
       response,
       this.configService.cacheTtlOracleStats,
     );

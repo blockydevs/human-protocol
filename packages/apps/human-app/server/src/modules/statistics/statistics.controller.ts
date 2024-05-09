@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Headers,
   Query,
   UsePipes,
   ValidationPipe,
@@ -26,15 +25,12 @@ export class StatisticsController {
   @ApiTags('Statistics')
   @Get('/stats')
   @ApiOperation({ summary: 'General Oracle Statistics' })
-  @ApiBearerAuth()
   @UsePipes(new ValidationPipe())
   public getOracleStatistics(
     @Query() dto: OracleStatisticsDto,
-    @Authorization() token: string,
   ): Promise<OracleStatisticsResponse> {
     const command = {
       address: dto.address,
-      token: token,
     } as OracleStatisticsCommand;
     return this.service.getOracleStats(command);
   }

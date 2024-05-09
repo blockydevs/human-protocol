@@ -12,11 +12,9 @@ export class OracleStatisticsResponse {
 }
 export class OracleStatisticsCommand {
   address: string;
-  token: string;
 }
 export class OracleStatisticsDetails {
   exchangeOracleUrl: string;
-  token: string;
 }
 
 export class OracleStatisticsDto {

@@ -57,11 +57,9 @@ export const userStatsDetailsFixture: UserStatisticsDetails = {
 
 export const oracleStatsCommandFixture: OracleStatisticsCommand = {
   address: EXCHANGE_ORACLE_ADDRESS,
-  token: TOKEN,
 };
 export const oracleStatsDetailsFixture: OracleStatisticsDetails = {
   exchangeOracleUrl: EXCHANGE_ORACLE_URL,
-  token: TOKEN,
 };
 export const requestContextFixture = {
   token: TOKEN,
@@ -77,7 +75,4 @@ export const userStatsOptionsFixture: AxiosRequestConfig = {
 export const oracleStatsOptionsFixture: AxiosRequestConfig = {
   method: 'GET',
   url: `${EXCHANGE_ORACLE_URL}/stats`,
-  headers: {
-    Authorization: `Bearer ${TOKEN}`,
-  },
 };

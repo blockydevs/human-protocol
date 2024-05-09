@@ -67,43 +67,39 @@ describe('StatisticsService', () => {
   describe('getOracleStats', () => {
     it('should return cached data if available', async () => {
       const cachedData = { some: 'data' };
-      const oracleCacheKey = EXCHANGE_ORACLE_ADDRESS + TOKEN;
       cacheManager.get.mockResolvedValue(cachedData);
 
       const command: OracleStatisticsCommand = {
         address: EXCHANGE_ORACLE_ADDRESS,
-        token: TOKEN,
       };
       const result: OracleStatisticsResponse =
         await service.getOracleStats(command);
 
-      expect(cacheManager.get).toHaveBeenCalledWith(oracleCacheKey);
+      expect(cacheManager.get).toHaveBeenCalledWith(command.address);
       expect(result).toEqual(cachedData);
       expect(exchangeGateway.fetchOracleStatistics).not.toHaveBeenCalled();
     });
 
     it('should fetch, cache, and return new data if not in cache', async () => {
       const newData = { newData: 'data' };
-      const oracleCacheKey = EXCHANGE_ORACLE_ADDRESS + TOKEN;
       cacheManager.get.mockResolvedValue(undefined);
       exchangeGateway.fetchOracleStatistics.mockResolvedValue(newData);
 
-      const command = { address: EXCHANGE_ORACLE_ADDRESS, token: TOKEN };
+      const command = { address: EXCHANGE_ORACLE_ADDRESS };
       const result = await service.getOracleStats(command);
       const details: OracleStatisticsDetails = {
         exchangeOracleUrl: EXCHANGE_ORACLE_URL,
-        token: TOKEN,
       };
 
       expect(kvStoreGateway.getExchangeOracleUrlByAddress).toHaveBeenCalledWith(
         command.address,
       );
-      expect(cacheManager.get).toHaveBeenCalledWith(oracleCacheKey);
+      expect(cacheManager.get).toHaveBeenCalledWith(command.address);
       expect(exchangeGateway.fetchOracleStatistics).toHaveBeenCalledWith(
         details,
       );
       expect(cacheManager.set).toHaveBeenCalledWith(
-        oracleCacheKey,
+        command.address,
         newData,
         configService.cacheTtlOracleStats,
       );

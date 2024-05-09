@@ -71,9 +71,6 @@ export class ExchangeOracleGateway {
     const options: AxiosRequestConfig = {
       method: HttpMethod.GET,
       url: `${details.exchangeOracleUrl}/stats`,
-      headers: {
-        Authorization: details.token,
-      },
     };
     return this.callExternalHttpUtilRequest<OracleStatisticsResponse>(options);
   }

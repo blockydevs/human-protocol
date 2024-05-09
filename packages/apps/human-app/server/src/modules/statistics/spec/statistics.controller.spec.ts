@@ -40,7 +40,7 @@ describe('StatisticsController', () => {
       const dto: OracleStatisticsDto = {
         address: statisticsExchangeOracleAddress,
       };
-      const result = await controller.getOracleStatistics(dto, statisticsToken);
+      const result = await controller.getOracleStatistics(dto);
 
       expect(statisticsServiceMock.getOracleStats).toHaveBeenCalledWith(
         oracleStatsCommandFixture,
