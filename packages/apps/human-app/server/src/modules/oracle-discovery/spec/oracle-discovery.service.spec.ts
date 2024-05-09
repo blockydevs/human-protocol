@@ -41,6 +41,13 @@ describe('OracleDiscoveryService', () => {
             set: jest.fn(),
           },
         },
+        {
+          provide: EnvironmentConfigService,
+          useValue: {
+            reputationOracleAddress: 'mockedaddress',
+            cacheTtlOracleDiscovery: 86400,
+          },
+        },
       ],
     }).compile();
     configService = moduleRef.get<EnvironmentConfigService>(
@@ -79,7 +86,7 @@ describe('OracleDiscoveryService', () => {
     const command: OracleDiscoveryCommand = {
       chainId: 80001,
     };
-    const address = configService.reputationOracleAddress.toLowerCase();
+
     jest.spyOn(cacheManager, 'get').mockResolvedValue(undefined);
     jest
       .spyOn(OperatorUtils, 'getReputationNetworkOperators')
@@ -96,7 +103,7 @@ describe('OracleDiscoveryService', () => {
     );
     expect(OperatorUtils.getReputationNetworkOperators).toHaveBeenCalledWith(
       command.chainId,
-      address,
+      'mockedaddress',
       EXCHANGE_ORACLE,
     );
   });
