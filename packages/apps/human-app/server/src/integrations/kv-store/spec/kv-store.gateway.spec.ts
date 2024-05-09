@@ -79,11 +79,6 @@ describe('KvStoreGateway', () => {
         KVStoreKeys.url,
       );
 
-      expect(service['kvStoreClient'].get).toHaveBeenCalledWith(
-        testAddress,
-        KVStoreKeys.url,
-      );
-
       expect(result).toBe(expectedUrl);
     });
   });
