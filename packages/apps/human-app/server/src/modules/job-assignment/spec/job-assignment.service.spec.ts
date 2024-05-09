@@ -74,7 +74,7 @@ describe('JobAssignmentService', () => {
 
       expect(
         escrowUtilsGatewayMock.getExchangeOracleAddressByEscrowAddress,
-      ).toHaveBeenCalledWith(command.data.escrowAddress);
+      ).toHaveBeenCalledWith(command.data.chainId, command.data.escrowAddress);
       expect(
         kvStoreGatewayMock.getExchangeOracleUrlByAddress,
       ).toHaveBeenCalledWith(escrowUtilExchangeOracleAddress);

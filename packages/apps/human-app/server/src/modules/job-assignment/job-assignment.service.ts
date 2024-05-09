@@ -26,6 +26,7 @@ export class JobAssignmentService {
   ): Promise<JobAssignmentResponse> {
     const exchangeOracleAddress =
       await this.escrowUtilsGateway.getExchangeOracleAddressByEscrowAddress(
+        command.data.chainId,
         command.data.escrowAddress,
       );
     const exchangeOracleUrl =

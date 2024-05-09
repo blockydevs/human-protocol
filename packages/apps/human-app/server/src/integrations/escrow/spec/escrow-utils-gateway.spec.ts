@@ -10,7 +10,7 @@ jest.mock('@human-protocol/sdk', () => {
       }),
     },
     ChainId: {
-      POLYGON_AMOY: 'POLYGON_AMOY',
+      POLYGON_AMOY: 1,
     },
   };
 });
@@ -36,11 +36,14 @@ describe('EscrowUtilsGateway', () => {
 
   describe('getExchangeOracleAddressByEscrowAddress', () => {
     it('should fetch data from EscrowUtils', async () => {
+      const chainId = 1;
       const escrowAddress = 'escrowAddress';
       const expectedUrl = '0x';
 
-      const result =
-        await service.getExchangeOracleAddressByEscrowAddress(escrowAddress);
+      const result = await service.getExchangeOracleAddressByEscrowAddress(
+        chainId,
+        escrowAddress,
+      );
       expect(EscrowUtils.getEscrow).toHaveBeenCalledWith(
         ChainId.POLYGON_AMOY,
         escrowAddress,
