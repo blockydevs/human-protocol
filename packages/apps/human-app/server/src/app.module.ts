@@ -22,6 +22,7 @@ import { StatisticsModule } from './modules/statistics/statistics.module';
 import { StatisticsController } from './modules/statistics/statistics.controller';
 import { ExchangeOracleModule } from './integrations/exchange-oracle/exchange-oracle.module';
 import { KvStoreModule } from './integrations/kv-store/kv-store.module';
+import { EscrowUtilsModule } from './integrations/escrow/escrow-utils.module';
 import Joi from 'joi';
 
 @Module({
@@ -54,6 +55,7 @@ import Joi from 'joi';
     OracleDiscoveryModule,
     StatisticsModule,
     KvStoreModule,
+    EscrowUtilsModule,
   ],
   controllers: [
     AppController,
