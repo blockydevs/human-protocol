@@ -4,7 +4,7 @@ import { IsEnum, IsNumber, IsOptional, Max, Min } from 'class-validator';
 import { SortOrder } from '../enums/global-common';
 import { AutoMap } from '@automapper/classes';
 
-export abstract class PageableClasses {
+export abstract class PageableDto {
   @AutoMap()
   @ApiPropertyOptional({
     minimum: 0,
