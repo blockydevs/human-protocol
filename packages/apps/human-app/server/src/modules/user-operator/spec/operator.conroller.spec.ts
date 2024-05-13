@@ -3,7 +3,7 @@ import { OperatorService } from '../operator.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
-import { OperatorProfile } from '../operator.mapper';
+import { OperatorProfile } from '../operator.mapper.profile';
 import {
   SignupOperatorCommand,
   SignupOperatorDto,

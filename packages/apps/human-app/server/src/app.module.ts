@@ -27,6 +27,9 @@ import { PasswordResetModule } from './modules/password-reset/password-reset.mod
 import { DisableOperatorModule } from './modules/disable-operator/disable-operator.module';
 import { KycProcedureModule } from './modules/kyc-procedure/kyc-procedure.module';
 import { PrepareSignatureModule } from './modules/prepare-signature/prepare-signature.module';
+import { HCaptchaModule } from './modules/h-captcha/h-captcha.module';
+import { HCaptchaLabelingModule } from './integrations/h-captcha-labeling/h-captcha-labeling.module';
+import { HCaptchaController } from './modules/h-captcha/h-captcha.controller';
 
 @Module({
   imports: [
@@ -54,6 +57,8 @@ import { PrepareSignatureModule } from './modules/prepare-signature/prepare-sign
     DisableOperatorModule,
     KycProcedureModule,
     PrepareSignatureModule,
+    HCaptchaModule,
+    HCaptchaLabelingModule,
   ],
   controllers: [
     AppController,
@@ -63,6 +68,7 @@ import { PrepareSignatureModule } from './modules/prepare-signature/prepare-sign
     OracleDiscoveryController,
     JobAssignmentController,
     StatisticsController,
+    HCaptchaController,
   ],
   exports: [HttpModule],
 })

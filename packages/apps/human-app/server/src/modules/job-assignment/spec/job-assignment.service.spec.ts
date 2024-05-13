@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JobAssignmentService } from '../job-assignment.service';
-import { KvStoreGateway } from '../../../integrations/kv-store/kv-store-gateway.service';
+import { KvStoreGateway } from '../../../integrations/kv-store/kv-store.gateway';
 import { ExchangeOracleGateway } from '../../../integrations/exchange-oracle/exchange-oracle.gateway';
 import {
   jobAssignmentCommandFixture,
@@ -11,7 +11,7 @@ import {
 } from './job-assignment.fixtures';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
-import { JobAssignmentProfile } from '../job-assignment.mapper';
+import { JobAssignmentProfile } from '../job-assignment.mapper.profile';
 
 describe('JobAssignmentService', () => {
   let service: JobAssignmentService;

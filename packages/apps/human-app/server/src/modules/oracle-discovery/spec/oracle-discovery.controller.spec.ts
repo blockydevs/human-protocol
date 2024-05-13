@@ -4,7 +4,7 @@ import { classes } from '@automapper/classes';
 import { OracleDiscoveryController } from '../oracle-discovery.controller';
 import { OracleDiscoveryService } from '../oracle-discovery.serivce';
 import { oracleDiscoveryServiceMock } from './oracle-discovery.service.mock';
-import { OracleDiscoveryProfile } from '../oracle-discovery.mapper';
+import { OracleDiscoveryProfile } from '../oracle-discovery.mapper.profile';
 import {
   OracleDiscoveryCommand,
   OracleDiscoveryResponse,

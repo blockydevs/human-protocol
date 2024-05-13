@@ -21,6 +21,7 @@ import {
   SigninWorkerCommand,
   SigninWorkerData,
 } from '../../modules/user-worker/model/worker-signin.model';
+import { EnableLabelingCommand, EnableLabelingData } from '../../modules/h-captcha/model/enable-labeling.model';
 
 @Injectable()
 export class ReputationOracleProfile extends AutomapperProfile {
@@ -57,6 +58,7 @@ export class ReputationOracleProfile extends AutomapperProfile {
           destination: new SnakeCaseNamingConvention(),
         }),
       );
+      createMap(mapper, EnableLabelingCommand, EnableLabelingData);
     };
   }
 }

@@ -1,10 +1,10 @@
 import { JobsDiscoveryService } from '../jobs-discovery.service';
-import { KvStoreGateway } from '../../../integrations/kv-store/kv-store-gateway.service';
+import { KvStoreGateway } from '../../../integrations/kv-store/kv-store.gateway';
 import { ExchangeOracleGateway } from '../../../integrations/exchange-oracle/exchange-oracle.gateway';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
-import { JobsDiscoveryProfile } from '../jobs-discovery.mapper';
+import { JobsDiscoveryProfile } from '../jobs-discovery.mapper.profile';
 import {
   jobsDiscoveryOracleUrlFixture,
   jobsDiscoveryParamsCommandFixture,

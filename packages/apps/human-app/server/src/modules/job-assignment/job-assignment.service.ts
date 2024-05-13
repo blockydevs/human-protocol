@@ -8,7 +8,7 @@ import {
   JobsFetchParamsDetails,
 } from './model/job-assignment.model';
 import { ExchangeOracleGateway } from '../../integrations/exchange-oracle/exchange-oracle.gateway';
-import { KvStoreGateway } from '../../integrations/kv-store/kv-store-gateway.service';
+import { KvStoreGateway } from '../../integrations/kv-store/kv-store.gateway';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 @Injectable()

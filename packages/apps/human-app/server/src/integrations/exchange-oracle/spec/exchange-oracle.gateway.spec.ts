@@ -17,7 +17,7 @@ import {
   jobsFetchParamsDataFixtureAsString,
   jobsFetchParamsDetailsFixture,
 } from '../../../modules/job-assignment/spec/job-assignment.fixtures';
-import { ExchangeOracleProfile } from '../exchange-oracle.mapper';
+import { ExchangeOracleProfile } from '../exchange-oracle.mapper.profile';
 import {
   jobsDiscoveryParamsDetailsFixture,
   paramsDataFixtureAsString,

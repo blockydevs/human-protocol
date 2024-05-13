@@ -6,7 +6,7 @@ import { ExchangeOracleGateway } from '../../../integrations/exchange-oracle/exc
 import { EnvironmentConfigService } from '../../../common/config/environment-config.service';
 import { Cache } from 'cache-manager';
 import { UserStatisticsCommand, UserStatisticsDetails } from '../model/user-statistics.model';
-import { KvStoreGateway } from '../../../integrations/kv-store/kv-store-gateway.service';
+import { KvStoreGateway } from '../../../integrations/kv-store/kv-store.gateway';
 import {
   OracleStatisticsCommand,
   OracleStatisticsDetails,

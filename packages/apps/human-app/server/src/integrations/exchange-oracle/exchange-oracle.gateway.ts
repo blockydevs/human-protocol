@@ -28,8 +28,8 @@ import {
 } from '../../modules/jobs-discovery/model/jobs-discovery.model';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { instanceToPlain } from 'class-transformer';
 import { HttpMethod } from '../../common/enums/http-method';
+import { toCleanObjParams } from '../../common/utils/gateway-common.utils';
 
 @Injectable()
 export class ExchangeOracleGateway {
@@ -38,15 +38,6 @@ export class ExchangeOracleGateway {
     @InjectMapper() private mapper: Mapper,
   ) {}
 
-  private cleanParams(obj: any): any {
-    return Object.entries(obj)
-      .filter(([_, v]) => v != null)
-      .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {});
-  }
-  private toCleanObjParams(params: any): any {
-    const plainParams = instanceToPlain(params);
-    return this.cleanParams(plainParams);
-  }
   private async callExternalHttpUtilRequest<T>(
     options: AxiosRequestConfig,
   ): Promise<T> {
@@ -83,7 +74,7 @@ export class ExchangeOracleGateway {
       JobsFetchParams,
       JobsFetchParamsData,
     );
-    const reducedParams = this.toCleanObjParams(jobFetchParamsData);
+    const reducedParams = toCleanObjParams(jobFetchParamsData);
     const options: AxiosRequestConfig = {
       method: HttpMethod.GET,
       url: `${details.exchangeOracleUrl}/assignment`,
@@ -118,7 +109,7 @@ export class ExchangeOracleGateway {
       JobsDiscoveryParams,
       JobsDiscoveryParamsData,
     );
-    const reducedParams = this.toCleanObjParams(jobsDiscoveryParamsData);
+    const reducedParams = toCleanObjParams(jobsDiscoveryParamsData);
     const options: AxiosRequestConfig = {
       method: HttpMethod.GET,
       url: `${details.exchangeOracleUrl}/job`,

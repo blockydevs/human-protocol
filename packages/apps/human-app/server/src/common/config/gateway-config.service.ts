@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ExternalApiName } from '../enums/external-api-name';
-import { EndpointName } from '../enums/endpoint-name';
-import { GatewayConfig, Gateways } from '../interfaces/endpoint.interface';
+import { HCaptchaLabelingEndpoints, ReputationOracleEndpoints } from '../enums/reputation-oracle-endpoints';
+import { GatewayConfig, GatewayEndpointConfig, Gateways } from '../interfaces/endpoint.interface';
 import { EnvironmentConfigService } from './environment-config.service';
 import { HttpMethod } from '../enums/http-method';
 
@@ -9,6 +9,9 @@ import { HttpMethod } from '../enums/http-method';
 export class GatewayConfigService {
   JSON_HEADER = {
     'Content-Type': 'application/json',
+  };
+  HCAPTCHA_API_KEY: Record<string, string> = {
+    api_key: this.envConfig.hcaptchaLabelingApiKey,
   };
   constructor(private envConfig: EnvironmentConfigService) {}
 
@@ -18,57 +21,85 @@ export class GatewayConfigService {
         [ExternalApiName.REPUTATION_ORACLE]: {
           url: this.envConfig.reputationOracleUrl,
           endpoints: {
-            [EndpointName.WORKER_SIGNUP]: {
+            [ReputationOracleEndpoints.WORKER_SIGNUP]: {
               endpoint: '/auth/signup',
               method: HttpMethod.POST,
               headers: this.JSON_HEADER,
             },
-            [EndpointName.OPERATOR_SIGNUP]: {
+            [ReputationOracleEndpoints.OPERATOR_SIGNUP]: {
               endpoint: '/auth/web3/signup',
               method: HttpMethod.POST,
               headers: this.JSON_HEADER,
             },
-            [EndpointName.WORKER_SIGNIN]: {
+            [ReputationOracleEndpoints.WORKER_SIGNIN]: {
               endpoint: '/auth/signin',
               method: HttpMethod.POST,
               headers: this.JSON_HEADER,
             },
-            [EndpointName.EMAIL_VERIFICATION]: {
+            [ReputationOracleEndpoints.EMAIL_VERIFICATION]: {
               endpoint: '/auth/email-verification',
               method: HttpMethod.POST,
               headers: this.JSON_HEADER,
             },
-            [EndpointName.RESEND_EMAIL_VERIFICATION]: {
+            [ReputationOracleEndpoints.RESEND_EMAIL_VERIFICATION]: {
               endpoint: '/auth/resend-email-verification',
               method: HttpMethod.POST,
               headers: this.JSON_HEADER,
             },
-            [EndpointName.FORGOT_PASSWORD]: {
+            [ReputationOracleEndpoints.FORGOT_PASSWORD]: {
               endpoint: '/auth/forgot-password',
               method: HttpMethod.POST,
               headers: this.JSON_HEADER,
             },
-            [EndpointName.RESTORE_PASSWORD]: {
+            [ReputationOracleEndpoints.RESTORE_PASSWORD]: {
               endpoint: '/auth/restore-password',
               method: HttpMethod.POST,
               headers: this.JSON_HEADER,
             },
-            [EndpointName.PREPARE_SIGNATURE]: {
-              endpoint: '/web3/prepare-signature',
+            [ReputationOracleEndpoints.PREPARE_SIGNATURE]: {
+              endpoint: '/user/prepare-signature',
               method: HttpMethod.POST,
               headers: this.JSON_HEADER,
             },
-            [EndpointName.DISABLE_OPERATOR]: {
+            [ReputationOracleEndpoints.DISABLE_OPERATOR]: {
               endpoint: '/user/disable-operator',
               method: HttpMethod.POST,
               headers: this.JSON_HEADER,
             },
-            [EndpointName.KYC_PROCEDURE_START]: {
+            [ReputationOracleEndpoints.KYC_PROCEDURE_START]: {
               endpoint: '/kyc/start',
               method: HttpMethod.POST,
               headers: this.JSON_HEADER,
             },
-          },
+            [ReputationOracleEndpoints.ENABLE_LABELING]: {
+              endpoint: '/labeler/register',
+              method: HttpMethod.POST,
+              params: this.HCAPTCHA_API_KEY,
+            },
+          } as Record<ReputationOracleEndpoints, GatewayEndpointConfig>,
+        },
+        [ExternalApiName.HCAPTCHA_LABELING]: {
+          url: this.envConfig.hcaptchaLabelingApiUrl,
+          endpoints: {
+            [HCaptchaLabelingEndpoints.USER_STATS]: {
+              endpoint: '/support/labeler/', // email to append as url param
+              method: HttpMethod.GET,
+              params: this.HCAPTCHA_API_KEY,
+            },
+            [HCaptchaLabelingEndpoints.DAILY_HMT_SPENT]: {
+              endpoint: '/requester/daily_hmt_spend',
+              method: HttpMethod.GET,
+              params: {
+                ...this.HCAPTCHA_API_KEY,
+                actual: false,
+              },
+            },
+            [HCaptchaLabelingEndpoints.TOKEN_VERIFY]: {
+              endpoint: '/siteverify',
+              method: HttpMethod.POST,
+              // params in this method are dynamic
+            },
+          } as Record<HCaptchaLabelingEndpoints, GatewayEndpointConfig>
         },
       },
     };

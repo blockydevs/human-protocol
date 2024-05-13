@@ -12,11 +12,14 @@ import {
   SignupOperatorData,
 } from '../../modules/user-operator/model/operator-registration.model';
 import { GatewayConfigService } from '../../common/config/gateway-config.service';
-import { GatewayConfig } from '../../common/interfaces/endpoint.interface';
+import {
+  GatewayConfig,
+  GatewayEndpointConfig,
+} from '../../common/interfaces/endpoint.interface';
 import { ExternalApiName } from '../../common/enums/external-api-name';
-import { EndpointName } from '../../common/enums/endpoint-name';
+import { ReputationOracleEndpoints } from '../../common/enums/reputation-oracle-endpoints';
 import { AxiosRequestConfig } from 'axios';
-import { EmptyData, RequestDataType } from './reputation-oracle.interface';
+import { RequestDataType } from './reputation-oracle.interface';
 import {
   SigninWorkerCommand,
   SigninWorkerData,
@@ -50,6 +53,11 @@ import {
   DisableOperatorParams,
 } from '../../modules/disable-operator/model/disable-operator.model';
 import { KycProcedureStartResponse } from '../../modules/kyc-procedure/model/kyc-start.model';
+import {
+  EnableLabelingCommand,
+  EnableLabelingData,
+  EnableLabelingResponse,
+} from '../../modules/h-captcha/model/enable-labeling.model';
 
 @Injectable()
 export class ReputationOracleGateway {
@@ -64,19 +72,22 @@ export class ReputationOracleGateway {
     );
   }
   private getEndpointOptions(
-    endpointName: EndpointName,
-    data: RequestDataType,
+    endpointName: ReputationOracleEndpoints,
+    data?: RequestDataType,
     token?: string,
   ) {
-    const { method, endpoint, headers } =
+    const endpointConfig: GatewayEndpointConfig =
       this.reputationOracleConfig.endpoints[endpointName];
     const authHeader = token ? { Authorization: token } : {};
     return {
-      method: method,
-      url: `${this.reputationOracleConfig.url}${endpoint}`,
+      method: endpointConfig.method,
+      url: `${this.reputationOracleConfig.url}${endpointConfig.endpoint}`,
       headers: {
         ...authHeader,
-        ...headers,
+        ...endpointConfig.headers,
+      },
+      params: {
+        ...endpointConfig.params,
       },
       data: data,
     };
@@ -96,7 +107,7 @@ export class ReputationOracleGateway {
     );
 
     const options = this.getEndpointOptions(
-      EndpointName.WORKER_SIGNUP,
+      ReputationOracleEndpoints.WORKER_SIGNUP,
       signupWorkerData,
     );
     return this.handleRequestToReputationOracle<void>(options);
@@ -109,7 +120,7 @@ export class ReputationOracleGateway {
       SignupOperatorData,
     );
     const options = this.getEndpointOptions(
-      EndpointName.OPERATOR_SIGNUP,
+      ReputationOracleEndpoints.OPERATOR_SIGNUP,
       signupOperatorData,
     );
     return this.handleRequestToReputationOracle<void>(options);
@@ -122,7 +133,7 @@ export class ReputationOracleGateway {
       SigninWorkerData,
     );
     const options = this.getEndpointOptions(
-      EndpointName.WORKER_SIGNIN,
+      ReputationOracleEndpoints.WORKER_SIGNIN,
       signinWorkerData,
     );
     return this.handleRequestToReputationOracle<SigninWorkerResponse>(options);
@@ -137,7 +148,7 @@ export class ReputationOracleGateway {
       EmailVerificationData,
     );
     const options = this.getEndpointOptions(
-      EndpointName.EMAIL_VERIFICATION,
+      ReputationOracleEndpoints.EMAIL_VERIFICATION,
       emailVerificationData,
     );
     return this.handleRequestToReputationOracle<void>(options);
@@ -152,7 +163,7 @@ export class ReputationOracleGateway {
       ResendEmailVerificationData,
     );
     const options = this.getEndpointOptions(
-      EndpointName.RESEND_EMAIL_VERIFICATION,
+      ReputationOracleEndpoints.RESEND_EMAIL_VERIFICATION,
       resendEmailVerificationData,
       resendEmailVerificationCommand.token,
     );
@@ -166,7 +177,7 @@ export class ReputationOracleGateway {
       ForgotPasswordData,
     );
     const options = this.getEndpointOptions(
-      EndpointName.FORGOT_PASSWORD,
+      ReputationOracleEndpoints.FORGOT_PASSWORD,
       forgotPasswordData,
     );
     return this.handleRequestToReputationOracle<void>(options);
@@ -179,7 +190,7 @@ export class ReputationOracleGateway {
       RestorePasswordData,
     );
     const options = this.getEndpointOptions(
-      EndpointName.RESTORE_PASSWORD,
+      ReputationOracleEndpoints.RESTORE_PASSWORD,
       restorePasswordData,
     );
     return this.handleRequestToReputationOracle<void>(options);
@@ -192,7 +203,7 @@ export class ReputationOracleGateway {
       PrepareSignatureData,
     );
     const options = this.getEndpointOptions(
-      EndpointName.PREPARE_SIGNATURE,
+      ReputationOracleEndpoints.PREPARE_SIGNATURE,
       prepareSignatureData,
     );
     return this.handleRequestToReputationOracle<PrepareSignatureResponse>(
@@ -207,7 +218,7 @@ export class ReputationOracleGateway {
       DisableOperatorData,
     );
     const options = this.getEndpointOptions(
-      EndpointName.DISABLE_OPERATOR,
+      ReputationOracleEndpoints.DISABLE_OPERATOR,
       disableOperatorData,
       disableOperatorCommand.token,
     );
@@ -216,10 +227,24 @@ export class ReputationOracleGateway {
 
   async sendKycProcedureStart() {
     const options = this.getEndpointOptions(
-      EndpointName.KYC_PROCEDURE_START,
-      EmptyData,
+      ReputationOracleEndpoints.KYC_PROCEDURE_START,
     );
     return this.handleRequestToReputationOracle<KycProcedureStartResponse>(
+      options,
+    );
+  }
+
+  async approveUserAsLabeler(command: EnableLabelingCommand) {
+    const data = this.mapper.map(
+      command,
+      EnableLabelingCommand,
+      EnableLabelingData,
+    );
+    const options = this.getEndpointOptions(
+      ReputationOracleEndpoints.ENABLE_LABELING,
+      data,
+    );
+    return this.handleRequestToReputationOracle<EnableLabelingResponse>(
       options,
     );
   }

@@ -6,25 +6,24 @@ const DEFAULT_CACHE_TTL_USER_STATS = 15 * 60;
 const DEFAULT_CACHE_TTL_ORACLE_DISCOVERY = 24 * 60 * 60;
 const DEFAULT_CORS_ALLOWED_ORIGIN = 'http://localhost:5173';
 const DEFAULT_CORS_ALLOWED_HEADERS = 'Content-Type, Accept';
+const DEFAULT_CACHE_TTL_EXCHANGE_ORACLE_URL = 24 * 60 * 60;
 @Injectable()
 export class EnvironmentConfigService {
   constructor(private configService: ConfigService) {}
   get host(): string {
-    return this.conditionallyReturnMandatoryEnvVariable<string>('HOST');
+    return this.configService.getOrThrow<string>('HOST');
   }
   get port(): number {
-    return this.conditionallyReturnMandatoryEnvVariable<number>('PORT');
+    return this.configService.getOrThrow<number>('PORT');
   }
   get reputationOracleUrl(): string {
-    return this.conditionallyReturnMandatoryEnvVariable<string>(
-      'REPUTATION_ORACLE_URL',
-    );
+    return this.configService.getOrThrow<string>('REPUTATION_ORACLE_URL');
   }
   get cachePort(): number {
-    return this.conditionallyReturnMandatoryEnvVariable<number>('REDIS_PORT');
+    return this.configService.getOrThrow<number>('REDIS_PORT');
   }
   get cacheHost(): string {
-    return this.conditionallyReturnMandatoryEnvVariable<string>('REDIS_HOST');
+    return this.configService.getOrThrow<string>('REDIS_HOST');
   }
   get cacheTtlOracleStats(): number {
     return this.configService.get<number>(
@@ -32,7 +31,9 @@ export class EnvironmentConfigService {
       DEFAULT_CACHE_TTL_ORACLE_STATS,
     );
   }
-
+  get dailyHmtSpentKey(): string {
+    return this.configService.getOrThrow('DAILY_HMT_SPENT_KEY');
+  }
   get cacheTtlUserStats(): number {
     return this.configService.get<number>(
       'CACHE_TTL_USER_STATS',
@@ -47,7 +48,7 @@ export class EnvironmentConfigService {
     );
   }
   get rpcUrl(): string {
-    return this.conditionallyReturnMandatoryEnvVariable<string>('RPC_URL');
+    return this.configService.getOrThrow<string>('RPC_URL');
   }
   get isCorsEnabled(): boolean {
     return this.configService.get<boolean>('CORS_ENABLED', false);
@@ -61,15 +62,23 @@ export class EnvironmentConfigService {
   get corsAllowedHeaders(): string {
     return this.configService.get<string>(
       'CORS_ALLOWED_HEADERS',
-      DEFAULT_CORS_ALLOWED_HEADERS
+      DEFAULT_CORS_ALLOWED_HEADERS,
     );
   }
-  conditionallyReturnMandatoryEnvVariable<T>(envName: string): T {
-    const value = this.configService.get<T>(envName);
-    if (!value) {
-      throw new EnvironmentVariableMissingError(envName);
-    }
-    return value;
+  get cacheTtlExchangeOracleUrl(): number {
+    return this.configService.get<number>(
+      'CACHE_TTL_EXCHANGE_ORACLE_URL',
+      DEFAULT_CACHE_TTL_EXCHANGE_ORACLE_URL,
+    );
+  }
+  get hcaptchaLabelingApiUrl(): string {
+    return this.configService.getOrThrow<string>('HCAPTCHA_LABELING_API_URL');
+  }
+  get hcaptchaLabelingApiKey(): string {
+    return this.configService.getOrThrow<string>('HCAPTCHA_LABELING_API_KEY');
+  }
+  get jwtSecret(): string {
+    return this.configService.getOrThrow<string>('JWT_SECRET'); // TODO: probably to remove
   }
   checkMandatoryConfig(): void {
     const mandatoryVariables = [
@@ -79,6 +88,7 @@ export class EnvironmentConfigService {
       'REDIS_PORT',
       'REDIS_HOST',
       'RPC_URL',
+      'JWT_SECRET',
     ];
     const missingVariables: string[] = [];
 

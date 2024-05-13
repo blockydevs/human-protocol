@@ -1,15 +1,19 @@
-import { EndpointName } from '../enums/endpoint-name';
+import {
+  HCaptchaLabelingEndpoints,
+  ReputationOracleEndpoints,
+} from '../enums/reputation-oracle-endpoints';
 import { ExternalApiName } from '../enums/external-api-name';
 
 export interface GatewayEndpointConfig {
   endpoint: string;
   method: string;
-  headers: Record<string, string>;
+  headers?: Record<string, string>;
+  params?: Record<string, string | boolean | number>;
 }
 
 export interface GatewayConfig {
   url: string;
-  endpoints: Record<EndpointName, GatewayEndpointConfig>;
+  endpoints: Record<string, GatewayEndpointConfig>;
 }
 
 export interface Gateways {
