@@ -1,6 +1,5 @@
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
-import { EnvironmentVariableMissingError } from '../interfaces/custom-exceptions.interface';
 const DEFAULT_CACHE_TTL_ORACLE_STATS = 12 * 60 * 60;
 const DEFAULT_CACHE_TTL_USER_STATS = 15 * 60;
 const DEFAULT_CACHE_TTL_ORACLE_DISCOVERY = 24 * 60 * 60;
@@ -18,6 +17,9 @@ export class EnvironmentConfigService {
   }
   get reputationOracleUrl(): string {
     return this.configService.getOrThrow<string>('REPUTATION_ORACLE_URL');
+  }
+  get reputationOracleAddress(): string {
+    return this.configService.getOrThrow<string>('REPUTATION_ORACLE_ADDRESS');
   }
   get cachePort(): number {
     return this.configService.getOrThrow<number>('REDIS_PORT');
@@ -80,26 +82,8 @@ export class EnvironmentConfigService {
   get jwtSecret(): string {
     return this.configService.getOrThrow<string>('JWT_SECRET'); // TODO: probably to remove
   }
-  checkMandatoryConfig(): void {
-    const mandatoryVariables = [
-      'HOST',
-      'PORT',
-      'REPUTATION_ORACLE_URL',
-      'REDIS_PORT',
-      'REDIS_HOST',
-      'RPC_URL',
-      'JWT_SECRET',
-    ];
-    const missingVariables: string[] = [];
-
-    mandatoryVariables.forEach((variable) => {
-      if (!this.configService.get(variable)) {
-        missingVariables.push(variable);
-      }
-    });
-
-    if (missingVariables.length > 0) {
-      throw new EnvironmentVariableMissingError(missingVariables.join(', '));
-    }
+  get chainIdsEnabled(): string[] {
+    const chainIds = this.configService.getOrThrow<string>('CHAIN_IDS_ENABLED');
+    return chainIds.split(',').map((id) => id.trim());
   }
 }

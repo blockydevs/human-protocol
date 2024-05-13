@@ -1,20 +1,25 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { KVStoreClient } from '@human-protocol/sdk';
 import { KvStoreGateway } from '../kv-store.gateway';
+import { KVStoreClient, KVStoreKeys } from '@human-protocol/sdk';
 import { EnvironmentConfigService } from '../../../common/config/environment-config.service';
 import { ethers } from 'ethers';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+
 const EXPECTED_URL = 'https://example.com';
-jest.mock('@human-protocol/sdk', () => ({
-  KVStoreClient: {
-    build: jest.fn().mockImplementation(() =>
-      Promise.resolve({
-        get: jest.fn().mockResolvedValue(EXPECTED_URL),
-      }),
-    ),
-  },
-}));
+jest.mock('@human-protocol/sdk', () => {
+  const actualSdk = jest.requireActual('@human-protocol/sdk');
+  return {
+    ...actualSdk,
+    KVStoreClient: {
+      build: jest.fn().mockImplementation(() =>
+        Promise.resolve({
+          get: jest.fn().mockResolvedValue(EXPECTED_URL),
+        }),
+      ),
+    },
+  };
+});
 
 describe('KvStoreGateway', () => {
   let service: KvStoreGateway;
@@ -85,7 +90,7 @@ describe('KvStoreGateway', () => {
       const result = await service.getExchangeOracleUrlByAddress(testAddress);
       expect(service['kvStoreClient'].get).toHaveBeenCalledWith(
         testAddress,
-        'url',
+        KVStoreKeys.url,
       );
       expect(cacheManager.set).toHaveBeenCalledWith(
         testAddress,

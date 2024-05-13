@@ -30,12 +30,37 @@ import { PrepareSignatureModule } from './modules/prepare-signature/prepare-sign
 import { HCaptchaModule } from './modules/h-captcha/h-captcha.module';
 import { HCaptchaLabelingModule } from './integrations/h-captcha-labeling/h-captcha-labeling.module';
 import { HCaptchaController } from './modules/h-captcha/h-captcha.controller';
+import { EscrowUtilsModule } from './integrations/escrow/escrow-utils.module';
+import Joi from 'joi';
+import { ChainId } from '@human-protocol/sdk';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
+      validationSchema: Joi.object({
+        HOST: Joi.string().required(),
+        PORT: Joi.number().required(),
+        REPUTATION_ORACLE_URL: Joi.string().required(),
+        REPUTATION_ORACLE_ADDRESS: Joi.string().required(),
+        REDIS_PORT: Joi.number().required(),
+        REDIS_HOST: Joi.string().required(),
+        RPC_URL: Joi.string().required(),
+        CHAIN_IDS_ENABLED: Joi.string()
+          .custom((value) => {
+            const chainIds = value.split(',');
+            for (const id of chainIds) {
+              if (!Object.values(ChainId).includes(Number(id.trim()))) {
+                throw new Error(
+                  `Invalid chain ID: Chain ID ${id} is not included in the HUMAN SDK.`,
+                );
+              }
+            }
+            return value;
+          })
+          .required(),
+      }),
     }),
     AutomapperModule.forRoot({
       strategyInitializer: classes(),
@@ -59,6 +84,7 @@ import { HCaptchaController } from './modules/h-captcha/h-captcha.controller';
     PrepareSignatureModule,
     HCaptchaModule,
     HCaptchaLabelingModule,
+    EscrowUtilsModule,
   ],
   controllers: [
     AppController,
