@@ -4,13 +4,7 @@ import { classes } from '@automapper/classes';
 import { OracleDiscoveryController } from '../oracle-discovery.controller';
 import { OracleDiscoveryService } from '../oracle-discovery.service';
 import { oracleDiscoveryServiceMock } from './oracle-discovery.service.mock';
-import { OracleDiscoveryProfile } from '../oracle-discovery.mapper.profile';
-import {
-  OracleDiscoveryCommand,
-  OracleDiscoveryResponse,
-  OracleDiscoveryDto,
-} from '../model/oracle-discovery.model';
-import { ChainId } from '@human-protocol/sdk';
+import { OracleDiscoveryResponse } from '../model/oracle-discovery.model';
 import { generateOracleDiscoveryResponseBody } from './oracle-discovery.fixture';
 
 describe('OracleDiscoveryController', () => {

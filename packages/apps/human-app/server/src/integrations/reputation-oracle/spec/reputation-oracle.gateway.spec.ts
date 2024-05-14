@@ -7,7 +7,6 @@ import { SignupWorkerCommand } from '../../../modules/user-worker/model/worker-r
 import nock from 'nock';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { SignupOperatorCommand } from '../../../modules/user-operator/model/operator-registration.model';
-import { gatewayConfigServiceMock } from '../../../common/config/gateway-config.service.mock';
 import { ethers } from 'ethers';
 import { SigninWorkerCommand } from '../../../modules/user-worker/model/worker-signin.model';
 import {
@@ -53,6 +52,14 @@ import {
   prepareSignatureCommandFixture,
   prepareSignatureDataFixture,
 } from '../../../modules/prepare-signature/spec/prepare-signature.fixtures';
+import {
+  gatewayConfigServiceMock
+} from '../../../common/config/spec/gateway-config-service.mock';
+import {
+  enableLabelingCommandFixture,
+  enableLabelingDataFixture, enableLabelingResponseFixture,
+} from '../../../modules/h-captcha/spec/h-captcha.fixtures';
+import { EnableLabelingCommand } from '../../../modules/h-captcha/model/enable-labeling.model';
 
 describe('ReputationOracleGateway', () => {
   let service: ReputationOracleGateway;
@@ -569,6 +576,56 @@ describe('ReputationOracleGateway', () => {
         .mockReturnValue(throwError(() => new Error('Internal Server Error')));
 
       await expect(service.sendKycProcedureStart()).rejects.toThrow(
+        new HttpException(
+          'Internal Server Error',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        ),
+      );
+    });
+  });
+  describe('approveUserAsLabeler', () => {
+    it('should successfully call the reputation oracle enable labeling endpoint', async () => {
+      const command: EnableLabelingCommand = enableLabelingCommandFixture;
+      const data = enableLabelingDataFixture;
+
+      nock('https://example.com')
+        .post('/labeler/register', {
+          ...data,
+        })
+        .reply(201, enableLabelingResponseFixture);
+
+      await expect(
+        service.approveUserAsLabeler(command),
+      ).resolves.not.toThrow();
+      expect(httpService.request).toHaveBeenCalled();
+    });
+
+    it('should handle http error response correctly', async () => {
+      jest
+        .spyOn(httpService, 'request')
+        .mockReturnValue(
+          throwError(
+            () =>
+              new HttpException(
+                { message: 'Bad request' },
+                HttpStatus.BAD_REQUEST,
+              ),
+          ),
+        );
+
+      const command: EnableLabelingCommand = enableLabelingCommandFixture;
+      await expect(service.approveUserAsLabeler(command)).rejects.toThrow(
+        new HttpException({ message: 'Bad request' }, HttpStatus.BAD_REQUEST),
+      );
+    });
+
+    it('should handle network or unknown errors correctly', async () => {
+      jest
+        .spyOn(httpService, 'request')
+        .mockReturnValue(throwError(() => new Error('Internal Server Error')));
+
+      const command: EnableLabelingCommand = enableLabelingCommandFixture;
+      await expect(service.approveUserAsLabeler(command)).rejects.toThrow(
         new HttpException(
           'Internal Server Error',
           HttpStatus.INTERNAL_SERVER_ERROR,

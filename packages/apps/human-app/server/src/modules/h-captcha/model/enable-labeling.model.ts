@@ -24,7 +24,7 @@ export class EnableLabelingData {
   @AutoMap()
   country: string;
   @AutoMap()
-  isKYCed: string;
+  isKYCed: boolean;
   @AutoMap()
   _id: string;
   @AutoMap()

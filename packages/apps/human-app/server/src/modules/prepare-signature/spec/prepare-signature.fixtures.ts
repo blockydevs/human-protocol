@@ -1,10 +1,10 @@
-import { PrepareSignatureType } from '../../../common/enums/global-common.interface';
 import {
   PrepareSignatureCommand,
   PrepareSignatureData,
   PrepareSignatureDto,
   PrepareSignatureResponse,
 } from '../model/prepare-signature.model';
+import { PrepareSignatureType } from '../../../common/enums/global-common';
 
 const ADDRESS = 'test_address';
 const TYPE: PrepareSignatureType = PrepareSignatureType.SIGNUP;

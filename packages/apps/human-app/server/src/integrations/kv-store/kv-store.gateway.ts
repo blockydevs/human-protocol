@@ -1,13 +1,12 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { EnvironmentConfigService } from '../../common/config/environment-config.service';
 import { ethers } from 'ethers';
-import { KVStoreClient } from '@human-protocol/sdk';
+import { KVStoreClient, KVStoreKeys } from '@human-protocol/sdk';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 
 @Injectable()
 export class KvStoreGateway {
-  private URL_KEY = 'url';
   private kvStoreClient: KVStoreClient;
   constructor(
     private configService: EnvironmentConfigService,
@@ -23,7 +22,7 @@ export class KvStoreGateway {
     if (cachedUrl) {
       return cachedUrl;
     }
-    const fetchedUrl = await this.kvStoreClient.get(address, this.URL_KEY);
+    const fetchedUrl = await this.kvStoreClient.get(address, KVStoreKeys.url);
     await this.cacheManager.set(
       address,
       fetchedUrl,

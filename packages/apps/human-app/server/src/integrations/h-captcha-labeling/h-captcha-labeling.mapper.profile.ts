@@ -1,6 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
-import { createMap, forMember, Mapper, mapWith } from '@automapper/core';
+import {
+  createMap,
+  forMember,
+  mapFrom,
+  Mapper,
+  mapWith,
+} from '@automapper/core';
 import {
   VerifyTokenCommand,
   VerifyTokenData,
@@ -18,17 +24,49 @@ export class HCaptchaLabelingMapperProfile extends AutomapperProfile {
   }
   override get profile() {
     return (mapper: Mapper) => {
-      createMap(mapper, VerifyTokenCommand, VerifyTokenData);
+      createMap(
+        mapper,
+        VerifyTokenCommand,
+        VerifyTokenData,
+        forMember(
+          (destination) => destination.secret,
+          mapFrom((source) => source.polygonWalletAddr),
+        ),
+        forMember(
+          (destination) => destination.sitekey,
+          mapFrom((source) => source.hcaptchaSiteKey),
+        ),
+        forMember(
+          (destination) => destination.response,
+          mapFrom((source) => source.hcaptchaToken),
+        ),
+      );
       createMap(
         mapper,
         UserStatsApiResponse,
         UserStatsResponse,
         forMember(
+          (destination) => destination.solved,
+          mapFrom((source) => source.solved),
+        ),
+        forMember(
+          (destination) => destination.served,
+          mapFrom((source) => source.served),
+        ),
+        forMember(
+          (destination) => destination.verified,
+          mapFrom((source) => source.verified),
+        ),
+        forMember(
+          (destination) => destination.balance,
+          mapFrom((source) => source.balance),
+        ),
+        forMember(
           (destination) => destination.currentDateStats,
-          mapWith(
-            UserDropoffData,
-            UserDropoffData,
-            (source: any) => source.at(-1), // TODO: this has to be checked, maybe type should be changed
+          mapFrom((source) =>
+            Array.isArray(source.dropoff_data) && source.dropoff_data.length > 0
+              ? source.dropoff_data[source.dropoff_data.length - 1]
+              : undefined,
           ),
         ),
       );

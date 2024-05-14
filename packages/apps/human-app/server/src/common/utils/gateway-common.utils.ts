@@ -7,6 +7,6 @@ function cleanParams(obj: any): any {
 }
 export function toCleanObjParams(params: any, existingParams: any = {}): any {
   const plainParams = instanceToPlain(params);
-  const cleanParams = this.cleanParams(plainParams);
-  return { ...existingParams, ...cleanParams };
+  const typelessParams = cleanParams(plainParams);
+  return { ...existingParams, ...typelessParams };
 }

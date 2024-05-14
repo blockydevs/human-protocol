@@ -12,7 +12,8 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { HCaptchaService } from './h-captcha.service';
 import {
   VerifyTokenCommand,
-  VerifyTokenDto, VerifyTokenResponse,
+  VerifyTokenDto,
+  VerifyTokenResponse,
 } from './model/verify-token.model';
 import {
   DailyHmtSpentCommand,
@@ -21,9 +22,10 @@ import {
 import { JwtPayload } from '../../common/config/params-decorators';
 import { JwtUserData } from '../../common/interfaces/jwt-token.model';
 import {
-  EnableLabelingCommand, EnableLabelingResponse,
+  EnableLabelingCommand,
+  EnableLabelingResponse,
 } from './model/enable-labeling.model';
-import { UserStatsCommand, UserStatsApiResponse } from './model/user-sats.model';
+import { UserStatsCommand, UserStatsResponse } from './model/user-sats.model';
 
 @Controller('/labeling/h-captcha')
 export class HCaptchaController {
@@ -82,8 +84,10 @@ export class HCaptchaController {
   @UsePipes(new ValidationPipe())
   public async getUserStats(
     @JwtPayload() jwtPayload: JwtUserData,
-  ): Promise<UserStatsApiResponse> {
+  ): Promise<UserStatsResponse> {
+    console.log('Payload: ', jwtPayload);
     const command = this.mapper.map(jwtPayload, JwtUserData, UserStatsCommand);
+    console.log('Mapped command:', command);
     return this.service.getUserStats(command);
   }
 }

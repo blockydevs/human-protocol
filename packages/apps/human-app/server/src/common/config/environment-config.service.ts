@@ -1,8 +1,10 @@
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
+const DEFAULT_CACHE_TTL_HCAPTCHA_USER_STATS = 12 * 60 * 60;
 const DEFAULT_CACHE_TTL_ORACLE_STATS = 12 * 60 * 60;
 const DEFAULT_CACHE_TTL_USER_STATS = 15 * 60;
 const DEFAULT_CACHE_TTL_ORACLE_DISCOVERY = 24 * 60 * 60;
+const DEFAULT_CACHE_TTL_DAILY_HMT_SPENT = 24 * 60 * 60;
 const DEFAULT_CORS_ALLOWED_ORIGIN = 'http://localhost:5173';
 const DEFAULT_CORS_ALLOWED_HEADERS = 'Content-Type, Accept';
 const DEFAULT_CACHE_TTL_EXCHANGE_ORACLE_URL = 24 * 60 * 60;
@@ -40,6 +42,18 @@ export class EnvironmentConfigService {
     return this.configService.get<number>(
       'CACHE_TTL_USER_STATS',
       DEFAULT_CACHE_TTL_USER_STATS,
+    );
+  }
+  get cacheTtlDailyHmtSpent(): number {
+    return this.configService.get<number>(
+      'CACHE_TTL_DAILY_HMT_SPENT',
+      DEFAULT_CACHE_TTL_DAILY_HMT_SPENT,
+    );
+  }
+  get cacheTtlHCaptchaUserStats(): number {
+    return this.configService.get<number>(
+      'CACHE_TTL_HCAPTCHA_USER_STATS',
+      DEFAULT_CACHE_TTL_HCAPTCHA_USER_STATS,
     );
   }
 

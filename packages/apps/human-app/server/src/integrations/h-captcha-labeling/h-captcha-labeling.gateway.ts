@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { EnableLabelingCommand } from '../../modules/h-captcha/model/enable-labeling.model';
 import {
   VerifyTokenCommand,
-  VerifyTokenApiResponse, VerifyTokenData,
+  VerifyTokenApiResponse,
+  VerifyTokenData,
 } from '../../modules/h-captcha/model/verify-token.model';
 import {
   GatewayConfig,
@@ -13,11 +13,17 @@ import { GatewayConfigService } from '../../common/config/gateway-config.service
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { ExternalApiName } from '../../common/enums/external-api-name';
-import { HCaptchaLabelingEndpoints, ReputationOracleEndpoints } from '../../common/enums/reputation-oracle-endpoints';
+import {
+  HCaptchaLabelingEndpoints,
+  ReputationOracleEndpoints,
+} from '../../common/enums/reputation-oracle-endpoints';
 import { RequestDataType } from '../reputation-oracle/reputation-oracle.interface';
 import { AxiosRequestConfig } from 'axios';
 import { lastValueFrom } from 'rxjs';
-import { UserStatsApiResponse, UserStatsResponse } from '../../modules/h-captcha/model/user-sats.model';
+import {
+  UserStatsApiResponse,
+  UserStatsResponse,
+} from '../../modules/h-captcha/model/user-sats.model';
 import { toCleanObjParams } from '../../common/utils/gateway-common.utils';
 import { DailyHmtSpentResponse } from '../../modules/h-captcha/model/daily-hmt-spent.model';
 
@@ -81,7 +87,7 @@ export class HCaptchaLabelingGateway {
     );
   }
 
-  async fechUserStats(email: string): Promise<UserStatsResponse> {
+  async fetchUserStats(email: string): Promise<UserStatsResponse> {
     const options = this.getEndpointOptions(
       HCaptchaLabelingEndpoints.USER_STATS,
     );

@@ -11,7 +11,7 @@ export class VerifyTokenCommand {
   @AutoMap()
   polygonWalletAddr: string;
 }
-export class VerifyTokenData { // TODO: I don't know if this structure has correct fields set
+export class VerifyTokenData {
   @AutoMap()
   secret: string;
   @AutoMap()

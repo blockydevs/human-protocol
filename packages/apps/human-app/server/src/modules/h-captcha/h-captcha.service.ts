@@ -1,7 +1,8 @@
 import { HttpException, Inject, Injectable, Logger } from '@nestjs/common';
 import {
   VerifyTokenCommand,
-  VerifyTokenApiResponse, VerifyTokenResponse,
+  VerifyTokenApiResponse,
+  VerifyTokenResponse,
 } from './model/verify-token.model';
 import {
   DailyHmtSpentCommand,
@@ -13,7 +14,7 @@ import {
 } from './model/enable-labeling.model';
 import { EnvironmentConfigService } from '../../common/config/environment-config.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { UserStatsCommand, UserStatsApiResponse } from './model/user-sats.model';
+import { UserStatsCommand, UserStatsResponse } from './model/user-sats.model';
 import { Cache } from 'cache-manager';
 import { HCaptchaLabelingGateway } from '../../integrations/h-captcha-labeling/h-captcha-labeling.gateway';
 import { ReputationOracleGateway } from '../../integrations/reputation-oracle/reputation-oracle.gateway';
@@ -34,11 +35,12 @@ export class HCaptchaService {
     this.checkIfLabelingEnabledForAccount(command.hcaptchaSiteKey);
     const response =
       await this.hCaptchaLabelingGateway.sendTokenToVerify(command);
-    if (response && response.success === true) {
+    if (response && response.success) {
       return new VerifyTokenResponse('CAPTCHA was verified successfully');
     }
-    this.logger.error(this.createHCaptchaVerificationErrorMessage(response));
-    throw new HttpException('Failed to verify h-captcha', 400);
+    const errorMessage = this.createHCaptchaVerificationErrorMessage(response);
+    this.logger.error(errorMessage);
+    throw new HttpException(errorMessage, 400);
   }
   private createHCaptchaVerificationErrorMessage(
     response: VerifyTokenApiResponse,
@@ -71,18 +73,27 @@ export class HCaptchaService {
       await this.cacheManager.get<DailyHmtSpentResponse>(hmtKey);
     if (!dailyHmtSpent) {
       dailyHmtSpent = await this.hCaptchaLabelingGateway.fetchDailyHmtSpent();
-      this.cacheManager.set(hmtKey, dailyHmtSpent);
+      await this.cacheManager.set(
+        hmtKey,
+        dailyHmtSpent,
+        this.configService.cacheTtlDailyHmtSpent,
+      );
     }
     return dailyHmtSpent;
   }
 
-  async getUserStats(command: UserStatsCommand): Promise<UserStatsApiResponse> {
+  async getUserStats(command: UserStatsCommand): Promise<UserStatsResponse> {
     this.checkIfLabelingEnabledForAccount(command.hcaptchaSiteKey);
-    let stats = await this.cacheManager.get<UserStatsApiResponse>(command.email);
-    if (!stats) {
-      stats = await this.hCaptchaLabelingGateway.fechUserStats(command.email);
-      await this.cacheManager.set(command.email, stats);
+    let stats = await this.cacheManager.get<UserStatsResponse>(command.email);
+    if (stats) {
+      return stats;
     }
+    stats = await this.hCaptchaLabelingGateway.fetchUserStats(command.email);
+    await this.cacheManager.set(
+      command.email,
+      stats,
+      this.configService.cacheTtlHCaptchaUserStats,
+    );
     return stats;
   }
   private checkIfLabelingEnabledForAccount(siteKey: string) {

@@ -11,7 +11,7 @@ export class UserStatsApiResponse {
   served: number;
   verified: number;
   balance: number;
-  dropoff_data: UserDropoffData[];
+  dropoff_data: UserDropoffData;
 }
 export class UserDropoffData {
   [date: string]: any;
