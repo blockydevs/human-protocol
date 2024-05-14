@@ -6,7 +6,11 @@ import { ReputationOracleGateway } from '../reputation-oracle.gateway';
 import { SignupWorkerCommand } from '../../../modules/user-worker/model/worker-registration.model';
 import nock from 'nock';
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { SignupOperatorCommand } from '../../../modules/user-operator/model/operator-registration.model';
+import {
+  SigninOperatorCommand,
+  SigninOperatorData,
+  SignupOperatorCommand,
+} from '../../../modules/user-operator/model/operator.model';
 import { ethers } from 'ethers';
 import { SigninWorkerCommand } from '../../../modules/user-worker/model/worker-signin.model';
 import {
@@ -32,59 +36,54 @@ import {
   restorePasswordCommandFixture,
   restorePasswordDataFixture,
 } from '../../../modules/password-reset/spec/password-reset.fixtures';
-import {
-  RestorePasswordCommand,
-  RestorePasswordData,
-} from '../../../modules/password-reset/model/restore-password.model';
+import { RestorePasswordCommand } from '../../../modules/password-reset/model/restore-password.model';
 import {
   PrepareSignatureCommand,
-  PrepareSignatureData,
 } from '../../../modules/prepare-signature/model/prepare-signature.model';
 import {
   disableOperatorCommandFixture,
   disableOperatorDataFixture,
 } from '../../../modules/disable-operator/spec/disable-operator.fixtures';
-import {
-  DisableOperatorCommand,
-  DisableOperatorData,
-} from '../../../modules/disable-operator/model/disable-operator.model';
+import { DisableOperatorCommand } from '../../../modules/disable-operator/model/disable-operator.model';
 import {
   prepareSignatureCommandFixture,
-  prepareSignatureDataFixture,
+  prepareSignatureDataFixture, prepareSignatureResponseFixture,
+  TOKEN,
 } from '../../../modules/prepare-signature/spec/prepare-signature.fixtures';
-import {
-  gatewayConfigServiceMock
-} from '../../../common/config/spec/gateway-config-service.mock';
+import { gatewayConfigServiceMock } from '../../../common/config/spec/gateway-config-service.mock';
 import {
   enableLabelingCommandFixture,
-  enableLabelingDataFixture, enableLabelingResponseFixture,
+  enableLabelingDataFixture,
+  enableLabelingResponseFixture,
 } from '../../../modules/h-captcha/spec/h-captcha.fixtures';
 import { EnableLabelingCommand } from '../../../modules/h-captcha/model/enable-labeling.model';
+import { AxiosRequestConfig } from 'axios';
+import { ReputationOracleProfile } from '../reputation-oracle.mapper.profile';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 
+const httpServiceMock = {
+  request: jest.fn(),
+};
 describe('ReputationOracleGateway', () => {
   let service: ReputationOracleGateway;
   let httpService: HttpService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       providers: [
         ReputationOracleGateway,
         GatewayConfigService,
         {
           provide: HttpService,
-          useValue: {
-            request: jest.fn().mockReturnValue(of({ data: 'mocked response' })),
-          },
+          useValue: httpServiceMock,
         },
-        {
-          provide: 'automapper:nestjs:default',
-          useValue: {
-            map: jest.fn((source, _, destination) => ({
-              ...source,
-              type: destination,
-            })),
-          },
-        },
+        ReputationOracleProfile,
       ],
     })
       .overrideProvider(GatewayConfigService)
@@ -155,6 +154,40 @@ describe('ReputationOracleGateway', () => {
           HttpStatus.INTERNAL_SERVER_ERROR,
         ),
       );
+    });
+  });
+
+  describe('sendOperatorSignin', () => {
+    let exampleCommand: SigninOperatorCommand;
+    beforeEach(async () => {
+      const wallet = ethers.Wallet.createRandom();
+      exampleCommand = {
+        address: wallet.address,
+        signature: await wallet.signMessage('signin'),
+      };
+    });
+    it('should successfully call the reputation oracle operator signin endpoint', async () => {
+      const expectedData = {
+        address: exampleCommand.address,
+        signature: exampleCommand.signature,
+      } as SigninOperatorData;
+      const expectedOptions: AxiosRequestConfig = {
+        method: 'POST',
+        url: `https://example.com/auth/web3/signin`,
+        headers: { 'Content-Type': 'application/json' },
+        data: expectedData,
+        params: {},
+      };
+      httpServiceMock.request.mockReturnValue(
+        of({
+          data: {
+            refresh_token: 'string',
+            access_token: 'string',
+          },
+        }),
+      );
+      await service.sendOperatorSignin(exampleCommand);
+      expect(httpService.request).toHaveBeenCalledWith(expectedOptions);
     });
   });
 
@@ -381,8 +414,9 @@ describe('ReputationOracleGateway', () => {
           ),
         );
 
-      const command: ForgotPasswordCommand = forgotPasswordCommandFixture;
-      await expect(service.sendForgotPassword(command)).rejects.toThrow(
+      await expect(
+        service.sendForgotPassword(forgotPasswordCommandFixture),
+      ).rejects.toThrow(
         new HttpException({ message: 'Bad request' }, HttpStatus.BAD_REQUEST),
       );
     });
@@ -405,10 +439,9 @@ describe('ReputationOracleGateway', () => {
   describe('sendRestorePassword', () => {
     it('should successfully call the reputation oracle endpoint', async () => {
       const command: RestorePasswordCommand = restorePasswordCommandFixture;
-      const data: RestorePasswordData = restorePasswordDataFixture;
       nock('https://expample.com')
         .post('/password-reset/restore-password', {
-          ...data,
+          ...restorePasswordDataFixture,
         })
         .reply(201, '');
       await expect(service.sendRestorePassword(command)).resolves.not.toThrow();
@@ -428,8 +461,9 @@ describe('ReputationOracleGateway', () => {
           ),
         );
 
-      const command: RestorePasswordCommand = restorePasswordCommandFixture;
-      await expect(service.sendRestorePassword(command)).rejects.toThrow(
+      await expect(
+        service.sendRestorePassword(restorePasswordCommandFixture),
+      ).rejects.toThrow(
         new HttpException({ message: 'Bad request' }, HttpStatus.BAD_REQUEST),
       );
     });
@@ -439,8 +473,9 @@ describe('ReputationOracleGateway', () => {
         .spyOn(httpService, 'request')
         .mockReturnValue(throwError(() => new Error('Internal Server Error')));
 
-      const command: RestorePasswordCommand = restorePasswordCommandFixture;
-      await expect(service.sendRestorePassword(command)).rejects.toThrow(
+      await expect(
+        service.sendRestorePassword(restorePasswordCommandFixture),
+      ).rejects.toThrow(
         new HttpException(
           'Internal Server Error',
           HttpStatus.INTERNAL_SERVER_ERROR,
@@ -452,16 +487,20 @@ describe('ReputationOracleGateway', () => {
   describe('sendPrepareSignature', () => {
     it('should successfully call the reputation oracle endpoint', async () => {
       const command: PrepareSignatureCommand = prepareSignatureCommandFixture;
-      const data: PrepareSignatureData = prepareSignatureDataFixture;
-      nock('https://expample.com')
-        .post('/disable-operator/prepare-signature', {
-          ...data,
-        })
-        .reply(201, '');
-      await expect(
+      httpServiceMock.request.mockResolvedValue(
+        prepareSignatureResponseFixture,
+      );
+      const expectedOptions: AxiosRequestConfig = {
+        method: 'POST',
+        url: `https://example.com/disable-operator/prepare-signature`,
+        headers: { 'Content-Type': 'application/json', Authorization: TOKEN },
+        data: prepareSignatureDataFixture,
+      };
+      const response = await expect(
         service.sendPrepareSignature(command),
       ).resolves.not.toThrow();
-      expect(httpService.request).toHaveBeenCalled();
+      expect(httpService.request).toHaveBeenCalledWith(expectedOptions);
+      expect(response).toEqual(prepareSignatureResponseFixture);
     });
 
     it('should handle http error response correctly', async () => {
@@ -477,8 +516,9 @@ describe('ReputationOracleGateway', () => {
           ),
         );
 
-      const command: PrepareSignatureCommand = prepareSignatureCommandFixture;
-      await expect(service.sendPrepareSignature(command)).rejects.toThrow(
+      await expect(
+        service.sendPrepareSignature(prepareSignatureCommandFixture),
+      ).rejects.toThrow(
         new HttpException({ message: 'Bad request' }, HttpStatus.BAD_REQUEST),
       );
     });
@@ -501,10 +541,9 @@ describe('ReputationOracleGateway', () => {
   describe('sendDisableOperator', () => {
     it('should successfully call the reputation oracle endpoint', async () => {
       const command: DisableOperatorCommand = disableOperatorCommandFixture;
-      const data: DisableOperatorData = disableOperatorDataFixture;
       nock('https://expample.com')
         .post('/disable-operator/prepare-signature', {
-          ...data,
+          ...disableOperatorDataFixture,
         })
         .reply(201, '');
       await expect(service.sendDisableOperator(command)).resolves.not.toThrow();
@@ -524,8 +563,9 @@ describe('ReputationOracleGateway', () => {
           ),
         );
 
-      const command: DisableOperatorCommand = disableOperatorCommandFixture;
-      await expect(service.sendDisableOperator(command)).rejects.toThrow(
+      await expect(
+        service.sendDisableOperator(disableOperatorCommandFixture),
+      ).rejects.toThrow(
         new HttpException({ message: 'Bad request' }, HttpStatus.BAD_REQUEST),
       );
     });
@@ -535,8 +575,9 @@ describe('ReputationOracleGateway', () => {
         .spyOn(httpService, 'request')
         .mockReturnValue(throwError(() => new Error('Internal Server Error')));
 
-      const command: DisableOperatorCommand = disableOperatorCommandFixture;
-      await expect(service.sendDisableOperator(command)).rejects.toThrow(
+      await expect(
+        service.sendDisableOperator(disableOperatorCommandFixture),
+      ).rejects.toThrow(
         new HttpException(
           'Internal Server Error',
           HttpStatus.INTERNAL_SERVER_ERROR,
@@ -547,7 +588,7 @@ describe('ReputationOracleGateway', () => {
 
   describe('sendKycProcedureStart', () => {
     it('should successfully call the reputation oracle endpoint', async () => {
-      nock('https://expample.com').post('/kyc/start', {}).reply(201, '');
+      nock('https://example.com').post('/kyc/start', {}).reply(201, '');
       await expect(service.sendKycProcedureStart()).resolves.not.toThrow();
       expect(httpService.request).toHaveBeenCalled();
     });
@@ -586,11 +627,9 @@ describe('ReputationOracleGateway', () => {
   describe('approveUserAsLabeler', () => {
     it('should successfully call the reputation oracle enable labeling endpoint', async () => {
       const command: EnableLabelingCommand = enableLabelingCommandFixture;
-      const data = enableLabelingDataFixture;
-
       nock('https://example.com')
         .post('/labeler/register', {
-          ...data,
+          ...enableLabelingDataFixture,
         })
         .reply(201, enableLabelingResponseFixture);
 
@@ -613,8 +652,9 @@ describe('ReputationOracleGateway', () => {
           ),
         );
 
-      const command: EnableLabelingCommand = enableLabelingCommandFixture;
-      await expect(service.approveUserAsLabeler(command)).rejects.toThrow(
+      await expect(
+        service.approveUserAsLabeler(enableLabelingCommandFixture),
+      ).rejects.toThrow(
         new HttpException({ message: 'Bad request' }, HttpStatus.BAD_REQUEST),
       );
     });
@@ -624,8 +664,9 @@ describe('ReputationOracleGateway', () => {
         .spyOn(httpService, 'request')
         .mockReturnValue(throwError(() => new Error('Internal Server Error')));
 
-      const command: EnableLabelingCommand = enableLabelingCommandFixture;
-      await expect(service.approveUserAsLabeler(command)).rejects.toThrow(
+      await expect(
+        service.approveUserAsLabeler(enableLabelingCommandFixture),
+      ).rejects.toThrow(
         new HttpException(
           'Internal Server Error',
           HttpStatus.INTERNAL_SERVER_ERROR,

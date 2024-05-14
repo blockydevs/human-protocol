@@ -1,14 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ExternalApiName } from '../enums/external-api-name';
-import {
-  HCaptchaLabelingEndpoints,
-  ReputationOracleEndpoints,
-} from '../enums/reputation-oracle-endpoints';
-import {
-  GatewayConfig,
-  GatewayEndpointConfig,
-  Gateways,
-} from '../interfaces/endpoint.interface';
+import { HCaptchaLabelingEndpoints, ReputationOracleEndpoints } from '../enums/reputation-oracle-endpoints';
+import { GatewayConfig, GatewayEndpointConfig, Gateways } from '../interfaces/endpoint.interface';
 import { EnvironmentConfigService } from './environment-config.service';
 import { HttpMethod } from '../enums/http-method';
 
@@ -88,7 +81,6 @@ export class GatewayConfigService {
               method: HttpMethod.POST,
               headers: this.JSON_HEADER,
             },
-
           } as Record<ReputationOracleEndpoints, GatewayEndpointConfig>,
         },
         [ExternalApiName.HCAPTCHA_LABELING]: {
@@ -118,7 +110,6 @@ export class GatewayConfigService {
     };
   }
   getConfig(gateway: ExternalApiName): GatewayConfig {
-    const config = this.getGatewaysConfig().gateways[gateway];
-    return config;
+    return this.getGatewaysConfig().gateways[gateway];
   }
 }

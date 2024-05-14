@@ -1,9 +1,6 @@
-import { HCaptchaLabelingEndpoints, ReputationOracleEndpoints } from '../../enums/reputation-oracle-endpoints';
-import { HttpMethod } from '../../enums/http-method';
-
 export const gatewayConfigServiceMock = {
   getConfig: jest.fn().mockReturnValue({
-    url: 'https://expample.com',
+    url: 'https://example.com',
     endpoints: {
       WORKER_SIGNUP: {
         endpoint: '/auth/signup',
@@ -60,6 +57,12 @@ export const gatewayConfigServiceMock = {
         method: 'POST',
         params: { api_key: 'mock-api-key' },
       },
+      OPERATOR_SIGNIN: {
+        endpoint: '/auth/web3/signin',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        params: {},
+      },
     },
   }),
 };
@@ -68,20 +71,20 @@ export const hCaptchaGatewayConfigServiceMock = {
   getConfig: jest.fn().mockReturnValue({
     url: 'https://api.example.com',
     endpoints: {
-      [HCaptchaLabelingEndpoints.TOKEN_VERIFY]: {
-        method: HttpMethod.POST,
+      TOKEN_VERIFY: {
+        method: 'POST',
         endpoint: '/siteverify',
         headers: {},
         params: {},
       },
-      [HCaptchaLabelingEndpoints.DAILY_HMT_SPENT]: {
-        method: HttpMethod.GET,
+      DAILY_HMT_SPENT: {
+        method: 'GET',
         endpoint: '/requester/daily_hmt_spend',
         headers: {},
         params: { api_key: 'mock-api-key', actual: false },
       },
-      [HCaptchaLabelingEndpoints.USER_STATS]: {
-        method: HttpMethod.GET,
+      USER_STATS: {
+        method: 'GET',
         endpoint: '/support/labeler/',
         headers: {},
         params: { api_key: 'mock-api-key' },

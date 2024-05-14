@@ -5,8 +5,6 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { of } from 'rxjs';
 import { AxiosRequestConfig } from 'axios';
-import { HCaptchaLabelingEndpoints } from '../../../common/enums/reputation-oracle-endpoints';
-import { HttpMethod } from '../../../common/enums/http-method';
 import { HCaptchaLabelingMapperProfile } from '../h-captcha-labeling.mapper.profile';
 import { GatewayConfigService } from '../../../common/config/gateway-config.service';
 import { EnvironmentConfigService } from '../../../common/config/environment-config.service';
@@ -47,7 +45,6 @@ describe('HCaptchaLabelingGateway', () => {
         HCaptchaLabelingMapperProfile,
         HCaptchaLabelingGateway,
         GatewayConfigService,
-
         { provide: HttpService, useValue: httpServiceMock },
         {
           provide: EnvironmentConfigService,

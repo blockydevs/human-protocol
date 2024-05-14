@@ -10,9 +10,10 @@ import {
   SnakeCaseNamingConvention,
 } from '@automapper/core';
 import {
+  SigninOperatorCommand, SigninOperatorData,
   SignupOperatorCommand,
   SignupOperatorData,
-} from '../../modules/user-operator/model/operator-registration.model';
+} from '../../modules/user-operator/model/operator.model';
 import {
   SignupWorkerCommand,
   SignupWorkerData,
@@ -21,7 +22,14 @@ import {
   SigninWorkerCommand,
   SigninWorkerData,
 } from '../../modules/user-worker/model/worker-signin.model';
-import { EnableLabelingCommand, EnableLabelingData } from '../../modules/h-captcha/model/enable-labeling.model';
+import {
+  EnableLabelingCommand,
+  EnableLabelingData,
+} from '../../modules/h-captcha/model/enable-labeling.model';
+import {
+  PrepareSignatureCommand,
+  PrepareSignatureData,
+} from '../../modules/prepare-signature/model/prepare-signature.model';
 
 @Injectable()
 export class ReputationOracleProfile extends AutomapperProfile {
@@ -45,6 +53,8 @@ export class ReputationOracleProfile extends AutomapperProfile {
         }),
       );
       createMap(mapper, SignupOperatorCommand, SignupOperatorData);
+      createMap(mapper, PrepareSignatureCommand, PrepareSignatureData);
+      createMap(mapper, SigninOperatorCommand, SigninOperatorData);
       createMap(
         mapper,
         SigninWorkerCommand,

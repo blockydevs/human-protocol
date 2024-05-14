@@ -8,9 +8,12 @@ import {
   SignupWorkerData,
 } from '../../modules/user-worker/model/worker-registration.model';
 import {
+  SigninOperatorCommand,
+  SigninOperatorData,
+  SigninOperatorResponse,
   SignupOperatorCommand,
   SignupOperatorData,
-} from '../../modules/user-operator/model/operator-registration.model';
+} from '../../modules/user-operator/model/operator.model';
 import { GatewayConfigService } from '../../common/config/gateway-config.service';
 import {
   GatewayConfig,
@@ -114,36 +117,50 @@ export class ReputationOracleGateway {
   }
 
   async sendOperatorSignup(command: SignupOperatorCommand): Promise<void> {
-    const signupOperatorData = this.mapper.map(
+    const data = this.mapper.map(
       command,
       SignupOperatorCommand,
       SignupOperatorData,
     );
     const options = this.getEndpointOptions(
       ReputationOracleEndpoints.OPERATOR_SIGNUP,
-      signupOperatorData,
+      data,
     );
     return this.handleRequestToReputationOracle<void>(options);
   }
+  async sendOperatorSignin(
+    command: SigninOperatorCommand,
+  ): Promise<SigninOperatorResponse> {
+    const data = this.mapper.map(
+      command,
+      SigninOperatorCommand,
+      SigninOperatorData,
+    );
+    const options = this.getEndpointOptions(
+      ReputationOracleEndpoints.OPERATOR_SIGNIN,
+      data,
+    );
+    return this.handleRequestToReputationOracle<SigninOperatorResponse>(
+      options,
+    );
+  }
 
-  async sendWorkerSignin(signinWorkerCommand: SigninWorkerCommand) {
-    const signinWorkerData = this.mapper.map(
-      signinWorkerCommand,
+  async sendWorkerSignin(command: SigninWorkerCommand) {
+    const data = this.mapper.map(
+      command,
       SigninWorkerCommand,
       SigninWorkerData,
     );
     const options = this.getEndpointOptions(
       ReputationOracleEndpoints.WORKER_SIGNIN,
-      signinWorkerData,
+      data,
     );
     return this.handleRequestToReputationOracle<SigninWorkerResponse>(options);
   }
 
-  async sendEmailVerification(
-    emailVerificationCommand: EmailVerificationCommand,
-  ) {
+  async sendEmailVerification(command: EmailVerificationCommand) {
     const emailVerificationData = this.mapper.map(
-      emailVerificationCommand,
+      command,
       EmailVerificationCommand,
       EmailVerificationData,
     );
@@ -196,15 +213,16 @@ export class ReputationOracleGateway {
     return this.handleRequestToReputationOracle<void>(options);
   }
 
-  async sendPrepareSignature(prepareSignatureCommand: PrepareSignatureCommand) {
-    const prepareSignatureData = this.mapper.map(
-      prepareSignatureCommand,
+  async sendPrepareSignature(command: PrepareSignatureCommand) {
+    const data = this.mapper.map(
+      command,
       PrepareSignatureCommand,
       PrepareSignatureData,
     );
     const options = this.getEndpointOptions(
       ReputationOracleEndpoints.PREPARE_SIGNATURE,
-      prepareSignatureData,
+      data,
+      command.token,
     );
     return this.handleRequestToReputationOracle<PrepareSignatureResponse>(
       options,

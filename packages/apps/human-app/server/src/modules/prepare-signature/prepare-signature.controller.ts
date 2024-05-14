@@ -14,6 +14,7 @@ import {
   PrepareSignatureResponse,
 } from './model/prepare-signature.model';
 import { PrepareSignatureService } from './prepare-signature.service';
+import { Authorization } from '../../common/config/params-decorators';
 
 @Controller('/prepare-signature')
 export class PrepareSignatureController {
@@ -30,13 +31,15 @@ export class PrepareSignatureController {
   })
   @UsePipes(new ValidationPipe())
   public async prepareSignature(
-    @Body() prepareSignatureDto: PrepareSignatureDto,
+    @Body() dto: PrepareSignatureDto,
+    @Authorization() token: string,
   ): Promise<PrepareSignatureResponse> {
-    const prepareSignatureCommand = this.mapper.map(
-      prepareSignatureDto,
+    const command = this.mapper.map(
+      dto,
       PrepareSignatureDto,
       PrepareSignatureCommand,
     );
-    return this.service.processPrepareSignature(prepareSignatureCommand);
+    command.token = token;
+    return this.service.processPrepareSignature(command);
   }
 }

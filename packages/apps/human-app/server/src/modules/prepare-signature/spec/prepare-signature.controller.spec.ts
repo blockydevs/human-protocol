@@ -6,6 +6,7 @@ import {
   prepareSignatureCommandFixture,
   prepareSignatureDtoFixture,
   prepareSignatureResponseFixture,
+  TOKEN,
 } from './prepare-signature.fixtures';
 import { serviceMock } from './prepare-signature.service.mock';
 import { PrepareSignatureResponse } from '../model/prepare-signature.model';
@@ -44,17 +45,13 @@ describe('PrepareSignatureController', () => {
   describe('prepareSignature', () => {
     it('should call the processPrepareSignature method of the service with the correct arguments', async () => {
       const dto = prepareSignatureDtoFixture;
+      const token = TOKEN;
       const command = prepareSignatureCommandFixture;
-      await controller.prepareSignature(dto);
+      const expectedResponse: PrepareSignatureResponse =
+        prepareSignatureResponseFixture;
+      const response = await controller.prepareSignature(dto, token);
+      expect(response).toEqual(expectedResponse);
       expect(service.processPrepareSignature).toHaveBeenCalledWith(command);
     });
-  });
-
-  it('should return the proper response from prepareSignature method in controller', async () => {
-    const dto = prepareSignatureDtoFixture;
-    const expectedResponse: PrepareSignatureResponse =
-      prepareSignatureResponseFixture;
-    const response = await controller.prepareSignature(dto);
-    expect(response).toEqual(expectedResponse);
   });
 });
