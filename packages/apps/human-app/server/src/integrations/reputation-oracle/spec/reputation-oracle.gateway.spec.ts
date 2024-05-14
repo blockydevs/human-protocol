@@ -519,7 +519,7 @@ describe('ReputationOracleGateway', () => {
         service.sendPrepareSignature(command),
       ).resolves.not.toThrow();
       expect(httpService.request).toHaveBeenCalledWith(expectedOptions);
-      expect(service.sendPrepareSignature(command)).resolves.toEqual(
+      await expect(service.sendPrepareSignature(command)).resolves.toEqual(
         prepareSignatureResponseFixture,
       );
     });
