@@ -30,6 +30,20 @@ import {
   PrepareSignatureCommand,
   PrepareSignatureData,
 } from '../../modules/prepare-signature/model/prepare-signature.model';
+import {
+  DisableOperatorData,
+  DisableOperatorParams,
+} from '../../modules/disable-operator/model/disable-operator.model';
+import { RestorePasswordCommand, RestorePasswordData } from '../../modules/password-reset/model/restore-password.model';
+import { ForgotPasswordCommand, ForgotPasswordData } from '../../modules/password-reset/model/forgot-password.model';
+import {
+  ResendEmailVerificationData,
+  ResendEmailVerificationParams,
+} from '../../modules/email-confirmation/model/resend-email-verification.model';
+import {
+  EmailVerificationCommand,
+  EmailVerificationData,
+} from '../../modules/email-confirmation/model/email-verification.model';
 
 @Injectable()
 export class ReputationOracleProfile extends AutomapperProfile {
@@ -55,6 +69,15 @@ export class ReputationOracleProfile extends AutomapperProfile {
       createMap(mapper, SignupOperatorCommand, SignupOperatorData);
       createMap(mapper, PrepareSignatureCommand, PrepareSignatureData);
       createMap(mapper, SigninOperatorCommand, SigninOperatorData);
+      createMap(mapper, DisableOperatorParams, DisableOperatorData);
+      createMap(mapper, RestorePasswordCommand, RestorePasswordData);
+      createMap(mapper, ForgotPasswordCommand, ForgotPasswordData);
+      createMap(
+        mapper,
+        ResendEmailVerificationParams,
+        ResendEmailVerificationData,
+      );
+      createMap(mapper, EmailVerificationCommand, EmailVerificationData);
       createMap(
         mapper,
         SigninWorkerCommand,
