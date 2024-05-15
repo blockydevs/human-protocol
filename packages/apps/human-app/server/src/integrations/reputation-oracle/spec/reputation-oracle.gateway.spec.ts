@@ -246,7 +246,7 @@ describe('ReputationOracleGateway', () => {
       const command: EmailVerificationCommand = emailVerificationCommandFixture;
       const data: EmailVerificationData = emailVerificationDataFixture;
       nock('https://expample.com')
-        .post('/email-confirmation/email-verification', {
+        .post('/auth/email-verification', {
           ...data,
         })
         .reply(201, '');
@@ -298,7 +298,7 @@ describe('ReputationOracleGateway', () => {
         ...command.data,
       };
       nock('https://expample.com')
-        .post('/email-confirmation/resend-email-verification', {
+        .post('/auth/resend-email-verification', {
           ...data,
         })
         .reply(201, '');
@@ -353,7 +353,7 @@ describe('ReputationOracleGateway', () => {
       const command: ForgotPasswordCommand = forgotPasswordCommandFixture;
       const data: ForgotPasswordData = forgotPasswordDataFixture;
       nock('https://expample.com')
-        .post('/password-reset/forgot-password', {
+        .post('/auth/forgot-password', {
           ...data,
         })
         .reply(201, '');
@@ -400,7 +400,7 @@ describe('ReputationOracleGateway', () => {
       const command: RestorePasswordCommand = restorePasswordCommandFixture;
       const data: RestorePasswordData = restorePasswordDataFixture;
       nock('https://expample.com')
-        .post('/password-reset/restore-password', {
+        .post('/auth/restore-password', {
           ...data,
         })
         .reply(201, '');
@@ -447,7 +447,7 @@ describe('ReputationOracleGateway', () => {
       const command: PrepareSignatureCommand = prepareSignatureCommandFixture;
       const data: PrepareSignatureData = prepareSignatureDataFixture;
       nock('https://expample.com')
-        .post('/prepare-signature', {
+        .post('/user/prepare-signature', {
           ...data,
         })
         .reply(201, '');
@@ -496,7 +496,7 @@ describe('ReputationOracleGateway', () => {
       const command: DisableOperatorCommand = disableOperatorCommandFixture;
       const data: DisableOperatorData = disableOperatorDataFixture;
       nock('https://expample.com')
-        .post('/disable-operator', {
+        .post('/user/disable-operator', {
           ...data,
         })
         .reply(201, '');
