@@ -7,13 +7,14 @@ import {
 } from '@nestjs/common';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   PrepareSignatureCommand,
   PrepareSignatureDto,
   PrepareSignatureResponse,
 } from './model/prepare-signature.model';
 import { PrepareSignatureService } from './prepare-signature.service';
+import { Authorization } from '../../common/config/params-decorators';
 
 @Controller('/prepare-signature')
 export class PrepareSignatureController {
@@ -32,11 +33,11 @@ export class PrepareSignatureController {
   public async prepareSignature(
     @Body() prepareSignatureDto: PrepareSignatureDto,
   ): Promise<PrepareSignatureResponse> {
-    const prepareSignatureCommand = this.mapper.map(
+    const command = this.mapper.map(
       prepareSignatureDto,
       PrepareSignatureDto,
       PrepareSignatureCommand,
     );
-    return this.service.processPrepareSignature(prepareSignatureCommand);
+    return this.service.processPrepareSignature(command);
   }
 }

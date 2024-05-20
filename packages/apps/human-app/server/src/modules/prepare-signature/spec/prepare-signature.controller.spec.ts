@@ -45,7 +45,10 @@ describe('PrepareSignatureController', () => {
     it('should call the processPrepareSignature method of the service with the correct arguments', async () => {
       const dto = prepareSignatureDtoFixture;
       const command = prepareSignatureCommandFixture;
-      await controller.prepareSignature(dto);
+      const expectedResponse: PrepareSignatureResponse =
+        prepareSignatureResponseFixture;
+      const response = await controller.prepareSignature(dto);
+      expect(response).toEqual(expectedResponse);
       expect(service.processPrepareSignature).toHaveBeenCalledWith(command);
     });
   });
