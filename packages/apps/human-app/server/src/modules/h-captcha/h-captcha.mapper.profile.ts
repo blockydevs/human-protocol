@@ -4,7 +4,7 @@ import { createMap, Mapper } from '@automapper/core';
 import { JwtUserData } from '../../common/interfaces/jwt-token.model';
 import { EnableLabelingCommand } from './model/enable-labeling.model';
 import { DailyHmtSpentCommand } from './model/daily-hmt-spent.model';
-import { UserStatsCommand } from './model/user-sats.model';
+import { UserStatsCommand } from './model/user-stats.model';
 import { VerifyTokenCommand } from './model/verify-token.model';
 
 @Injectable()

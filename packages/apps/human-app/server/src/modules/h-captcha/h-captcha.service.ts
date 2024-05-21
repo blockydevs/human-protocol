@@ -14,7 +14,7 @@ import {
 } from './model/enable-labeling.model';
 import { EnvironmentConfigService } from '../../common/config/environment-config.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { UserStatsCommand, UserStatsResponse } from './model/user-sats.model';
+import { UserStatsCommand, UserStatsResponse } from './model/user-stats.model';
 import { Cache } from 'cache-manager';
 import { HCaptchaLabelingGateway } from '../../integrations/h-captcha-labeling/h-captcha-labeling.gateway';
 import { ReputationOracleGateway } from '../../integrations/reputation-oracle/reputation-oracle.gateway';

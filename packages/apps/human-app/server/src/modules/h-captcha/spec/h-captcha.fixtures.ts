@@ -14,7 +14,7 @@ import {
   UserStatsApiResponse,
   UserStatsCommand,
   UserStatsResponse,
-} from '../model/user-sats.model';
+} from '../model/user-stats.model';
 import { EnableLabelingCommand, EnableLabelingData, EnableLabelingResponse } from '../model/enable-labeling.model';
 import { AutoMap } from '@automapper/classes';
 const EMAIL = 'some_email@example.com';

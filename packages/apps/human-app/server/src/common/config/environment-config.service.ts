@@ -93,9 +93,6 @@ export class EnvironmentConfigService {
   get hcaptchaLabelingApiKey(): string {
     return this.configService.getOrThrow<string>('HCAPTCHA_LABELING_API_KEY');
   }
-  get jwtSecret(): string {
-    return this.configService.getOrThrow<string>('JWT_SECRET'); // TODO: probably to remove
-  }
   get chainIdsEnabled(): string[] {
     const chainIds = this.configService.getOrThrow<string>('CHAIN_IDS_ENABLED');
     return chainIds.split(',').map((id) => id.trim());

@@ -15,7 +15,7 @@ import {
   EnableLabelingCommand,
   EnableLabelingResponse,
 } from '../model/enable-labeling.model';
-import { UserStatsCommand } from '../model/user-sats.model';
+import { UserStatsCommand } from '../model/user-stats.model';
 import {
   hCaptchaUserStatsCommandFixture,
   enableLabelingCommandFixture,

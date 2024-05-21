@@ -25,7 +25,7 @@ import {
   EnableLabelingCommand,
   EnableLabelingResponse,
 } from './model/enable-labeling.model';
-import { UserStatsCommand, UserStatsResponse } from './model/user-sats.model';
+import { UserStatsCommand, UserStatsResponse } from './model/user-stats.model';
 
 @Controller('/labeling/h-captcha')
 export class HCaptchaController {

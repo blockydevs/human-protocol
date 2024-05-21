@@ -504,7 +504,7 @@ describe('ReputationOracleGateway', () => {
     it('should successfully call the reputation oracle endpoint', async () => {
       const command: PrepareSignatureCommand = prepareSignatureCommandFixture;
       httpServiceMock.request.mockReturnValue(
-        of(prepareSignatureResponseFixture),
+        of({ data: prepareSignatureResponseFixture }),
       );
 
       const expectedOptions: AxiosRequestConfig = {

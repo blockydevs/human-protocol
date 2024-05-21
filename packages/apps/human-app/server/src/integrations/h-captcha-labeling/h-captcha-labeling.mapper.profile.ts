@@ -15,7 +15,7 @@ import {
   UserDropoffData,
   UserStatsApiResponse,
   UserStatsResponse,
-} from '../../modules/h-captcha/model/user-sats.model';
+} from '../../modules/h-captcha/model/user-stats.model';
 
 @Injectable()
 export class HCaptchaLabelingMapperProfile extends AutomapperProfile {

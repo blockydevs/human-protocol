@@ -23,7 +23,7 @@ import { lastValueFrom } from 'rxjs';
 import {
   UserStatsApiResponse,
   UserStatsResponse,
-} from '../../modules/h-captcha/model/user-sats.model';
+} from '../../modules/h-captcha/model/user-stats.model';
 import { toCleanObjParams } from '../../common/utils/gateway-common.utils';
 import { DailyHmtSpentResponse } from '../../modules/h-captcha/model/daily-hmt-spent.model';
 
