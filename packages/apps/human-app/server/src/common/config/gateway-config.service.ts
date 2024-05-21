@@ -81,6 +81,11 @@ export class GatewayConfigService {
               method: HttpMethod.POST,
               headers: this.JSON_HEADER,
             },
+            [ReputationOracleEndpoints.REGISTER_ADDRESS]: {
+              endpoint: '/user/register-address',
+              method: HttpMethod.POST,
+              headers: this.JSON_HEADER,
+            },
           } as Record<ReputationOracleEndpoints, GatewayEndpointConfig>,
         },
         [ExternalApiName.HCAPTCHA_LABELING]: {

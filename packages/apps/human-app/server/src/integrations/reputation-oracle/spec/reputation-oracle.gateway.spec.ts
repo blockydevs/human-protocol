@@ -60,6 +60,12 @@ import {
   enableLabelingDataFixture,
   enableLabelingResponseFixture,
 } from '../../../modules/h-captcha/spec/h-captcha.fixtures';
+import {
+  REGISTER_ADDRESS_TOKEN,
+  registerAddressCommandFixture,
+  registerAddressDataFixture,
+  registerAddressResponseFixture,
+} from '../../../modules/register-address/spec/register-address.fixtures';
 
 const httpServiceMock = {
   request: jest.fn(),
@@ -702,6 +708,31 @@ describe('ReputationOracleGateway', () => {
           HttpStatus.INTERNAL_SERVER_ERROR,
         ),
       );
+    });
+  });
+  describe('sendBlockchainAddressRegistration', () => {
+    it('should successfully call the reputation oracle blockchain address registration endpoint', async () => {
+      const expectedOptions: AxiosRequestConfig = {
+        method: 'POST',
+        url: `https://example.com/user/register-address`,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: REGISTER_ADDRESS_TOKEN,
+        },
+        data: registerAddressDataFixture,
+        params: {},
+      };
+
+      httpServiceMock.request.mockReturnValue(
+        of({
+          data: registerAddressResponseFixture,
+        }),
+      );
+
+      await service.sendBlockchainAddressRegistration(
+        registerAddressCommandFixture,
+      );
+      expect(httpService.request).toHaveBeenCalledWith(expectedOptions);
     });
   });
 });

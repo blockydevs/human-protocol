@@ -63,6 +63,11 @@ export const gatewayConfigServiceMock = {
         headers: { 'Content-Type': 'application/json' },
         params: {},
       },
+      REGISTER_ADDRESS: {
+        endpoint: '/user/register-address',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      },
     },
   }),
 };

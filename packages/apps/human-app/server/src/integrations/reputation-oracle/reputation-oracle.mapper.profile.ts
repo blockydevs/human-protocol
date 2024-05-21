@@ -10,7 +10,8 @@ import {
   SnakeCaseNamingConvention,
 } from '@automapper/core';
 import {
-  SigninOperatorCommand, SigninOperatorData,
+  SigninOperatorCommand,
+  SigninOperatorData,
   SignupOperatorCommand,
   SignupOperatorData,
 } from '../../modules/user-operator/model/operator.model';
@@ -34,8 +35,14 @@ import {
   DisableOperatorData,
   DisableOperatorParams,
 } from '../../modules/disable-operator/model/disable-operator.model';
-import { RestorePasswordCommand, RestorePasswordData } from '../../modules/password-reset/model/restore-password.model';
-import { ForgotPasswordCommand, ForgotPasswordData } from '../../modules/password-reset/model/forgot-password.model';
+import {
+  RestorePasswordCommand,
+  RestorePasswordData,
+} from '../../modules/password-reset/model/restore-password.model';
+import {
+  ForgotPasswordCommand,
+  ForgotPasswordData,
+} from '../../modules/password-reset/model/forgot-password.model';
 import {
   ResendEmailVerificationData,
   ResendEmailVerificationParams,
@@ -44,6 +51,10 @@ import {
   EmailVerificationCommand,
   EmailVerificationData,
 } from '../../modules/email-confirmation/model/email-verification.model';
+import {
+  RegisterAddressCommand,
+  RegisterAddressData,
+} from '../../modules/register-address/model/register-address.model';
 
 @Injectable()
 export class ReputationOracleProfile extends AutomapperProfile {
@@ -57,10 +68,6 @@ export class ReputationOracleProfile extends AutomapperProfile {
         mapper,
         SignupWorkerCommand,
         SignupWorkerData,
-        forMember(
-          (destination) => destination.h_captcha_token,
-          mapFrom((source) => source.hCaptchaToken),
-        ),
         namingConventions({
           source: new CamelCaseNamingConvention(),
           destination: new SnakeCaseNamingConvention(),
@@ -82,16 +89,21 @@ export class ReputationOracleProfile extends AutomapperProfile {
         mapper,
         SigninWorkerCommand,
         SigninWorkerData,
-        forMember(
-          (destination) => destination.h_captcha_token,
-          mapFrom((source) => source.hCaptchaToken),
-        ),
         namingConventions({
           source: new CamelCaseNamingConvention(),
           destination: new SnakeCaseNamingConvention(),
         }),
       );
       createMap(mapper, EnableLabelingCommand, EnableLabelingData);
+      createMap(
+        mapper,
+        RegisterAddressCommand,
+        RegisterAddressData,
+        namingConventions({
+          source: new CamelCaseNamingConvention(),
+          destination: new SnakeCaseNamingConvention(),
+        }),
+      );
     };
   }
 }

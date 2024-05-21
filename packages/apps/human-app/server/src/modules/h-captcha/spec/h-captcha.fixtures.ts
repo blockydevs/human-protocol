@@ -149,3 +149,4 @@ export const enableLabelingDataFixture: EnableLabelingData = {
 export const enableLabelingResponseFixture: EnableLabelingResponse = {
   message: SUCCESSFULLY_ENABLED,
 };
+

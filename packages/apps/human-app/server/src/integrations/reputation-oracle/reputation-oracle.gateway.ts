@@ -61,6 +61,11 @@ import {
   EnableLabelingData,
   EnableLabelingResponse,
 } from '../../modules/h-captcha/model/enable-labeling.model';
+import {
+  RegisterAddressCommand,
+  RegisterAddressData,
+  RegisterAddressResponse,
+} from '../../modules/register-address/model/register-address.model';
 
 @Injectable()
 export class ReputationOracleGateway {
@@ -78,7 +83,7 @@ export class ReputationOracleGateway {
     endpointName: ReputationOracleEndpoints,
     data?: RequestDataType,
     token?: string,
-  ) {
+  ): AxiosRequestConfig {
     const endpointConfig: GatewayEndpointConfig =
       this.reputationOracleConfig.endpoints[endpointName];
     const authHeader = token ? { Authorization: token } : {};
@@ -93,7 +98,7 @@ export class ReputationOracleGateway {
         ...endpointConfig.params,
       },
       data: data,
-    };
+    } as AxiosRequestConfig;
   }
 
   private async handleRequestToReputationOracle<T>(
@@ -263,6 +268,24 @@ export class ReputationOracleGateway {
       data,
     );
     return this.handleRequestToReputationOracle<EnableLabelingResponse>(
+      options,
+    );
+  }
+
+  sendBlockchainAddressRegistration(
+    command: RegisterAddressCommand,
+  ): Promise<RegisterAddressResponse> {
+    const data = this.mapper.map(
+      command,
+      RegisterAddressCommand,
+      RegisterAddressData,
+    );
+    const options = this.getEndpointOptions(
+      ReputationOracleEndpoints.REGISTER_ADDRESS,
+      data,
+      command.token,
+    );
+    return this.handleRequestToReputationOracle<RegisterAddressResponse>(
       options,
     );
   }
