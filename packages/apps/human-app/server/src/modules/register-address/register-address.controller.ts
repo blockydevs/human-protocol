@@ -16,7 +16,7 @@ import {
 } from './model/register-address.model';
 import { Mapper } from '@automapper/core';
 
-@Controller('/register-address')
+@Controller('/user/register-address')
 export class RegisterAddressController {
   @InjectMapper() private readonly mapper: Mapper;
 
