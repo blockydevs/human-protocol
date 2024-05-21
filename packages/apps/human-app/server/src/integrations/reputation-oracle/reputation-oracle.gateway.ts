@@ -66,7 +66,6 @@ import {
   RegisterAddressData,
   RegisterAddressResponse,
 } from '../../modules/register-address/model/register-address.model';
-import { ReputationOracleEndpoints } from '../../common/enums/reputation-oracle-endpoints';
 
 @Injectable()
 export class ReputationOracleGateway {
@@ -251,7 +250,7 @@ export class ReputationOracleGateway {
   async sendKycProcedureStart(token: string) {
     const options = this.getEndpointOptions(
       ReputationOracleEndpoints.KYC_PROCEDURE_START,
-      EmptyData,
+      undefined,
       token,
     );
     return this.handleRequestToReputationOracle<KycProcedureStartResponse>(

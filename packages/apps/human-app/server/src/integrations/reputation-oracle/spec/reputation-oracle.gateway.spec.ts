@@ -3,11 +3,8 @@ import { HttpService } from '@nestjs/axios';
 import { GatewayConfigService } from '../../../common/config/gateway-config.service';
 import { of, throwError } from 'rxjs';
 import { ReputationOracleGateway } from '../reputation-oracle.gateway';
-import { of, throwError } from 'rxjs';
 import nock from 'nock';
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { SignupOperatorCommand } from '../../../modules/user-operator/model/operator-registration.model';
-import { gatewayConfigServiceMock } from '../../../common/config/gateway-config.service.mock';
 import { ethers } from 'ethers';
 import { AxiosRequestConfig } from 'axios';
 import { AutomapperModule } from '@automapper/nestjs';
@@ -44,7 +41,10 @@ import {
   restorePasswordCommandFixture,
   restorePasswordDataFixture,
 } from '../../../modules/password-reset/spec/password-reset.fixtures';
-import { RestorePasswordCommand } from '../../../modules/password-reset/model/restore-password.model';
+import {
+  RestorePasswordCommand,
+  RestorePasswordData,
+} from '../../../modules/password-reset/model/restore-password.model';
 import { PrepareSignatureCommand } from '../../../modules/prepare-signature/model/prepare-signature.model';
 import {
   prepareSignatureCommandFixture,
@@ -55,7 +55,10 @@ import {
   disableOperatorCommandFixture,
   disableOperatorDataFixture,
 } from '../../../modules/disable-operator/spec/disable-operator.fixtures';
-import { DisableOperatorCommand } from '../../../modules/disable-operator/model/disable-operator.model';
+import {
+  DisableOperatorCommand,
+  DisableOperatorData,
+} from '../../../modules/disable-operator/model/disable-operator.model';
 import { EnableLabelingCommand } from '../../../modules/h-captcha/model/enable-labeling.model';
 import {
   enableLabelingCommandFixture,
