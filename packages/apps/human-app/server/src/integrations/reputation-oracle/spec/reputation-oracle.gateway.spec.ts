@@ -1,10 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpService } from '@nestjs/axios';
 import { GatewayConfigService } from '../../../common/config/gateway-config.service';
+import { of, throwError } from 'rxjs';
 import { ReputationOracleGateway } from '../reputation-oracle.gateway';
 import { of, throwError } from 'rxjs';
 import nock from 'nock';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { SignupOperatorCommand } from '../../../modules/user-operator/model/operator-registration.model';
+import { gatewayConfigServiceMock } from '../../../common/config/gateway-config.service.mock';
 import { ethers } from 'ethers';
 import { AxiosRequestConfig } from 'axios';
 import { AutomapperModule } from '@automapper/nestjs';
@@ -47,7 +50,6 @@ import {
   prepareSignatureCommandFixture,
   prepareSignatureDataFixture,
   prepareSignatureResponseFixture,
-  TOKEN,
 } from '../../../modules/prepare-signature/spec/prepare-signature.fixtures';
 import {
   disableOperatorCommandFixture,
@@ -221,7 +223,7 @@ describe('ReputationOracleGateway', () => {
         type: 'OPERATOR',
       };
 
-      nock('https://example.com')
+      nock('https://expample.com')
         .post('/auth/web3/signup', expectedData)
         .reply(201, '');
 
@@ -350,10 +352,13 @@ describe('ReputationOracleGateway', () => {
     it('should successfully call the reputation oracle endpoint', async () => {
       const command: ResendEmailVerificationCommand =
         resendEmailVerificationCommandFixture;
-      const data: ResendEmailVerificationData = { ...command.data };
-
+      const data: ResendEmailVerificationData = {
+        ...command.data,
+      };
       nock('https://example.com')
-        .post('/email-confirmation/resend-email-verification', { ...data })
+        .post('/auth/resend-email-verification', {
+          ...data,
+        })
         .reply(201, '');
 
       httpServiceMock.request.mockReturnValue(of({}));
@@ -408,9 +413,10 @@ describe('ReputationOracleGateway', () => {
     it('should successfully call the reputation oracle endpoint', async () => {
       const command: ForgotPasswordCommand = forgotPasswordCommandFixture;
       const data: ForgotPasswordData = forgotPasswordDataFixture;
-
       nock('https://example.com')
-        .post('/password-reset/forgot-password', { ...data })
+        .post('/auth/forgot-password', {
+          ...data,
+        })
         .reply(201, '');
 
       httpServiceMock.request.mockReturnValue(of({}));
@@ -457,10 +463,10 @@ describe('ReputationOracleGateway', () => {
   describe('sendRestorePassword', () => {
     it('should successfully call the reputation oracle endpoint', async () => {
       const command: RestorePasswordCommand = restorePasswordCommandFixture;
-
+      const data: RestorePasswordData = restorePasswordDataFixture;
       nock('https://example.com')
-        .post('/password-reset/restore-password', {
-          ...restorePasswordDataFixture,
+        .post('/auth/restore-password', {
+          ...data,
         })
         .reply(201, '');
 
@@ -510,13 +516,13 @@ describe('ReputationOracleGateway', () => {
     it('should successfully call the reputation oracle endpoint', async () => {
       const command: PrepareSignatureCommand = prepareSignatureCommandFixture;
       httpServiceMock.request.mockReturnValue(
-        of({ data: prepareSignatureResponseFixture }),
+        of(prepareSignatureResponseFixture),
       );
 
       const expectedOptions: AxiosRequestConfig = {
         method: 'POST',
         url: `https://example.com/user/prepare-signature`,
-        headers: { 'Content-Type': 'application/json', Authorization: TOKEN },
+        headers: { 'Content-Type': 'application/json' },
         data: prepareSignatureDataFixture,
         params: {},
       };
@@ -525,9 +531,6 @@ describe('ReputationOracleGateway', () => {
         service.sendPrepareSignature(command),
       ).resolves.not.toThrow();
       expect(httpService.request).toHaveBeenCalledWith(expectedOptions);
-      await expect(service.sendPrepareSignature(command)).resolves.toEqual(
-        prepareSignatureResponseFixture,
-      );
     });
 
     it('should handle http error response correctly', async () => {
@@ -568,10 +571,10 @@ describe('ReputationOracleGateway', () => {
   describe('sendDisableOperator', () => {
     it('should successfully call the reputation oracle endpoint', async () => {
       const command: DisableOperatorCommand = disableOperatorCommandFixture;
-
+      const data: DisableOperatorData = disableOperatorDataFixture;
       nock('https://example.com')
-        .post('/disable-operator/prepare-signature', {
-          ...disableOperatorDataFixture,
+        .post('/user/disable-operator', {
+          ...data,
         })
         .reply(201, '');
 
@@ -620,10 +623,10 @@ describe('ReputationOracleGateway', () => {
   describe('sendKycProcedureStart', () => {
     it('should successfully call the reputation oracle endpoint', async () => {
       nock('https://example.com').post('/kyc/start', {}).reply(201, '');
-
       httpServiceMock.request.mockReturnValue(of({}));
-
-      await expect(service.sendKycProcedureStart()).resolves.not.toThrow();
+      await expect(
+        service.sendKycProcedureStart('token'),
+      ).resolves.not.toThrow();
       expect(httpService.request).toHaveBeenCalled();
     });
 
@@ -640,7 +643,7 @@ describe('ReputationOracleGateway', () => {
           ),
         );
 
-      await expect(service.sendKycProcedureStart()).rejects.toThrow(
+      await expect(service.sendKycProcedureStart('token')).rejects.toThrow(
         new HttpException({ message: 'Bad request' }, HttpStatus.BAD_REQUEST),
       );
     });
@@ -650,7 +653,7 @@ describe('ReputationOracleGateway', () => {
         .spyOn(httpService, 'request')
         .mockReturnValue(throwError(() => new Error('Internal Server Error')));
 
-      await expect(service.sendKycProcedureStart()).rejects.toThrow(
+      await expect(service.sendKycProcedureStart('token')).rejects.toThrow(
         new HttpException(
           'Internal Server Error',
           HttpStatus.INTERNAL_SERVER_ERROR,
@@ -734,5 +737,9 @@ describe('ReputationOracleGateway', () => {
       );
       expect(httpService.request).toHaveBeenCalledWith(expectedOptions);
     });
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
   });
 });

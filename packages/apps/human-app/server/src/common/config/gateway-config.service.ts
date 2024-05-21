@@ -4,6 +4,7 @@ import { HCaptchaLabelingEndpoints, ReputationOracleEndpoints } from '../enums/r
 import { GatewayConfig, GatewayEndpointConfig, Gateways } from '../interfaces/endpoint.interface';
 import { EnvironmentConfigService } from './environment-config.service';
 import { HttpMethod } from '../enums/http-method';
+import { ReputationOracleEndpoints } from '../enums/reputation-oracle-endpoints';
 
 @Injectable()
 export class GatewayConfigService {
