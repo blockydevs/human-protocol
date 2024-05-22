@@ -33,6 +33,8 @@ import { HCaptchaController } from './modules/h-captcha/h-captcha.controller';
 import { EscrowUtilsModule } from './integrations/escrow/escrow-utils.module';
 import Joi from 'joi';
 import { ChainId } from '@human-protocol/sdk';
+import { RegisterAddressController } from './modules/register-address/register-address.controller';
+import { RegisterAddressModule } from './modules/register-address/register-address.module';
 
 @Module({
   imports: [
@@ -87,6 +89,7 @@ import { ChainId } from '@human-protocol/sdk';
     HCaptchaModule,
     HCaptchaLabelingModule,
     EscrowUtilsModule,
+    RegisterAddressModule,
   ],
   controllers: [
     AppController,
@@ -97,6 +100,7 @@ import { ChainId } from '@human-protocol/sdk';
     JobAssignmentController,
     StatisticsController,
     HCaptchaController,
+    RegisterAddressController,
   ],
   exports: [HttpModule],
 })
