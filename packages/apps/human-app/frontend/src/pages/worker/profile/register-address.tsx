@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useRegisterAddress } from '@/api/servieces/worker/register-address';
 import { useProtectedLayoutNotification } from '@/hooks/use-protected-layout-notifications';
 import { defaultErrorMessage } from '@/shared/helpers/default-error-message';
+import { jsonRpcErrorHandler } from '@/shared/helpers/json-rpc-error-handler';
 
 export function RegisterAddress({ disabled }: { disabled: boolean }) {
   const { closeNotification, setTopNotification } =
@@ -18,7 +19,7 @@ export function RegisterAddress({ disabled }: { disabled: boolean }) {
     if (status === 'error') {
       setTopNotification({
         type: 'warning',
-        content: defaultErrorMessage(error),
+        content: defaultErrorMessage(error, jsonRpcErrorHandler),
       });
     }
   }, [closeNotification, error, setTopNotification, status]);
