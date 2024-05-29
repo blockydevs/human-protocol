@@ -1,7 +1,7 @@
 import { Grid, List, Paper, Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import type { Dispatch, SetStateAction } from 'react';
-import { ProfileListItem } from '@/pages/operator/profile/profile-list-item';
+import { ProfileListItem } from '@/components/ui/profile-list-item';
 import { colorPalette } from '@/styles/color-palette';
 import { Button } from '@/components/ui/button';
 import { SearchForm } from '@/pages/playground/table-example/table-search-form';
@@ -87,7 +87,7 @@ export function MyJobsTableMobile({
                       />
                       <ProfileListItem
                         header={t('worker.jobs.rewardAmount')}
-                        paragraph={`${d.reward_amount}`}
+                        paragraph={`${d.reward_amount.toFixed(0)} ${d.reward_token}`}
                       />
                     </Grid>
                     <Grid item xs={6}>

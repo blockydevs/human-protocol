@@ -6,6 +6,14 @@
     "plusPrefix": "+"
   },
   "dashboard": {},
+  "protectedPagesHeaders": {
+    "profile": "Profile",
+    "jobsDiscovery":"Jobs Discovery",
+    "jobs": "Jobs"
+  },
+  "web3ProtectedPagesHeaders": {
+    "profile": "Profile"
+  },
   "validation": {
     "required": "Required",
     "min": "Min {{count}} characters",
@@ -189,6 +197,13 @@
         "noKYCOnChain": "Please complete your profile! You still need to add KYC info on-chain."
       }
     },
+    "oraclesTable": {
+      "annotationTool": "Annotation tool",
+      "oracleAddress": "Oracle address",
+      "jobTypes": "Job types",
+      "seeJobs": "See jobs",
+      "allJobs": "All jobs"
+    },
     "jobs": {
       "successFullyAssignedJob": "Successfully assigned a job!",
       "errorFetchingData": "There was an error while fetching data, please try again",
@@ -290,6 +305,7 @@
     "stakeForm": {
       "formBtn": "Stake",
       "backBtn": "Skip",
+      "nextBtn": "Next",
       "label": "Stake amount",
       "description": "Please add bellow the amount to stake",
       "successAlert": "You have successfully staked {{amount}} HMT",
