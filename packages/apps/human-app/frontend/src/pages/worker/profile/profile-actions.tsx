@@ -12,14 +12,13 @@ import { Button } from '@/components/ui/button';
 import { defaultErrorMessage } from '@/shared/helpers/default-error-message';
 import { routerPaths } from '@/router/router-paths';
 import { startSynapsKyc } from '@/pages/worker/profile/start-synaps-kyc';
-import { useRegisterAddress } from '@/api/servieces/worker/register-address';
+import { RegisterAddress } from '@/pages/worker/profile/register-address';
 
 export function ProfileActions({
   setNotifications,
 }: {
   setNotifications: () => void;
 }) {
-  useRegisterAddress();
   const navigation = useNavigate();
   const { setTopNotification } = useProtectedLayoutNotification();
   const {
@@ -109,17 +108,12 @@ export function ProfileActions({
       </Grid>
       <Grid>
         <ProfileAction
-          // TODO verify if info is added on chain
           done={false}
           doneLabel={t('worker.profile.kycInfoOnChainAdded')}
           toDoComponent={
-            <Button
+            <RegisterAddress
               disabled={!(isWalletConnected && user.kyc_status === 'APPROVED')}
-              fullWidth
-              variant="contained"
-            >
-              {t('worker.profile.addKYCInfoOnChain')}
-            </Button>
+            />
           }
         />
       </Grid>

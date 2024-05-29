@@ -1,17 +1,23 @@
 /* eslint-disable camelcase -- ... */
 import { z } from 'zod';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
+import type { JsonRpcSigner } from 'ethers';
 import { apiClient } from '@/api/api-client';
 import { apiPaths } from '@/api/api-paths';
-import { useWalletConnect } from '@/hooks/use-wallet-connect';
 import { useAuthenticatedUser } from '@/auth/use-authenticated-user';
+import { useWalletConnect } from '@/hooks/use-wallet-connect';
+import { ethKvStoreSetBulk } from '@/smart-contracts/EthKVStore/eth-kv-store-set-bulk';
+import { getContractAddress } from '@/smart-contracts/get-contract-address';
 
 export interface RegisterAddressPayload {
-  chain_id?: number;
   address?: string;
 }
 
-const RegisterAddressSuccessSchema = z.unknown();
+const RegisterAddressSuccessSchema = z.object({
+  signed_address: z.string(),
+});
+
+type RegisterAddressSuccess = z.infer<typeof RegisterAddressSuccessSchema>;
 
 function registerAddress(data: RegisterAddressPayload) {
   return apiClient(apiPaths.worker.registerAddress.path, {
@@ -21,12 +27,43 @@ function registerAddress(data: RegisterAddressPayload) {
   });
 }
 
+async function registerAddressInKVStore({
+  signed_address,
+  oracleAddress,
+  signer,
+  chainId = 80002,
+}: RegisterAddressSuccess & {
+  oracleAddress: string;
+  signer?: JsonRpcSigner;
+  chainId?: number;
+}) {
+  const contractAddress = getContractAddress({
+    chainId,
+    contractName: 'EthKVStore',
+  });
+
+  await ethKvStoreSetBulk({
+    keys: [`KYC-${oracleAddress}`],
+    values: [signed_address],
+    signer,
+    chainId,
+    contractAddress,
+  });
+}
+
 export function useRegisterAddress() {
-  const { chainId } = useWalletConnect();
   const { user } = useAuthenticatedUser();
-  return useQuery({
-    queryFn: () =>
-      registerAddress({ chain_id: chainId, address: user.reputation_network }),
-    queryKey: [chainId, user.reputation_network],
+  const { web3ProviderMutation, chainId } = useWalletConnect();
+  return useMutation({
+    mutationFn: async () => {
+      const response = await registerAddress({ address: user.address || '' });
+      await registerAddressInKVStore({
+        signed_address: response.signed_address,
+        signer: web3ProviderMutation.data?.signer,
+        oracleAddress: user.reputation_network,
+        chainId,
+      });
+    },
+    mutationKey: [user.address],
   });
 }

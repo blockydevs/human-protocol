@@ -28,3 +28,12 @@ export type SetBulkKeys = [
 ];
 
 export type SetBulkValues = [string, string, Role, string];
+export interface SetOperatorPayload {
+  keys: SetBulkKeys;
+  values: SetBulkValues;
+}
+
+export interface SetKYCPayload {
+  keys: [`KYC-${string}`];
+  values: [string];
+}
