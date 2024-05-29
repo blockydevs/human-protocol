@@ -7,7 +7,10 @@ import {
   SnakeCaseNamingConvention,
 } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
-import { RegisterAddressCommand, RegisterAddressDto } from './model/register-address.model';
+import {
+  RegisterAddressCommand,
+  RegisterAddressDto,
+} from './model/register-address.model';
 
 @Injectable()
 export class RegisterAddressProfile extends AutomapperProfile {

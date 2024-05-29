@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { RegisterAddressCommand, RegisterAddressResponse } from './model/register-address.model';
+import {
+  RegisterAddressCommand,
+  RegisterAddressResponse,
+} from './model/register-address.model';
 import { ReputationOracleGateway } from '../../integrations/reputation-oracle/reputation-oracle.gateway';
 
 @Injectable()
