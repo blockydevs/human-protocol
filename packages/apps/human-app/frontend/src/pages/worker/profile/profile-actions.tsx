@@ -12,7 +12,8 @@ import { Button } from '@/components/ui/button';
 import { defaultErrorMessage } from '@/shared/helpers/default-error-message';
 import { routerPaths } from '@/router/router-paths';
 import { startSynapsKyc } from '@/pages/worker/profile/start-synaps-kyc';
-import { RegisterAddress } from '@/pages/worker/profile/register-address';
+import { RegisterAddressAction } from '@/pages/worker/profile/register-address-action';
+import { RequireWalletConnect } from '@/auth-web3/require-wallet-connect';
 
 export function ProfileActions({
   setNotifications,
@@ -109,13 +110,15 @@ export function ProfileActions({
         />
       </Grid>
       <Grid>
-        <ProfileAction
-          done={false}
-          doneLabel={t('worker.profile.kycInfoOnChainAdded')}
-          toDoComponent={
-            <RegisterAddress disabled={!(isWalletConnected && kycApproved)} />
-          }
-        />
+        {isWalletConnected && kycApproved ? (
+          <RequireWalletConnect>
+            <RegisterAddressAction kycApproved={kycApproved} />
+          </RequireWalletConnect>
+        ) : (
+          <Button disabled fullWidth>
+            {t('worker.profile.addKYCInfoOnChain')}
+          </Button>
+        )}
       </Grid>
     </Grid>
   );

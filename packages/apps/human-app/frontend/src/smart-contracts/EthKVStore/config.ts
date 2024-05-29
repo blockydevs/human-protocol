@@ -33,7 +33,8 @@ export interface SetOperatorPayload {
   values: SetBulkValues;
 }
 
+export type KYCKey = `KYC-${string}`;
 export interface SetKYCPayload {
-  keys: [`KYC-${string}`];
+  keys: [KYCKey];
   values: [string];
 }
