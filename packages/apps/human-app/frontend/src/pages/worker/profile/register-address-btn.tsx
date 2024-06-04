@@ -38,9 +38,7 @@ export function RegisterAddress({
       disabled={disabled}
       fullWidth
       loading={isPending}
-      onClick={() => {
-        mutate();
-      }}
+      onClick={mutate.bind(undefined, undefined)}
       variant="contained"
     >
       {t('worker.profile.addKYCInfoOnChain')}
