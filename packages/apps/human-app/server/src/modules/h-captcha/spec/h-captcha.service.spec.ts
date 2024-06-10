@@ -119,7 +119,7 @@ describe('HCaptchaService', () => {
       const command: VerifyTokenCommand = verifyTokenCommandFixture;
       const apiResponse: VerifyTokenApiResponse =
         unsuccessfulVerifyTokenApiResponseWithoutErrorCodesFixture;
-      const errorMessage = errorMessagesFixture.withoutErrorCodes;
+      const errorMessage = errorMessagesFixture.withUndefinedErrorCodes;
 
       jest
         .spyOn(hCaptchaLabelingGateway, 'sendTokenToVerify')
@@ -192,7 +192,9 @@ describe('HCaptchaService', () => {
   describe('getUserStats', () => {
     it('should return user stats from cache if available', async () => {
       const command: UserStatsCommand = hCaptchaUserStatsCommandFixture;
-      jest.spyOn(cacheManager, 'get').mockResolvedValue(userStatsResponseFixture);
+      jest
+        .spyOn(cacheManager, 'get')
+        .mockResolvedValue(userStatsResponseFixture);
 
       const result = await service.getUserStats(command);
       expect(result).toEqual(userStatsResponseFixture);

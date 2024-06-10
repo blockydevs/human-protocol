@@ -65,6 +65,7 @@ describe('KvStoreGateway', () => {
 
   afterEach(async () => {
     jest.restoreAllMocks();
+    jest.clearAllMocks();
   });
   it('should be defined', () => {
     expect(service).toBeDefined();

@@ -2,17 +2,17 @@ import { AutoMap } from '@automapper/classes';
 
 export class JwtUserData {
   @AutoMap()
-  _id: string;
+  userId: string;
   @AutoMap()
-  country: string;
-  @AutoMap()
-  eth_addr: string;
+  address: string;
   @AutoMap()
   email: string;
   @AutoMap()
-  hcaptchaSiteKey: string;
+  kyc_status: 'APPROVED' | 'NONE';
   @AutoMap()
-  polygonWalletAddr: string;
+  reputation_network: string;
   @AutoMap()
-  isKYCed: boolean;
+  iat: number;
+  @AutoMap()
+  exp: number;
 }

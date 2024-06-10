@@ -21,7 +21,9 @@ export class EnvironmentConfigService {
     return this.configService.getOrThrow<string>('REPUTATION_ORACLE_URL');
   }
   get reputationOracleAddress(): string {
-    return this.configService.getOrThrow<string>('REPUTATION_ORACLE_ADDRESS');
+    return this.configService
+      .getOrThrow<string>('REPUTATION_ORACLE_ADDRESS')
+      .toLowerCase();
   }
   get cachePort(): number {
     return this.configService.getOrThrow<number>('REDIS_PORT');
