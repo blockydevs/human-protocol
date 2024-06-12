@@ -93,7 +93,7 @@ export class EnvironmentConfigService {
   get hcaptchaLabelingApiKey(): string {
     return this.configService.getOrThrow<string>('HCAPTCHA_LABELING_API_KEY');
   }
-  get chainIdsEnabled(): string[] {
+  get enabledChainIds(): string[] {
     const chainIds = this.configService.getOrThrow<string>('CHAIN_IDS_ENABLED');
     return chainIds.split(',').map((id) => id.trim());
   }

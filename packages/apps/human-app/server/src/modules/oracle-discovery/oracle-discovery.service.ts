@@ -16,7 +16,7 @@ export class OracleDiscoveryService {
 
   async processOracleDiscovery(): Promise<OracleDiscoveryResponse[]> {
     const address = this.configService.reputationOracleAddress.toLowerCase();
-    const chainIds = this.configService.chainIdsEnabled;
+    const chainIds = this.configService.enabledChainIds;
 
     const allData = await Promise.all(
       chainIds.map(async (chainId) => {
