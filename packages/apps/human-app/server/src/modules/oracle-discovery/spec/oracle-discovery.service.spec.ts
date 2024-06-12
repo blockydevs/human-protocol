@@ -39,14 +39,6 @@ describe('OracleDiscoveryService', () => {
             set: jest.fn(),
           },
         },
-        // {
-        //   provide: EnvironmentConfigService,
-        //   useValue: {
-        //     reputationOracleAddress: 'mockedaddress',
-        //     cacheTtlOracleDiscovery: 86400,
-        //     chainIdsEnabled: ['80001'],
-        //   },
-        // },
       ],
     }).compile();
     configService = moduleRef.get<EnvironmentConfigService>(
