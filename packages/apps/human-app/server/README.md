@@ -75,12 +75,13 @@ Models are used to define the shape and responsibilities of the data:
   Domain-specific mappers in this context would be overly convoluted and difficult to configure.
   - **Gateway Configuration**: The configuration of the gateways' destination points is located 
   in the `gateway-config.service.ts` file.
-  - **Caching**:Cache persistence functionality was introduced in this project for optimization purposes. Redis was chosen
+  - **Caching**: Cache persistence functionality was introduced in this project for optimization purposes. Redis was chosen
   as the in-memory storage. The TTL can be checked and changed in the `.env.example` file, all `TTL` values are in seconds:
     * `REDIS_HOST` - URL of the Redis host
     * `REDIS_PORT` - port on which Redis is hosted
     * `CACHE_TTL_ORACLE_DISCOVERY` - time of persisting found oracles
     * `CACHE_TTL_ORACLE_STATS` - time of persisting statistics of the given oracle
+    * `CACHE_TTL_DAILY_HMT_SPENT` - time of persisting statistics of global daily HMT expenditures
     * `CACHE_TTL_USER_STATS` - time of persisting statistics of the given user
     * `CACHE_TTL_HCAPTCHA_USER_STATS` - time of persisting statistics related to h-captcha tasks for given user
     * `CACHE_TTL_EXCHANGE_ORACLE_URL` - time of persisting exchange oracle URL
