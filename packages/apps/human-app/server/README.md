@@ -75,3 +75,11 @@ This division of responsibilities is intentional, as gateways serve as the gathe
 Domain-specific mappers in this context would be overly convoluted and difficult to configure.
 - **Gateway Configuration**: The configuration of the gateways' destination points is located 
 in the `gateway-config.service.ts` file.
+- **Caching**:Cache persistence functionality was introduced in this project for optimization purposes. Redis was chosen
+as the in-memory storage. The TTL can be checked and changed in the `.env.example` file. Caching is used for persisting 
+the exchange oracle URL as well as responses from the following endpoints:
+  * `/h-captcha/daily-hmt-spent`
+  * `/h-captcha/user-stats`
+  * `/oracles`
+  * `/statistics/stats`
+  * `/statistics/stats/assignment`
