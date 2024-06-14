@@ -58,7 +58,6 @@ import {
 import { KycProcedureStartResponse } from '../../modules/kyc-procedure/model/kyc-start.model';
 import {
   EnableLabelingCommand,
-  EnableLabelingData,
   EnableLabelingResponse,
 } from '../../modules/h-captcha/model/enable-labeling.model';
 import {
@@ -259,14 +258,10 @@ export class ReputationOracleGateway {
   }
 
   async approveUserAsLabeler(command: EnableLabelingCommand) {
-    const data = this.mapper.map(
-      command,
-      EnableLabelingCommand,
-      EnableLabelingData,
-    );
     const options = this.getEndpointOptions(
       ReputationOracleEndpoints.ENABLE_LABELING,
-      data,
+      undefined,
+      command.token,
     );
     return this.handleRequestToReputationOracle<EnableLabelingResponse>(
       options,

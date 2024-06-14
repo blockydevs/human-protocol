@@ -2,7 +2,7 @@ import { AutoMap } from '@automapper/classes';
 
 export class DailyHmtSpentCommand {
   @AutoMap()
-  hcaptchaSiteKey: string;
+  siteKey: string;
 }
 export class DailyHmtSpentResponse {
   spend: number;

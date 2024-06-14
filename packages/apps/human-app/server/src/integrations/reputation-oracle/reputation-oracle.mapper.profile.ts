@@ -25,7 +25,6 @@ import {
 } from '../../modules/user-worker/model/worker-signin.model';
 import {
   EnableLabelingCommand,
-  EnableLabelingData,
 } from '../../modules/h-captcha/model/enable-labeling.model';
 import {
   PrepareSignatureCommand,
@@ -94,7 +93,6 @@ export class ReputationOracleProfile extends AutomapperProfile {
           destination: new SnakeCaseNamingConvention(),
         }),
       );
-      createMap(mapper, EnableLabelingCommand, EnableLabelingData);
       createMap(
         mapper,
         RegisterAddressCommand,
