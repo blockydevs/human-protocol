@@ -1,10 +1,10 @@
 import { t } from 'i18next';
 import { useEffect } from 'react';
-import { useRegisterAddress } from '@/api/servieces/worker/register-address';
+import { useRegisterAddressOnChain } from '@/api/servieces/worker/register-address-on-chain';
 import { Button } from '@/components/ui/button';
 import { useWalletConnect } from '@/hooks/use-wallet-connect';
 import { ProfileAction } from '@/pages/worker/profile/profile-action';
-import { RegisterAddress } from '@/pages/worker/profile/register-address-btn';
+import { RegisterAddress } from '@/pages/worker/profile/register-address-on-chain-btn';
 import { useProtectedLayoutNotification } from '@/hooks/use-protected-layout-notifications';
 
 export function RegisterAddressAction({
@@ -16,17 +16,17 @@ export function RegisterAddressAction({
     useProtectedLayoutNotification();
 
   const {
-    data: registerAddressData,
-    isError: isRegisterAddressError,
-    isPending: isRegisterAddressPending,
-    status: registerAddressStatus,
-  } = useRegisterAddress();
+    data: registerAddressOnChainData,
+    isError: isRegisterAddressOnChainError,
+    isPending: isRegisterAddressOnChainPending,
+    status: registerAddressOnChainStatus,
+  } = useRegisterAddressOnChain();
   const { isConnected } = useWalletConnect();
 
   useEffect(() => {
     if (
-      !registerAddressData?.kycRegisteredOnChain &&
-      registerAddressStatus === 'success'
+      !registerAddressOnChainData?.kycRegisteredOnChain &&
+      registerAddressOnChainStatus === 'success'
     ) {
       setTopNotification({
         content: t('worker.profile.topNotifications.noKYCOnChain'),
@@ -37,12 +37,12 @@ export function RegisterAddressAction({
     }
   }, [
     closeNotification,
-    registerAddressData,
-    registerAddressStatus,
+    registerAddressOnChainData?.kycRegisteredOnChain,
+    registerAddressOnChainStatus,
     setTopNotification,
   ]);
 
-  if (isRegisterAddressPending) {
+  if (isRegisterAddressOnChainPending) {
     return (
       <Button fullWidth loading>
         {t('worker.profile.addKYCInfoOnChain')}
@@ -50,7 +50,7 @@ export function RegisterAddressAction({
     );
   }
 
-  if (isRegisterAddressError) {
+  if (isRegisterAddressOnChainError) {
     return (
       <Button disabled fullWidth>
         {t('worker.profile.addKYCInfoOnChain')}
@@ -61,14 +61,14 @@ export function RegisterAddressAction({
   return (
     <ProfileAction
       done={Boolean(
-        registerAddressData.registeredAddressOnChain ===
-          registerAddressData.signedAddress
+        registerAddressOnChainData.registeredAddressOnChain ===
+          registerAddressOnChainData.signedAddress
       )}
       doneLabel={t('worker.profile.kycInfoOnChainAdded')}
       toDoComponent={
         <RegisterAddress
           disabled={!(isConnected && kycApproved)}
-          signed_address={registerAddressData.signedAddress}
+          signed_address={registerAddressOnChainData.signedAddress}
         />
       }
     />

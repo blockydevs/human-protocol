@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { defaultErrorMessage } from '@/shared/helpers/default-error-message';
 import { routerPaths } from '@/router/router-paths';
 import { startSynapsKyc } from '@/pages/worker/profile/start-synaps-kyc';
-import { RegisterAddressAction } from '@/pages/worker/profile/register-address-action';
+import { RegisterAddressAction } from '@/pages/worker/profile/register-address-on-chain-action';
 import { RequireWalletConnect } from '@/auth-web3/require-wallet-connect';
 import { WalletConnectDone } from '@/pages/worker/profile/wallet-connect-done';
 

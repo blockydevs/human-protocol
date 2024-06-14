@@ -2,7 +2,7 @@ import { Contract } from 'ethers';
 import EthKVStore from '@/smart-contracts/abi/EthKVStore.json';
 import type { ContractCallArguments } from '@/smart-contracts/types';
 import type { KYCKey } from '@/smart-contracts/EthKVStore/config';
-import type { RegisterAddressSuccess } from '@/api/servieces/worker/register-address';
+import type { RegisterAddressSuccess } from '@/api/servieces/worker/register-address-on-chain';
 
 export async function ethKVStoreGetKycData({
   kycKey,

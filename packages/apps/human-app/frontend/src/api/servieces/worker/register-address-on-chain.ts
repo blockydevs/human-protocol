@@ -20,7 +20,7 @@ export type RegisterAddressSuccess = z.infer<
   typeof RegisterAddressSuccessSchema
 >;
 
-export function useRegisterAddress() {
+export function useRegisterAddressOnChain() {
   const { user } = useAuthenticatedUser();
   const { web3ProviderMutation, address, chainId } = useConnectedWallet();
   return useQuery({

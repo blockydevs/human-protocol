@@ -1,7 +1,7 @@
 /* eslint-disable camelcase -- ... */
 import { useMutation } from '@tanstack/react-query';
 import type { JsonRpcSigner } from 'ethers';
-import type { RegisterAddressSuccess } from '@/api/servieces/worker/register-address';
+import type { RegisterAddressSuccess } from '@/api/servieces/worker/register-address-on-chain';
 import { useConnectedWallet } from '@/auth-web3/use-connected-wallet';
 import { useAuthenticatedUser } from '@/auth/use-authenticated-user';
 import { ethKvStoreSetBulk } from '@/smart-contracts/EthKVStore/eth-kv-store-set-bulk';
