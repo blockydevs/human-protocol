@@ -21,6 +21,7 @@ export function RegisterAddressAction({
     isPending: isRegisterAddressOnChainPending,
     status: registerAddressOnChainStatus,
   } = useRegisterAddressOnChain();
+
   const { isConnected } = useWalletConnect();
 
   useEffect(() => {
@@ -32,14 +33,29 @@ export function RegisterAddressAction({
         content: t('worker.profile.topNotifications.noKYCOnChain'),
         type: 'warning',
       });
-    } else {
-      closeNotification();
+
+      return;
     }
+
+    if (
+      registerAddressOnChainData?.kycRegisteredOnChain &&
+      registerAddressOnChainStatus === 'success'
+    ) {
+      closeNotification();
+
+      return;
+    }
+
+    if (registerAddressOnChainStatus === 'error') {
+      setTopNotification({
+        content: t('errors.unknown'),
+        type: 'warning',
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- ...
   }, [
-    closeNotification,
     registerAddressOnChainData?.kycRegisteredOnChain,
     registerAddressOnChainStatus,
-    setTopNotification,
   ]);
 
   if (isRegisterAddressOnChainPending) {
@@ -60,15 +76,12 @@ export function RegisterAddressAction({
 
   return (
     <ProfileAction
-      done={Boolean(
-        registerAddressOnChainData.registeredAddressOnChain ===
-          registerAddressOnChainData.signedAddress
-      )}
+      done={Boolean(registerAddressOnChainData.kycRegisteredOnChain)}
       doneLabel={t('worker.profile.kycInfoOnChainAdded')}
       toDoComponent={
         <RegisterAddress
           disabled={!(isConnected && kycApproved)}
-          signed_address={registerAddressOnChainData.signedAddress}
+          signed_address={registerAddressOnChainData.signedAddress || ''}
         />
       }
     />

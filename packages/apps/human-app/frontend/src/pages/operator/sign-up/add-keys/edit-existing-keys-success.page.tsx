@@ -7,11 +7,11 @@ import {
 } from '@/components/ui/page-card';
 import { Button } from '@/components/ui/button';
 import { useConnectedWallet } from '@/auth-web3/use-connected-wallet';
-import type { SignatureData } from '@/api/servieces/operator/prepare-signature';
+import type { SignatureData } from '@/api/servieces/common/prepare-signature';
 import {
   PrepareSignatureType,
   usePrepareSignature,
-} from '@/api/servieces/operator/prepare-signature';
+} from '@/api/servieces/common/prepare-signature';
 import { defaultErrorMessage } from '@/shared/helpers/default-error-message';
 import { useWeb3SignUp } from '@/api/servieces/operator/web3-signup';
 import { Alert } from '@/components/ui/alert';

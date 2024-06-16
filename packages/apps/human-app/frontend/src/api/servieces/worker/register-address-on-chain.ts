@@ -7,6 +7,11 @@ import { useAuthenticatedUser } from '@/auth/use-authenticated-user';
 import { ethKVStoreGetKycData } from '@/smart-contracts/EthKVStore/eth-kv-store-get-kyc-data';
 import { getContractAddress } from '@/smart-contracts/get-contract-address';
 import { useConnectedWallet } from '@/auth-web3/use-connected-wallet';
+import { useRegisterAddressState } from '@/hooks/use-register-address-state';
+import {
+  PrepareSignatureType,
+  prepareSignature,
+} from '@/api/servieces/common/prepare-signature';
 
 export interface RegisterAddressPayload {
   address: string;
@@ -22,20 +27,34 @@ export type RegisterAddressSuccess = z.infer<
 
 export function useRegisterAddressOnChain() {
   const { user } = useAuthenticatedUser();
-  const { web3ProviderMutation, address, chainId } = useConnectedWallet();
+  const { web3ProviderMutation, address, chainId, signMessage } =
+    useConnectedWallet();
+  const { registerAddressQueryData } = useRegisterAddressState();
+
+  const getSignedAddress = async (): Promise<RegisterAddressSuccess> => {
+    if (registerAddressQueryData) {
+      return registerAddressQueryData;
+    }
+
+    const dataToSign = await prepareSignature({
+      address: user.address || address,
+      type: PrepareSignatureType.RegisterAddress,
+    });
+    const signature = await signMessage(JSON.stringify(dataToSign));
+
+    return apiClient(apiPaths.worker.registerAddress.path, {
+      authenticated: true,
+      successSchema: RegisterAddressSuccessSchema,
+      options: {
+        method: 'POST',
+        body: JSON.stringify({ address: user.address, signature }),
+      },
+    });
+  };
+
   return useQuery({
     queryFn: async () => {
-      const signedAddress = await apiClient(
-        apiPaths.worker.registerAddress.path,
-        {
-          authenticated: true,
-          successSchema: RegisterAddressSuccessSchema,
-          options: {
-            method: 'POST',
-            body: JSON.stringify({ address: user.address }),
-          },
-        }
-      );
+      const signedAddress = await getSignedAddress();
 
       const contractAddress = getContractAddress({
         chainId,
@@ -58,6 +77,11 @@ export function useRegisterAddressOnChain() {
           signedAddress.signed_address === registeredAddressOnChain,
       };
     },
+    retry: 0,
+    refetchInterval: 0,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
     queryKey: [
       user.address,
       user.reputation_network,

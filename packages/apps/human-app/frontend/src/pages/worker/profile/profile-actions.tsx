@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { ProfileAction } from '@/pages/worker/profile/profile-action';
 import { useAuthenticatedUser } from '@/auth/use-authenticated-user';
 import { useWalletConnect } from '@/hooks/use-wallet-connect';
-import { ConnectWalletBtn } from '@/components/ui/connect-wallet-btn';
 import { useKycSessionIdMutation } from '@/api/servieces/worker/get-kyc-session-id';
 import { useProtectedLayoutNotification } from '@/hooks/use-protected-layout-notifications';
 import { Button } from '@/components/ui/button';
@@ -15,6 +14,7 @@ import { startSynapsKyc } from '@/pages/worker/profile/start-synaps-kyc';
 import { RegisterAddressAction } from '@/pages/worker/profile/register-address-on-chain-action';
 import { RequireWalletConnect } from '@/auth-web3/require-wallet-connect';
 import { WalletConnectDone } from '@/pages/worker/profile/wallet-connect-done';
+import { WalletConnectWithRegisterAddressBtn } from '@/pages/worker/profile/wallet-connect-with-register-address-btn';
 
 export function ProfileActions({
   setNotifications,
@@ -97,25 +97,13 @@ export function ProfileActions({
       </Grid>
       <Grid>
         <ProfileAction
-          done={Boolean(isWalletConnected && kycApproved)}
-          doneLabel={
-            <RequireWalletConnect>
-              <WalletConnectDone />
-            </RequireWalletConnect>
-          }
-          toDoComponent={
-            <ConnectWalletBtn
-              disabled={user.kyc_status !== 'APPROVED'}
-              fullWidth
-              variant="contained"
-            >
-              {t('worker.profile.connectWallet')}
-            </ConnectWalletBtn>
-          }
+          done={Boolean(user.address && isWalletConnected)}
+          doneLabel={<WalletConnectDone />}
+          toDoComponent={<WalletConnectWithRegisterAddressBtn />}
         />
       </Grid>
       <Grid>
-        {isWalletConnected && kycApproved ? (
+        {isWalletConnected && kycApproved && user.address ? (
           <RequireWalletConnect>
             <RegisterAddressAction kycApproved={kycApproved} />
           </RequireWalletConnect>

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/api/api-client';
 import { apiPaths } from '@/api/api-paths';
 
@@ -7,6 +7,7 @@ export enum PrepareSignatureType {
   SignUp = 'SIGNUP',
   SignIn = 'SIGNIN',
   DisableOperator = 'DISABLE_OPERATOR',
+  RegisterAddress = 'REGISTER_ADDRESS',
 }
 
 export const prepareSignatureSuccessSchema = z.object({
@@ -34,5 +35,27 @@ export function usePrepareSignature(body: PrepareSignatureBody) {
     queryFn: () => prepareSignature(body),
     queryKey: [body],
     refetchInterval: 0,
+  });
+}
+export function usePrepareSignatureMutation(callbacks?: {
+  onSuccess?: (successResponse: SignatureData) => Promise<void> | void;
+  onError?: () => void;
+}) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (body: PrepareSignatureBody) => prepareSignature(body),
+    onSuccess: async (data) => {
+      await queryClient.invalidateQueries();
+      if (callbacks?.onSuccess) {
+        await callbacks.onSuccess(data);
+      }
+    },
+    onError: async () => {
+      await queryClient.invalidateQueries();
+      if (callbacks?.onError) {
+        callbacks.onError();
+      }
+    },
   });
 }

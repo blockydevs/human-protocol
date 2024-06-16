@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Snackbar from '@mui/material/Snackbar';
 import { Button } from '@/components/ui/button';
 import { useWalletConnect } from '@/hooks/use-wallet-connect';
-import { PrepareSignatureType } from '@/api/servieces/operator/prepare-signature';
+import { PrepareSignatureType } from '@/api/servieces/common/prepare-signature';
 import { useWeb3SignIn } from '@/api/servieces/operator/web3-signin';
 import { useWeb3Auth } from '@/auth-web3/use-web3-auth';
 import { routerPaths } from '@/router/router-paths';
