@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { HCaptchaService } from './h-captcha.service';
 import {
   VerifyTokenCommand,
@@ -19,7 +19,10 @@ import {
   DailyHmtSpentCommand,
   DailyHmtSpentResponse,
 } from './model/daily-hmt-spent.model';
-import { JwtPayload } from '../../common/config/params-decorators';
+import {
+  Authorization,
+  JwtPayload,
+} from '../../common/config/params-decorators';
 import { JwtUserData } from '../../common/interfaces/jwt-token.model';
 import {
   EnableLabelingCommand,
@@ -36,36 +39,39 @@ export class HCaptchaController {
   @ApiTags('h-captcha')
   @Post('/enable')
   @ApiOperation({ summary: 'Enables h-captcha labeling' })
+  @ApiBearerAuth()
   @UsePipes(new ValidationPipe())
   public async enableLabeling(
-    @JwtPayload() jwtPayload: JwtUserData,
+    @Authorization() token: string,
   ): Promise<EnableLabelingResponse> {
-    const command = this.mapper.map(
-      jwtPayload,
-      JwtUserData,
-      EnableLabelingCommand,
-    );
+    const command = {
+      token: token,
+    } as EnableLabelingCommand;
     return this.service.enableLabeling(command);
   }
 
   @ApiTags('h-captcha')
   @Post('/verify')
   @ApiOperation({ summary: 'Sends solution for verification' })
+  @ApiBearerAuth()
   @UsePipes(new ValidationPipe())
   public async verifyToken(
     @Body() dto: VerifyTokenDto,
     @JwtPayload() jwtPayload: JwtUserData,
+    @Authorization() jwtToken: string,
   ): Promise<VerifyTokenResponse> {
     const command = this.mapper.map(
       jwtPayload,
       JwtUserData,
       VerifyTokenCommand,
     );
-    command.hcaptchaToken = dto.hcaptchaToken;
+    command.response = dto.token;
+    command.jwtToken = jwtToken;
     return await this.service.verifyToken(command);
   }
   @ApiTags('h-captcha')
   @Get('/daily-hmt-spent')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Gets global daily HMT spent' })
   @UsePipes(new ValidationPipe())
   public async getDailyHmtSpent(
@@ -80,14 +86,13 @@ export class HCaptchaController {
   }
   @ApiTags('h-captcha')
   @Get('/user-stats')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Gets stats per user' })
   @UsePipes(new ValidationPipe())
   public async getUserStats(
     @JwtPayload() jwtPayload: JwtUserData,
   ): Promise<UserStatsResponse> {
-    console.log('Payload: ', jwtPayload);
     const command = this.mapper.map(jwtPayload, JwtUserData, UserStatsCommand);
-    console.log('Mapped command:', command);
     return this.service.getUserStats(command);
   }
 }

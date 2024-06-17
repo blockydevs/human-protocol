@@ -13,8 +13,10 @@ export enum ReputationOracleEndpoints {
   ENABLE_LABELING = 'ENABLE_LABELING',
   REGISTER_ADDRESS = 'REGISTER_ADDRESS',
 }
-export enum HCaptchaLabelingEndpoints {
+export enum HCaptchaLabelingStatsEndpoints {
   USER_STATS = 'USER_STATS',
   DAILY_HMT_SPENT = 'DAILY_HMT_SPENT',
+}
+export enum HCaptchaLabelingVerifyEndpoints {
   TOKEN_VERIFY = 'TOKEN_VERIFY',
 }

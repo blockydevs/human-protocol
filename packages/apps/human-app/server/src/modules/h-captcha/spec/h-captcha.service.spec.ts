@@ -3,7 +3,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { HCaptchaService } from '../h-captcha.service';
 import { EnvironmentConfigService } from '../../../common/config/environment-config.service';
-import { HCaptchaLabelingGateway } from '../../../integrations/h-captcha-labeling/h-captcha-labeling.gateway';
+import { HCaptchaStatisticsGateway } from '../../../integrations/h-captcha-labeling/h-captcha-statistics.gateway';
 import { ReputationOracleGateway } from '../../../integrations/reputation-oracle/reputation-oracle.gateway';
 import {
   VerifyTokenCommand,
@@ -35,7 +35,7 @@ describe('HCaptchaService', () => {
   let service: HCaptchaService;
   let cacheManager: Cache;
   let configService: EnvironmentConfigService;
-  let hCaptchaLabelingGateway: HCaptchaLabelingGateway;
+  let hCaptchaLabelingGateway: HCaptchaStatisticsGateway;
   let reputationOracleGateway: ReputationOracleGateway;
 
   beforeEach(async () => {
@@ -51,7 +51,7 @@ describe('HCaptchaService', () => {
           },
         },
         {
-          provide: HCaptchaLabelingGateway,
+          provide: HCaptchaStatisticsGateway,
           useValue: hCaptchaLabelingGatewayMock,
         },
         {
@@ -75,8 +75,8 @@ describe('HCaptchaService', () => {
     configService = module.get<EnvironmentConfigService>(
       EnvironmentConfigService,
     );
-    hCaptchaLabelingGateway = module.get<HCaptchaLabelingGateway>(
-      HCaptchaLabelingGateway,
+    hCaptchaLabelingGateway = module.get<HCaptchaStatisticsGateway>(
+      HCaptchaStatisticsGateway,
     );
     reputationOracleGateway = module.get<ReputationOracleGateway>(
       ReputationOracleGateway,
@@ -119,7 +119,7 @@ describe('HCaptchaService', () => {
       const command: VerifyTokenCommand = verifyTokenCommandFixture;
       const apiResponse: VerifyTokenApiResponse =
         unsuccessfulVerifyTokenApiResponseWithoutErrorCodesFixture;
-      const errorMessage = errorMessagesFixture.withoutErrorCodes;
+      const errorMessage = errorMessagesFixture.withUndefinedErrorCodes;
 
       jest
         .spyOn(hCaptchaLabelingGateway, 'sendTokenToVerify')
@@ -192,7 +192,9 @@ describe('HCaptchaService', () => {
   describe('getUserStats', () => {
     it('should return user stats from cache if available', async () => {
       const command: UserStatsCommand = hCaptchaUserStatsCommandFixture;
-      jest.spyOn(cacheManager, 'get').mockResolvedValue(userStatsResponseFixture);
+      jest
+        .spyOn(cacheManager, 'get')
+        .mockResolvedValue(userStatsResponseFixture);
 
       const result = await service.getUserStats(command);
       expect(result).toEqual(userStatsResponseFixture);
