@@ -7,15 +7,23 @@ export class RegisterAddressDto {
   @IsString()
   @ApiProperty({ example: 'string' })
   address: string;
+  @AutoMap()
+  @IsString()
+  @ApiProperty({ example: 'string' })
+  signature: string;
 }
 export class RegisterAddressCommand {
   @AutoMap()
   address: string;
+  @AutoMap()
+  signature: string;
   token: string;
 }
 export class RegisterAddressData {
   @AutoMap()
   address: string;
+  @AutoMap()
+  signature: string;
 }
 export class RegisterAddressResponse {
   signed_address: string;
