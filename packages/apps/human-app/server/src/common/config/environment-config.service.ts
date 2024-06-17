@@ -21,7 +21,9 @@ export class EnvironmentConfigService {
     return this.configService.getOrThrow<string>('REPUTATION_ORACLE_URL');
   }
   get reputationOracleAddress(): string {
-    return this.configService.getOrThrow<string>('REPUTATION_ORACLE_ADDRESS');
+    return this.configService
+      .getOrThrow<string>('REPUTATION_ORACLE_ADDRESS')
+      .toLowerCase();
   }
   get cachePort(): number {
     return this.configService.getOrThrow<number>('REDIS_PORT');
@@ -87,8 +89,11 @@ export class EnvironmentConfigService {
       DEFAULT_CACHE_TTL_EXCHANGE_ORACLE_URL,
     );
   }
-  get hcaptchaLabelingApiUrl(): string {
-    return this.configService.getOrThrow<string>('HCAPTCHA_LABELING_API_URL');
+  get hcaptchaLabelingStatsApiUrl(): string {
+    return this.configService.getOrThrow<string>('HCAPTCHA_LABELING_STATS_API_URL');
+  }
+  get hcaptchaLabelingVerifyApiUrl(): string {
+    return this.configService.getOrThrow<string>('HCAPTCHA_LABELING_VERIFY_API_URL');
   }
   get hcaptchaLabelingApiKey(): string {
     return this.configService.getOrThrow<string>('HCAPTCHA_LABELING_API_KEY');

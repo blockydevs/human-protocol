@@ -49,7 +49,8 @@ import { RegisterAddressModule } from './modules/register-address/register-addre
         REDIS_PORT: Joi.number().required(),
         REDIS_HOST: Joi.string().required(),
         RPC_URL: Joi.string().required(),
-        HCAPTCHA_LABELING_API_URL: Joi.string().required(),
+        HCAPTCHA_LABELING_STATS_API_URL: Joi.string().required(),
+        HCAPTCHA_LABELING_VERIFY_API_URL: Joi.string().required(),
         HCAPTCHA_LABELING_API_KEY: Joi.string().required(),
         CHAIN_IDS_ENABLED: Joi.string()
           .custom((value) => {

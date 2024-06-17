@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { HCaptchaLabelingGateway } from '../h-captcha-labeling.gateway';
+import { HCaptchaStatisticsGateway } from '../h-captcha-statistics.gateway';
 import { HttpService } from '@nestjs/axios';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
@@ -32,7 +32,7 @@ const environmentConfigServiceMock = {
 };
 
 describe('HCaptchaLabelingGateway', () => {
-  let gateway: HCaptchaLabelingGateway;
+  let gateway: HCaptchaStatisticsGateway;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -43,7 +43,7 @@ describe('HCaptchaLabelingGateway', () => {
       ],
       providers: [
         HCaptchaLabelingMapperProfile,
-        HCaptchaLabelingGateway,
+        HCaptchaStatisticsGateway,
         GatewayConfigService,
         { provide: HttpService, useValue: httpServiceMock },
         {
@@ -56,7 +56,7 @@ describe('HCaptchaLabelingGateway', () => {
       .useValue(hCaptchaGatewayConfigServiceMock)
       .compile();
 
-    gateway = module.get<HCaptchaLabelingGateway>(HCaptchaLabelingGateway);
+    gateway = module.get<HCaptchaStatisticsGateway>(HCaptchaStatisticsGateway);
   });
 
   afterEach(() => {

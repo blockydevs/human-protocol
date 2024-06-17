@@ -1,10 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import {
-  VerifyTokenCommand,
-  VerifyTokenApiResponse,
-  VerifyTokenData,
-} from '../../modules/h-captcha/model/verify-token.model';
-import {
   GatewayConfig,
   GatewayEndpointConfig,
 } from '../../common/interfaces/endpoint.interface';
@@ -13,22 +8,20 @@ import { GatewayConfigService } from '../../common/config/gateway-config.service
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { ExternalApiName } from '../../common/enums/external-api-name';
-import {
-  HCaptchaLabelingEndpoints,
-  ReputationOracleEndpoints,
-} from '../../common/enums/reputation-oracle-endpoints';
+import { GatewayEndpoints } from '../../common/config/gateway-config.types';
 import { RequestDataType } from '../reputation-oracle/reputation-oracle.interface';
 import { AxiosRequestConfig } from 'axios';
 import { lastValueFrom } from 'rxjs';
 import {
-  UserStatsApiResponse,
-  UserStatsResponse,
-} from '../../modules/h-captcha/model/user-stats.model';
+  VerifyTokenApiResponse,
+  VerifyTokenCommand,
+  VerifyTokenData,
+} from '../../modules/h-captcha/model/verify-token.model';
+import { HCaptchaLabelingVerifyEndpoints } from '../../common/enums/reputation-oracle-endpoints';
 import { toCleanObjParams } from '../../common/utils/gateway-common.utils';
-import { DailyHmtSpentResponse } from '../../modules/h-captcha/model/daily-hmt-spent.model';
 
-@Injectable()
-export class HCaptchaLabelingGateway {
+Injectable()
+export class HCaptchaVerifyGateway {
   private readonly gatewayConfig: GatewayConfig;
   constructor(
     private httpService: HttpService,
@@ -36,14 +29,14 @@ export class HCaptchaLabelingGateway {
     @InjectMapper() private readonly mapper: Mapper,
   ) {
     this.gatewayConfig = gatewayConfigService.getConfig(
-      ExternalApiName.HCAPTCHA_LABELING,
+      ExternalApiName.HCAPTCHA_LABELING_VERIFY,
     );
   }
   private getEndpointOptions(
-    endpointName: HCaptchaLabelingEndpoints | ReputationOracleEndpoints,
+    endpointName: GatewayEndpoints,
     data?: RequestDataType,
     token?: string,
-  ) {
+  ): AxiosRequestConfig {
     const endpointConfig: GatewayEndpointConfig =
       this.gatewayConfig.endpoints[endpointName];
     const authHeader = token ? { Authorization: token } : {};
@@ -68,34 +61,24 @@ export class HCaptchaLabelingGateway {
   }
   async sendTokenToVerify(
     command: VerifyTokenCommand,
-  ): Promise<VerifyTokenApiResponse> {
-    const options = this.getEndpointOptions(
-      HCaptchaLabelingEndpoints.TOKEN_VERIFY,
-    );
-    const data = this.mapper.map(command, VerifyTokenCommand, VerifyTokenData);
-    options.params = toCleanObjParams(data, options.params);
-    return this.handleRequestToHCaptchaLabelingApi<VerifyTokenApiResponse>(
-      options,
-    );
-  }
-  async fetchDailyHmtSpent() {
-    const options = this.getEndpointOptions(
-      HCaptchaLabelingEndpoints.DAILY_HMT_SPENT,
-    );
-    return this.handleRequestToHCaptchaLabelingApi<DailyHmtSpentResponse>(
-      options,
-    );
-  }
-
-  async fetchUserStats(email: string): Promise<UserStatsResponse> {
-    const options = this.getEndpointOptions(
-      HCaptchaLabelingEndpoints.USER_STATS,
-    );
-    options.url += email;
-    const response =
-      await this.handleRequestToHCaptchaLabelingApi<UserStatsApiResponse>(
+  ): Promise<VerifyTokenApiResponse | undefined> {
+    try {
+      const options = this.getEndpointOptions(
+        HCaptchaLabelingVerifyEndpoints.TOKEN_VERIFY,
+        undefined,
+        command.jwtToken,
+      );
+      const data = {
+        sitekey: command.sitekey,
+        response: command.response,
+        secret: command.secret,
+      } as VerifyTokenData;
+      options.params = toCleanObjParams(data, options.params);
+      return this.handleRequestToHCaptchaLabelingApi<VerifyTokenApiResponse>(
         options,
       );
-    return this.mapper.map(response, UserStatsApiResponse, UserStatsResponse);
+    } catch (e) {
+      console.log('Error: ', e);
+    }
   }
 }

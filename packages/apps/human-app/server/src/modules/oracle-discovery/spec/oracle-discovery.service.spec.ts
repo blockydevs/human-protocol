@@ -30,20 +30,13 @@ describe('OracleDiscoveryService', () => {
         }),
       ],
       providers: [
+        EnvironmentConfigService,
         OracleDiscoveryService,
         {
           provide: CACHE_MANAGER,
           useValue: {
             get: jest.fn(),
             set: jest.fn(),
-          },
-        },
-        {
-          provide: EnvironmentConfigService,
-          useValue: {
-            reputationOracleAddress: 'mockedaddress',
-            cacheTtlOracleDiscovery: 86400,
-            chainIdsEnabled: ['80001'],
           },
         },
       ],
@@ -78,26 +71,28 @@ describe('OracleDiscoveryService', () => {
       { address: 'mockAddress1', role: 'validator' },
       { address: 'mockAddress2', role: 'validator' },
     ];
-    const chainId = 80001;
+    const chainIds = configService.chainIdsEnabled;
+    const reputationOracleAddress = configService.reputationOracleAddress;
+    chainIds.forEach(async (chainId) => {
+      jest.spyOn(cacheManager, 'get').mockResolvedValue(undefined);
+      jest
+        .spyOn(OperatorUtils, 'getReputationNetworkOperators')
+        .mockResolvedValue(mockData);
 
-    jest.spyOn(cacheManager, 'get').mockResolvedValue(undefined);
-    jest
-      .spyOn(OperatorUtils, 'getReputationNetworkOperators')
-      .mockResolvedValue(mockData);
+      const result = await oracleDiscoveryService.processOracleDiscovery();
 
-    const result = await oracleDiscoveryService.processOracleDiscovery();
-
-    expect(result).toEqual(mockData);
-    expect(cacheManager.get).toHaveBeenCalledWith(chainId.toString());
-    expect(cacheManager.set).toHaveBeenCalledWith(
-      chainId.toString(),
-      mockData,
-      configService.cacheTtlOracleDiscovery,
-    );
-    expect(OperatorUtils.getReputationNetworkOperators).toHaveBeenCalledWith(
-      chainId,
-      'mockedaddress',
-      EXCHANGE_ORACLE,
-    );
+      expect(result).toEqual(mockData);
+      expect(cacheManager.get).toHaveBeenCalledWith(chainId);
+      expect(cacheManager.set).toHaveBeenCalledWith(
+        chainId,
+        mockData,
+        configService.cacheTtlOracleDiscovery,
+      );
+      expect(OperatorUtils.getReputationNetworkOperators).toHaveBeenCalledWith(
+        Number(chainId),
+        reputationOracleAddress,
+        EXCHANGE_ORACLE,
+      );
+    });
   });
 });
