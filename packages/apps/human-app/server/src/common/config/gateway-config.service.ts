@@ -122,9 +122,9 @@ export class GatewayConfigService {
               method: HttpMethod.POST,
               // params in this method are dynamic
             },
-          } as Record<HCaptchaLabelingVerifyEndpoints, GatewayEndpointConfig>
+          } as Record<HCaptchaLabelingVerifyEndpoints, GatewayEndpointConfig>,
         },
-      }
+      },
     };
   }
   getConfig(gateway: ExternalApiName): GatewayConfig {

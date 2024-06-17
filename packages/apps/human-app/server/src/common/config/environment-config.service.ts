@@ -25,6 +25,13 @@ export class EnvironmentConfigService {
       .getOrThrow<string>('REPUTATION_ORACLE_ADDRESS')
       .toLowerCase();
   }
+  get axiosRequestLoggingEnabled(): boolean {
+    const isLoggingEnabled = this.configService.get(
+      'IS_AXIOS_REQUEST_LOGGING_ENABLED',
+      undefined,
+    );
+    return !!(isLoggingEnabled && isLoggingEnabled === 'true');
+  }
   get cachePort(): number {
     return this.configService.getOrThrow<number>('REDIS_PORT');
   }

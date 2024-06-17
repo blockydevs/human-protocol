@@ -63,16 +63,16 @@ export class HCaptchaVerifyGateway {
     command: VerifyTokenCommand,
   ): Promise<VerifyTokenApiResponse | undefined> {
     try {
-      const options = this.getEndpointOptions(
-        HCaptchaLabelingVerifyEndpoints.TOKEN_VERIFY,
-        undefined,
-        command.jwtToken,
-      );
       const data = {
         sitekey: command.sitekey,
         response: command.response,
         secret: command.secret,
       } as VerifyTokenData;
+      const options = this.getEndpointOptions(
+        HCaptchaLabelingVerifyEndpoints.TOKEN_VERIFY,
+        data,
+        command.jwtToken,
+      );
       options.params = toCleanObjParams(data, options.params);
       return this.handleRequestToHCaptchaLabelingApi<VerifyTokenApiResponse>(
         options,

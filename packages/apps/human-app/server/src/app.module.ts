@@ -35,6 +35,7 @@ import Joi from 'joi';
 import { ChainId } from '@human-protocol/sdk';
 import { RegisterAddressController } from './modules/register-address/register-address.controller';
 import { RegisterAddressModule } from './modules/register-address/register-address.module';
+import { InterceptorModule } from './common/interceptors/interceptor.module';
 
 @Module({
   imports: [
@@ -91,6 +92,7 @@ import { RegisterAddressModule } from './modules/register-address/register-addre
     HCaptchaLabelingModule,
     EscrowUtilsModule,
     RegisterAddressModule,
+    InterceptorModule,
   ],
   controllers: [
     AppController,
