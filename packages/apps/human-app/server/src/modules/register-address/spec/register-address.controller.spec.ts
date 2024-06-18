@@ -5,13 +5,13 @@ import { HttpService } from '@nestjs/axios';
 import { RegisterAddressController } from '../register-address.controller';
 import { RegisterAddressService } from '../register-address.service';
 import { registerAddressServiceMock } from './register-address.service.mock';
-import { RegisterAddressProfile } from '../register-address-profile.service';
 import {
   REGISTER_ADDRESS_TOKEN,
   registerAddressCommandFixture,
   registerAddressDtoFixture,
   registerAddressResponseFixture,
 } from './register-address.fixtures';
+import { RegisterAddressProfile } from '../register-address.mapper.profile';
 
 describe('RegisterAddressController', () => {
   let controller: RegisterAddressController;
