@@ -11,14 +11,12 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { EnvironmentConfigService } from '../../common/config/environment-config.service';
 import { ExchangeOracleGateway } from '../../integrations/exchange-oracle/exchange-oracle.gateway';
-import { KvStoreGateway } from '../../integrations/kv-store/kv-store.gateway';
 
 @Injectable()
 export class StatisticsService {
   constructor(
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private readonly exchangeOracleGateway: ExchangeOracleGateway,
-    private readonly kvStoreGateway: KvStoreGateway,
     private readonly configService: EnvironmentConfigService,
   ) {}
   async getOracleStats(
