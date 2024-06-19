@@ -91,7 +91,6 @@ export class HCaptchaService {
       return stats;
     }
     stats = await this.hCaptchaLabelingGateway.fetchUserStats(command.email);
-    console.log(stats);
     await this.cacheManager.set(
       command.email,
       stats,

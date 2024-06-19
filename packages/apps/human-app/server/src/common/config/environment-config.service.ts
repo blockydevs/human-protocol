@@ -97,10 +97,14 @@ export class EnvironmentConfigService {
     );
   }
   get hcaptchaLabelingStatsApiUrl(): string {
-    return this.configService.getOrThrow<string>('HCAPTCHA_LABELING_STATS_API_URL');
+    return this.configService.getOrThrow<string>(
+      'HCAPTCHA_LABELING_STATS_API_URL',
+    );
   }
   get hcaptchaLabelingVerifyApiUrl(): string {
-    return this.configService.getOrThrow<string>('HCAPTCHA_LABELING_VERIFY_API_URL');
+    return this.configService.getOrThrow<string>(
+      'HCAPTCHA_LABELING_VERIFY_API_URL',
+    );
   }
   get hcaptchaLabelingApiKey(): string {
     return this.configService.getOrThrow<string>('HCAPTCHA_LABELING_API_KEY');

@@ -76,7 +76,7 @@ export class GatewayConfigService {
               headers: this.JSON_HEADER,
             },
             [ReputationOracleEndpoints.ENABLE_LABELING]: {
-              endpoint: '/labeler/register',
+              endpoint: '/user/register-labeler',
               method: HttpMethod.POST,
               params: {
                 api_key: this.envConfig.hcaptchaLabelingApiKey,

@@ -9,7 +9,6 @@ import { ResendEmailVerificationData } from '../../modules/email-confirmation/mo
 import { PrepareSignatureData } from '../../modules/prepare-signature/model/prepare-signature.model';
 import { DisableOperatorData } from '../../modules/disable-operator/model/disable-operator.model';
 import { RegisterAddressData } from '../../modules/register-address/model/register-address.model';
-import { VerifyTokenData } from '../../modules/h-captcha/model/verify-token.model';
 
 export type RequestDataType =
   | SignupWorkerData
@@ -20,5 +19,5 @@ export type RequestDataType =
   | PrepareSignatureData
   | DisableOperatorData
   | SigninOperatorData
-  | VerifyTokenData
-  | RegisterAddressData;
+  | RegisterAddressData
+  | Record<string, never>;

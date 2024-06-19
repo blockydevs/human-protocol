@@ -62,7 +62,6 @@ import {
 import { EnableLabelingCommand } from '../../../modules/h-captcha/model/enable-labeling.model';
 import {
   enableLabelingCommandFixture,
-  enableLabelingDataFixture,
   enableLabelingResponseFixture,
 } from '../../../modules/h-captcha/spec/h-captcha.fixtures';
 import {
@@ -670,7 +669,7 @@ describe('ReputationOracleGateway', () => {
       const command: EnableLabelingCommand = enableLabelingCommandFixture;
 
       nock('https://example.com')
-        .post('/labeler/register', { ...enableLabelingDataFixture })
+        .post('/labeler/register', {})
         .reply(201, enableLabelingResponseFixture);
 
       httpServiceMock.request.mockReturnValue(of({}));

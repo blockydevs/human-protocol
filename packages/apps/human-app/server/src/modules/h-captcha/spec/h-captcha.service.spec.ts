@@ -29,13 +29,18 @@ import {
   unsuccessfulVerifyTokenApiResponseWithUndefinedErrorCodesFixture,
   errorMessagesFixture,
 } from './h-captcha.fixtures';
-import { hCaptchaLabelingGatewayMock } from '../../../integrations/h-captcha-labeling/spec/h-captcha-labeling.gateway.mock';
+import {
+  hCaptchaStatisticsGatewayMock,
+  hCaptchaVerifyGatewayMock,
+} from '../../../integrations/h-captcha-labeling/spec/h-captcha-statistics-gateway.mock';
+import { HCaptchaVerifyGateway } from '../../../integrations/h-captcha-labeling/h-captcha-verify.gateway';
 
 describe('HCaptchaService', () => {
   let service: HCaptchaService;
   let cacheManager: Cache;
   let configService: EnvironmentConfigService;
-  let hCaptchaLabelingGateway: HCaptchaStatisticsGateway;
+  let hCaptchaStatisticsGateway: HCaptchaStatisticsGateway;
+  let hCaptchaVerifyGateway: HCaptchaVerifyGateway;
   let reputationOracleGateway: ReputationOracleGateway;
 
   beforeEach(async () => {
@@ -52,7 +57,11 @@ describe('HCaptchaService', () => {
         },
         {
           provide: HCaptchaStatisticsGateway,
-          useValue: hCaptchaLabelingGatewayMock,
+          useValue: hCaptchaStatisticsGatewayMock,
+        },
+        {
+          provide: HCaptchaVerifyGateway,
+          useValue: hCaptchaVerifyGatewayMock,
         },
         {
           provide: ReputationOracleGateway,
@@ -75,8 +84,11 @@ describe('HCaptchaService', () => {
     configService = module.get<EnvironmentConfigService>(
       EnvironmentConfigService,
     );
-    hCaptchaLabelingGateway = module.get<HCaptchaStatisticsGateway>(
+    hCaptchaStatisticsGateway = module.get<HCaptchaStatisticsGateway>(
       HCaptchaStatisticsGateway,
+    );
+    hCaptchaVerifyGateway = module.get<HCaptchaVerifyGateway>(
+      HCaptchaVerifyGateway,
     );
     reputationOracleGateway = module.get<ReputationOracleGateway>(
       ReputationOracleGateway,
@@ -91,7 +103,7 @@ describe('HCaptchaService', () => {
     it('should verify token successfully', async () => {
       const command: VerifyTokenCommand = verifyTokenCommandFixture;
       jest
-        .spyOn(hCaptchaLabelingGateway, 'sendTokenToVerify')
+        .spyOn(hCaptchaVerifyGateway, 'sendTokenToVerify')
         .mockResolvedValue(successfulVerifyTokenApiResponseFixture);
 
       const result = await service.verifyToken(command);
@@ -107,7 +119,7 @@ describe('HCaptchaService', () => {
       const errorMessage = errorMessagesFixture.withErrorCodes;
 
       jest
-        .spyOn(hCaptchaLabelingGateway, 'sendTokenToVerify')
+        .spyOn(hCaptchaVerifyGateway, 'sendTokenToVerify')
         .mockResolvedValue(apiResponse);
 
       await expect(service.verifyToken(command)).rejects.toThrowError(
@@ -122,7 +134,7 @@ describe('HCaptchaService', () => {
       const errorMessage = errorMessagesFixture.withUndefinedErrorCodes;
 
       jest
-        .spyOn(hCaptchaLabelingGateway, 'sendTokenToVerify')
+        .spyOn(hCaptchaVerifyGateway, 'sendTokenToVerify')
         .mockResolvedValue(apiResponse);
 
       await expect(service.verifyToken(command)).rejects.toThrowError(
@@ -137,7 +149,7 @@ describe('HCaptchaService', () => {
       const errorMessage = errorMessagesFixture.withUndefinedErrorCodes;
 
       jest
-        .spyOn(hCaptchaLabelingGateway, 'sendTokenToVerify')
+        .spyOn(hCaptchaVerifyGateway, 'sendTokenToVerify')
         .mockResolvedValue(apiResponse);
 
       await expect(service.verifyToken(command)).rejects.toThrowError(
@@ -176,7 +188,7 @@ describe('HCaptchaService', () => {
 
       jest.spyOn(cacheManager, 'get').mockResolvedValue(null);
       jest
-        .spyOn(hCaptchaLabelingGateway, 'fetchDailyHmtSpent')
+        .spyOn(hCaptchaStatisticsGateway, 'fetchDailyHmtSpent')
         .mockResolvedValue(dailyHmtSpentResponseFixture);
 
       const result = await service.getDailyHmtSpent(command);
@@ -205,7 +217,7 @@ describe('HCaptchaService', () => {
 
       jest.spyOn(cacheManager, 'get').mockResolvedValue(null);
       jest
-        .spyOn(hCaptchaLabelingGateway, 'fetchUserStats')
+        .spyOn(hCaptchaStatisticsGateway, 'fetchUserStats')
         .mockResolvedValue(userStatsResponseFixture);
 
       const result = await service.getUserStats(command);

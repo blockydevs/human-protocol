@@ -18,7 +18,7 @@ export class VerifyTokenCommand {
   @AutoMap()
   jwtToken: string;
 }
-export class VerifyTokenData {
+export class VerifyTokenParams {
   @AutoMap()
   secret: string;
   @AutoMap()

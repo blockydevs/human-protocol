@@ -15,7 +15,7 @@ import { lastValueFrom } from 'rxjs';
 import {
   VerifyTokenApiResponse,
   VerifyTokenCommand,
-  VerifyTokenData,
+  VerifyTokenParams,
 } from '../../modules/h-captcha/model/verify-token.model';
 import { HCaptchaLabelingVerifyEndpoints } from '../../common/enums/reputation-oracle-endpoints';
 import { toCleanObjParams } from '../../common/utils/gateway-common.utils';
@@ -63,17 +63,17 @@ export class HCaptchaVerifyGateway {
     command: VerifyTokenCommand,
   ): Promise<VerifyTokenApiResponse | undefined> {
     try {
-      const data = {
+      const options = this.getEndpointOptions(
+        HCaptchaLabelingVerifyEndpoints.TOKEN_VERIFY,
+        {},
+        command.jwtToken,
+      );
+      const params = {
         sitekey: command.sitekey,
         response: command.response,
         secret: command.secret,
-      } as VerifyTokenData;
-      const options = this.getEndpointOptions(
-        HCaptchaLabelingVerifyEndpoints.TOKEN_VERIFY,
-        data,
-        command.jwtToken,
-      );
-      options.params = toCleanObjParams(data, options.params);
+      } as VerifyTokenParams;
+      options.params = toCleanObjParams(params, options.params);
       return this.handleRequestToHCaptchaLabelingApi<VerifyTokenApiResponse>(
         options,
       );

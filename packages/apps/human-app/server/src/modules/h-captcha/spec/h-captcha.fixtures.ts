@@ -2,7 +2,7 @@ import { JwtUserData } from '../../../common/interfaces/jwt-token.model';
 import {
   VerifyTokenApiResponse,
   VerifyTokenCommand,
-  VerifyTokenData,
+  VerifyTokenParams,
   VerifyTokenDto,
 } from '../model/verify-token.model';
 import {
@@ -37,8 +37,7 @@ const BALANCE = {
   recent: 3,
   total: 7,
 } as BalanceStats;
-const SITE_KEY = 'site_key_1';
-const JWT_TOKEN = 'jwt.token.1';
+export const JWT_TOKEN = 'jwt.token.1';
 const DROPOFF_DATA_1 = { date: '2021-01-01', value: 10 } as DateValue;
 const DROPOFF_DATA_2 = { date: '2021-01-02', value: 20 } as DateValue;
 const DROPOFF_DATA_3 = { date: '2021-01-03', value: 30 } as DateValue;
@@ -50,7 +49,7 @@ export const jwtUserDataFixture: JwtUserData = {
   address: POLYGON_WALLET_ADDR,
   email: EMAIL,
   kyc_status: 'APPROVED',
-  site_key: SITE_KEY,
+  site_key: H_CAPTCHA_SITE_KEY,
   reputation_network: REPUTATION_NETWORK,
   iat: IAT,
   exp: EXP,
@@ -76,7 +75,7 @@ export const verifyTokenCommandFixture: VerifyTokenCommand = {
   jwtToken: JWT_TOKEN,
 };
 
-export const verifyTokenDataFixture: VerifyTokenData = {
+export const verifyTokenParamsFixture: VerifyTokenParams = {
   secret: POLYGON_WALLET_ADDR,
   sitekey: H_CAPTCHA_SITE_KEY,
   response: TOKEN_TO_VERIFY,
