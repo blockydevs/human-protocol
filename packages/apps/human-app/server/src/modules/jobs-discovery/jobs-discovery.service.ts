@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
   JobsDiscoveryParamsCommand,
-  JobsDiscoveryParamsDetails,
   JobsDiscoveryResponse,
 } from './model/jobs-discovery.model';
 import { ExchangeOracleGateway } from '../../integrations/exchange-oracle/exchange-oracle.gateway';
@@ -19,14 +18,6 @@ export class JobsDiscoveryService {
   async processJobsDiscovery(
     command: JobsDiscoveryParamsCommand,
   ): Promise<JobsDiscoveryResponse> {
-    const exchangeOracleUrl =
-      await this.kvStoreGateway.getExchangeOracleUrlByAddress(command.oracleAddress);
-    const details = this.mapper.map(
-      command,
-      JobsDiscoveryParamsCommand,
-      JobsDiscoveryParamsDetails,
-    );
-    details.exchangeOracleUrl = exchangeOracleUrl;
-    return this.exchangeOracleGateway.fetchJobs(details);
+    return this.exchangeOracleGateway.fetchJobs(command);
   }
 }

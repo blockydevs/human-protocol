@@ -1,12 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
   UserStatisticsCommand,
-  UserStatisticsDetails,
   UserStatisticsResponse,
 } from './model/user-statistics.model';
 import {
   OracleStatisticsCommand,
-  OracleStatisticsDetails,
   OracleStatisticsResponse,
 } from './model/oracle-statistics.model';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
@@ -32,13 +30,8 @@ export class StatisticsService {
     if (cachedStatistics) {
       return cachedStatistics;
     }
-    const exchangeOracleUrl =
-      await this.kvStoreGateway.getExchangeOracleUrlByAddress(command.oracleAddress);
-    const details = {
-      exchangeOracleUrl: exchangeOracleUrl,
-    } as OracleStatisticsDetails;
     const response: OracleStatisticsResponse =
-      await this.exchangeOracleGateway.fetchOracleStatistics(details);
+      await this.exchangeOracleGateway.fetchOracleStatistics(command);
     await this.cacheManager.set(
       url,
       response,
@@ -55,14 +48,8 @@ export class StatisticsService {
     if (cachedStatistics) {
       return cachedStatistics;
     }
-    const exchangeOracleUrl =
-      await this.kvStoreGateway.getExchangeOracleUrlByAddress(command.oracleAddress);
-    const details = {
-      exchangeOracleUrl: exchangeOracleUrl,
-      token: command.token,
-    } as UserStatisticsDetails;
     const response =
-      await this.exchangeOracleGateway.fetchUserStatistics(details);
+      await this.exchangeOracleGateway.fetchUserStatistics(command);
     await this.cacheManager.set(
       userCacheKey,
       response,

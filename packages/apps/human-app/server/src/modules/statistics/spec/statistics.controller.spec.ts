@@ -7,7 +7,7 @@ import {
   oracleStatsResponseFixture,
   statisticsExchangeOracleAddress,
   statisticsToken,
-  userStatsCommandFixture,
+  generalUserStatsCommandFixture,
   userStatsResponseFixture,
 } from './statistics.fixtures';
 import { OracleStatisticsDto } from '../model/oracle-statistics.model';
@@ -57,7 +57,7 @@ describe('StatisticsController', () => {
       const result = await controller.getUserStatistics(dto, statisticsToken);
 
       expect(statisticsServiceMock.getUserStats).toHaveBeenCalledWith(
-        userStatsCommandFixture,
+        generalUserStatsCommandFixture,
       );
       expect(result).toEqual(userStatsResponseFixture);
     });

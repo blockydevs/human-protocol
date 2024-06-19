@@ -13,9 +13,6 @@ export class OracleStatisticsResponse {
 export class OracleStatisticsCommand {
   oracleAddress: string;
 }
-export class OracleStatisticsDetails {
-  exchangeOracleUrl: string;
-}
 
 export class OracleStatisticsDto {
   @IsString()

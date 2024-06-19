@@ -17,7 +17,3 @@ export class UserStatisticsDto {
   @IsString()
   oracle_address: string;
 }
-export class UserStatisticsDetails {
-  exchangeOracleUrl: string;
-  token: string;
-}
