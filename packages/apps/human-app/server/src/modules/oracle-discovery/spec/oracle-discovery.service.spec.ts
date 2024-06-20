@@ -13,15 +13,17 @@ jest.mock('@human-protocol/sdk', () => ({
     getReputationNetworkOperators: jest.fn(),
   },
 }));
-
 describe('OracleDiscoveryService', () => {
   const EXCHANGE_ORACLE = 'Exchange Oracle';
+  const EXPECTED_CHAIN_IDS = ['4200'];
+  const REPUTATION_ORACLE_ADDRESS = 'the_oracle';
+  const TTL = '300';
   let oracleDiscoveryService: OracleDiscoveryService;
   let cacheManager: Cache;
   let configService: EnvironmentConfigService;
 
   beforeEach(async () => {
-    const moduleRef = await Test.createTestingModule({
+    const module = await Test.createTestingModule({
       imports: [
         CommonConfigModule,
         ConfigModule.forRoot({
@@ -30,7 +32,14 @@ describe('OracleDiscoveryService', () => {
         }),
       ],
       providers: [
-        EnvironmentConfigService,
+        {
+          provide: EnvironmentConfigService,
+          useValue: {
+            chainIdsEnabled: EXPECTED_CHAIN_IDS,
+            reputationOracleAddress: REPUTATION_ORACLE_ADDRESS,
+            cacheTtlOracleDiscovery: TTL,
+          },
+        },
         OracleDiscoveryService,
         {
           provide: CACHE_MANAGER,
@@ -41,13 +50,16 @@ describe('OracleDiscoveryService', () => {
         },
       ],
     }).compile();
-    configService = moduleRef.get<EnvironmentConfigService>(
+    configService = module.get<EnvironmentConfigService>(
       EnvironmentConfigService,
     );
-    oracleDiscoveryService = moduleRef.get<OracleDiscoveryService>(
+    oracleDiscoveryService = module.get<OracleDiscoveryService>(
       OracleDiscoveryService,
     );
-    cacheManager = moduleRef.get<Cache>(CACHE_MANAGER);
+    cacheManager = module.get<Cache>(CACHE_MANAGER);
+  });
+  afterEach(() => {
+    jest.resetAllMocks()
   });
   it('should be defined', () => {
     expect(oracleDiscoveryService).toBeDefined();
@@ -71,26 +83,25 @@ describe('OracleDiscoveryService', () => {
       { address: 'mockAddress1', role: 'validator' },
       { address: 'mockAddress2', role: 'validator' },
     ];
-    const chainIds = configService.chainIdsEnabled;
-    const reputationOracleAddress = configService.reputationOracleAddress;
-    chainIds.forEach(async (chainId) => {
-      jest.spyOn(cacheManager, 'get').mockResolvedValue(undefined);
-      jest
-        .spyOn(OperatorUtils, 'getReputationNetworkOperators')
-        .mockResolvedValue(mockData);
 
-      const result = await oracleDiscoveryService.processOracleDiscovery();
+    jest.spyOn(cacheManager, 'get').mockResolvedValue(undefined);
+    jest
+      .spyOn(OperatorUtils, 'getReputationNetworkOperators')
+      .mockResolvedValue(mockData);
 
-      expect(result).toEqual(mockData);
+    const result = await oracleDiscoveryService.processOracleDiscovery();
+
+    expect(result).toEqual(mockData);
+    EXPECTED_CHAIN_IDS.forEach((chainId) => {
       expect(cacheManager.get).toHaveBeenCalledWith(chainId);
       expect(cacheManager.set).toHaveBeenCalledWith(
         chainId,
         mockData,
-        configService.cacheTtlOracleDiscovery,
+        TTL,
       );
       expect(OperatorUtils.getReputationNetworkOperators).toHaveBeenCalledWith(
         Number(chainId),
-        reputationOracleAddress,
+        REPUTATION_ORACLE_ADDRESS,
         EXCHANGE_ORACLE,
       );
     });
