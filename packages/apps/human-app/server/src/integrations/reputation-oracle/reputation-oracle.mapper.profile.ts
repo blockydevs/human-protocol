@@ -76,7 +76,6 @@ export class ReputationOracleProfile extends AutomapperProfile {
       createMap(mapper, PrepareSignatureCommand, PrepareSignatureData);
       createMap(mapper, SigninOperatorCommand, SigninOperatorData);
       createMap(mapper, DisableOperatorParams, DisableOperatorData);
-      createMap(mapper, RestorePasswordCommand, RestorePasswordData);
       createMap(mapper, ForgotPasswordCommand, ForgotPasswordData);
       createMap(
         mapper,

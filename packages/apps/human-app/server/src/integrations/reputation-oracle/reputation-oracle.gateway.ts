@@ -205,14 +205,14 @@ export class ReputationOracleGateway {
   }
 
   async sendRestorePassword(restorePasswordCommand: RestorePasswordCommand) {
-    const restorePasswordData = this.mapper.map(
+    const data = this.mapper.map(
       restorePasswordCommand,
       RestorePasswordCommand,
       RestorePasswordData,
     );
     const options = this.getEndpointOptions(
       ReputationOracleEndpoints.RESTORE_PASSWORD,
-      restorePasswordData,
+      data,
     );
     return this.handleRequestToReputationOracle<void>(options);
   }
