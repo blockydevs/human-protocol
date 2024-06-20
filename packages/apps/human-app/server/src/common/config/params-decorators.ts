@@ -1,5 +1,5 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import * as jwt from 'jsonwebtoken';
+import { jwtDecode } from 'jwt-decode';
 import { JwtUserData } from '../interfaces/jwt-token.model';
 
 export const Authorization = createParamDecorator(
@@ -13,11 +13,11 @@ export const JwtPayload = createParamDecorator(
     const request = ctx.switchToHttp().getRequest();
     const token = request.headers['authorization']?.split(' ')[1];
     if (!token) return null;
-
     try {
-      const decoded = jwt.decode(token);
+      const decoded = jwtDecode(token);
       return decoded as JwtUserData;
     } catch (error) {
+      console.error('Error in decoding token: ', error);
       return null;
     }
   },

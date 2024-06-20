@@ -1,25 +1,24 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { HCaptchaLabelingGateway } from '../h-captcha-labeling.gateway';
+import { HCaptchaStatisticsGateway } from '../h-captcha-statistics.gateway';
 import { HttpService } from '@nestjs/axios';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { of } from 'rxjs';
 import { AxiosRequestConfig } from 'axios';
-import { HCaptchaLabelingMapperProfile } from '../h-captcha-labeling.mapper.profile';
+import { HCaptchaVerifyMapperProfile } from '../h-captchaverify-mapper-profile.service';
 import { GatewayConfigService } from '../../../common/config/gateway-config.service';
 import { EnvironmentConfigService } from '../../../common/config/environment-config.service';
-import { toCleanObjParams } from '../../../common/utils/gateway-common.utils';
 import {
   dailyHmtSpentResponseFixture,
-  successfulVerifyTokenApiResponseFixture,
   userStatsApiResponseFixture,
   userStatsResponseFixture,
+  successfulVerifyTokenApiResponseFixture,
   verifyTokenCommandFixture,
-  verifyTokenDataFixture,
+  verifyTokenParamsFixture,
 } from '../../../modules/h-captcha/spec/h-captcha.fixtures';
-import {
-  hCaptchaGatewayConfigServiceMock
-} from '../../../common/config/spec/gateway-config-service.mock';
+import { hCaptchaGatewayConfigServiceMock } from '../../../common/config/spec/gateway-config-service.mock';
+import { HCaptchaVerifyGateway } from '../h-captcha-verify.gateway';
+import { toCleanObjParams } from '../../../common/utils/gateway-common.utils';
 
 const httpServiceMock = {
   request: jest.fn(),
@@ -27,12 +26,14 @@ const httpServiceMock = {
 
 const environmentConfigServiceMock = {
   hcaptchaLabelingApiKey: 'mock-api-key',
-  hcaptchaLabelingApiUrl: 'https://api.example.com',
+  hcaptchaLabelingStatsApiUrl: 'https://api-statistics.example.com',
+  hcaptchaLabelingVerifyApiUrl: 'https://api-verify.example.com',
   reputationOracleUrl: 'https://oracle.example.com',
 };
 
 describe('HCaptchaLabelingGateway', () => {
-  let gateway: HCaptchaLabelingGateway;
+  let statisticsGateway: HCaptchaStatisticsGateway;
+  let verifyGateway: HCaptchaVerifyGateway;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -42,8 +43,9 @@ describe('HCaptchaLabelingGateway', () => {
         }),
       ],
       providers: [
-        HCaptchaLabelingMapperProfile,
-        HCaptchaLabelingGateway,
+        HCaptchaStatisticsGateway,
+        HCaptchaVerifyGateway,
+        HCaptchaVerifyMapperProfile,
         GatewayConfigService,
         { provide: HttpService, useValue: httpServiceMock },
         {
@@ -51,12 +53,12 @@ describe('HCaptchaLabelingGateway', () => {
           useValue: environmentConfigServiceMock,
         },
       ],
-    })
-      .overrideProvider(GatewayConfigService)
-      .useValue(hCaptchaGatewayConfigServiceMock)
-      .compile();
+    }).compile();
 
-    gateway = module.get<HCaptchaLabelingGateway>(HCaptchaLabelingGateway);
+    statisticsGateway = module.get<HCaptchaStatisticsGateway>(
+      HCaptchaStatisticsGateway,
+    );
+    verifyGateway = module.get<HCaptchaVerifyGateway>(HCaptchaVerifyGateway);
   });
 
   afterEach(() => {
@@ -64,7 +66,7 @@ describe('HCaptchaLabelingGateway', () => {
   });
 
   it('should be defined', () => {
-    expect(gateway).toBeDefined();
+    expect(statisticsGateway).toBeDefined();
   });
 
   describe('sendTokenToVerify', () => {
@@ -73,14 +75,17 @@ describe('HCaptchaLabelingGateway', () => {
         of({ data: successfulVerifyTokenApiResponseFixture }),
       );
 
-      const result = await gateway.sendTokenToVerify(verifyTokenCommandFixture);
+      const result = await verifyGateway.sendTokenToVerify(
+        verifyTokenCommandFixture,
+      );
       expect(result).toEqual(successfulVerifyTokenApiResponseFixture);
 
       const expectedOptions: AxiosRequestConfig = {
         method: 'POST',
-        url: 'https://api.example.com/siteverify',
-        headers: {},
-        params: toCleanObjParams(verifyTokenDataFixture),
+        url: `${environmentConfigServiceMock.hcaptchaLabelingVerifyApiUrl}/siteverify`,
+        headers: { Authorization: verifyTokenCommandFixture.jwtToken },
+        data: {},
+        params: toCleanObjParams(verifyTokenParamsFixture),
       };
       expect(httpServiceMock.request).toHaveBeenCalledWith(expectedOptions);
     });
@@ -92,12 +97,12 @@ describe('HCaptchaLabelingGateway', () => {
         of({ data: dailyHmtSpentResponseFixture }),
       );
 
-      const result = await gateway.fetchDailyHmtSpent();
+      const result = await statisticsGateway.fetchDailyHmtSpent();
       expect(result).toEqual(dailyHmtSpentResponseFixture);
 
       const expectedOptions: AxiosRequestConfig = {
         method: 'GET',
-        url: 'https://api.example.com/requester/daily_hmt_spend',
+        url: `${environmentConfigServiceMock.hcaptchaLabelingStatsApiUrl}/requester/daily_hmt_spend`,
         headers: {},
         params: { api_key: 'mock-api-key', actual: false },
       };
@@ -111,12 +116,12 @@ describe('HCaptchaLabelingGateway', () => {
         of({ data: userStatsApiResponseFixture }),
       );
 
-      const result = await gateway.fetchUserStats('test@example.com');
+      const result = await statisticsGateway.fetchUserStats('test@example.com');
       expect(result).toEqual(userStatsResponseFixture);
 
       const expectedOptions: AxiosRequestConfig = {
         method: 'GET',
-        url: `https://api.example.com/support/labeler/test@example.com`,
+        url: `${environmentConfigServiceMock.hcaptchaLabelingStatsApiUrl}/support/labeler/test@example.com`,
         headers: {},
         params: { api_key: 'mock-api-key' },
       };

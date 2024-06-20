@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ExternalApiName } from '../enums/external-api-name';
 import {
-  HCaptchaLabelingEndpoints,
+  HCaptchaLabelingStatsEndpoints, HCaptchaLabelingVerifyEndpoints,
   ReputationOracleEndpoints,
 } from '../enums/reputation-oracle-endpoints';
 import {
@@ -16,9 +16,6 @@ import { HttpMethod } from '../enums/http-method';
 export class GatewayConfigService {
   JSON_HEADER = {
     'Content-Type': 'application/json',
-  };
-  HCAPTCHA_API_KEY: Record<string, string> = {
-    api_key: this.envConfig.hcaptchaLabelingApiKey,
   };
   constructor(private envConfig: EnvironmentConfigService) {}
 
@@ -79,9 +76,11 @@ export class GatewayConfigService {
               headers: this.JSON_HEADER,
             },
             [ReputationOracleEndpoints.ENABLE_LABELING]: {
-              endpoint: '/labeler/register',
+              endpoint: '/user/register-labeler',
               method: HttpMethod.POST,
-              params: this.HCAPTCHA_API_KEY,
+              params: {
+                api_key: this.envConfig.hcaptchaLabelingApiKey,
+              },
             },
             [ReputationOracleEndpoints.OPERATOR_SIGNIN]: {
               endpoint: '/auth/web3/signin',
@@ -95,28 +94,35 @@ export class GatewayConfigService {
             },
           } as Record<ReputationOracleEndpoints, GatewayEndpointConfig>,
         },
-        [ExternalApiName.HCAPTCHA_LABELING]: {
-          url: this.envConfig.hcaptchaLabelingApiUrl,
+        [ExternalApiName.HCAPTCHA_LABELING_STATS]: {
+          url: this.envConfig.hcaptchaLabelingStatsApiUrl,
           endpoints: {
-            [HCaptchaLabelingEndpoints.USER_STATS]: {
+            [HCaptchaLabelingStatsEndpoints.USER_STATS]: {
               endpoint: '/support/labeler/', // email to append as url param
               method: HttpMethod.GET,
-              params: this.HCAPTCHA_API_KEY,
+              params: {
+                api_key: this.envConfig.hcaptchaLabelingApiKey,
+              },
             },
-            [HCaptchaLabelingEndpoints.DAILY_HMT_SPENT]: {
+            [HCaptchaLabelingStatsEndpoints.DAILY_HMT_SPENT]: {
               endpoint: '/requester/daily_hmt_spend',
               method: HttpMethod.GET,
               params: {
-                ...this.HCAPTCHA_API_KEY,
+                api_key: this.envConfig.hcaptchaLabelingApiKey,
                 actual: false,
               },
             },
-            [HCaptchaLabelingEndpoints.TOKEN_VERIFY]: {
+          } as Record<HCaptchaLabelingStatsEndpoints, GatewayEndpointConfig>,
+        },
+        [ExternalApiName.HCAPTCHA_LABELING_VERIFY]: {
+          url: this.envConfig.hcaptchaLabelingVerifyApiUrl,
+          endpoints: {
+            [HCaptchaLabelingVerifyEndpoints.TOKEN_VERIFY]: {
               endpoint: '/siteverify',
               method: HttpMethod.POST,
               // params in this method are dynamic
             },
-          } as Record<HCaptchaLabelingEndpoints, GatewayEndpointConfig>,
+          } as Record<HCaptchaLabelingVerifyEndpoints, GatewayEndpointConfig>,
         },
       },
     };

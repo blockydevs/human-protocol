@@ -16,8 +16,9 @@ import { EnvironmentConfigService } from '../../common/config/environment-config
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { UserStatsCommand, UserStatsResponse } from './model/user-stats.model';
 import { Cache } from 'cache-manager';
-import { HCaptchaLabelingGateway } from '../../integrations/h-captcha-labeling/h-captcha-labeling.gateway';
+import { HCaptchaStatisticsGateway } from '../../integrations/h-captcha-labeling/h-captcha-statistics.gateway';
 import { ReputationOracleGateway } from '../../integrations/reputation-oracle/reputation-oracle.gateway';
+import { HCaptchaVerifyGateway } from '../../integrations/h-captcha-labeling/h-captcha-verify.gateway';
 
 @Injectable()
 export class HCaptchaService {
@@ -26,15 +27,16 @@ export class HCaptchaService {
   private readonly logger = new Logger(HCaptchaService.name);
   constructor(
     private configService: EnvironmentConfigService,
-    private hCaptchaLabelingGateway: HCaptchaLabelingGateway,
+    private hCaptchaLabelingGateway: HCaptchaStatisticsGateway,
+    private hCaptchaVerifyGateway: HCaptchaVerifyGateway,
     private reputationOracleGateway: ReputationOracleGateway,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async verifyToken(command: VerifyTokenCommand): Promise<VerifyTokenResponse> {
-    this.checkIfLabelingEnabledForAccount(command.hcaptchaSiteKey);
+    this.checkIfHcaptchaSitekeyPresent(command.sitekey);
     const response =
-      await this.hCaptchaLabelingGateway.sendTokenToVerify(command);
+      await this.hCaptchaVerifyGateway.sendTokenToVerify(command);
     if (response && response.success) {
       return new VerifyTokenResponse('CAPTCHA was verified successfully');
     }
@@ -43,7 +45,7 @@ export class HCaptchaService {
     throw new HttpException(errorMessage, 400);
   }
   private createHCaptchaVerificationErrorMessage(
-    response: VerifyTokenApiResponse,
+    response: VerifyTokenApiResponse | undefined,
   ): string {
     let message = 'Failed to verify h-captcha token. ';
     if (response) {
@@ -67,7 +69,7 @@ export class HCaptchaService {
   async getDailyHmtSpent(
     command: DailyHmtSpentCommand,
   ): Promise<DailyHmtSpentResponse> {
-    this.checkIfLabelingEnabledForAccount(command.hcaptchaSiteKey);
+    this.checkIfHcaptchaSitekeyPresent(command.siteKey);
     const hmtKey = this.configService.dailyHmtSpentKey;
     let dailyHmtSpent =
       await this.cacheManager.get<DailyHmtSpentResponse>(hmtKey);
@@ -83,7 +85,7 @@ export class HCaptchaService {
   }
 
   async getUserStats(command: UserStatsCommand): Promise<UserStatsResponse> {
-    this.checkIfLabelingEnabledForAccount(command.hcaptchaSiteKey);
+    this.checkIfHcaptchaSitekeyPresent(command.siteKey);
     let stats = await this.cacheManager.get<UserStatsResponse>(command.email);
     if (stats) {
       return stats;
@@ -96,7 +98,7 @@ export class HCaptchaService {
     );
     return stats;
   }
-  private checkIfLabelingEnabledForAccount(siteKey: string) {
+  private checkIfHcaptchaSitekeyPresent(siteKey: string) {
     if (!siteKey) {
       throw new HttpException('Labeling is not enabled for this account', 400);
     }

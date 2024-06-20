@@ -1,17 +1,24 @@
 import { AutoMap } from '@automapper/classes';
+import { IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class VerifyTokenDto {
-  hcaptchaToken: string;
+  @AutoMap()
+  @IsString()
+  @ApiProperty()
+  token: string;
 }
 export class VerifyTokenCommand {
   @AutoMap()
-  hcaptchaToken: string;
+  response: string;
   @AutoMap()
-  hcaptchaSiteKey: string;
+  sitekey: string;
   @AutoMap()
-  polygonWalletAddr: string;
+  secret: string;
+  @AutoMap()
+  jwtToken: string;
 }
-export class VerifyTokenData {
+export class VerifyTokenParams {
   @AutoMap()
   secret: string;
   @AutoMap()

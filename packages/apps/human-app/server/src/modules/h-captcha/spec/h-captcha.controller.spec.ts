@@ -9,6 +9,7 @@ import {
   dailyHmtSpentCommandFixture,
   enableLabelingCommandFixture,
   hCaptchaUserStatsCommandFixture,
+  JWT_TOKEN,
   jwtUserDataFixture,
   verifyTokenCommandFixture,
   verifyTokenDtoFixture,
@@ -50,7 +51,7 @@ describe('HCaptchaController', () => {
     const dto = verifyTokenDtoFixture;
     const jwtPayload = jwtUserDataFixture;
     const command = verifyTokenCommandFixture;
-    await controller.verifyToken(dto, jwtPayload);
+    await controller.verifyToken(dto, jwtPayload, JWT_TOKEN);
     expect(service.verifyToken).toHaveBeenCalledWith(command);
   });
 
@@ -62,9 +63,8 @@ describe('HCaptchaController', () => {
   });
 
   it('should call enableLabeling with proper arguments', async () => {
-    const dto = jwtUserDataFixture;
     const command = enableLabelingCommandFixture;
-    await controller.enableLabeling(dto);
+    await controller.enableLabeling(JWT_TOKEN);
     expect(service.enableLabeling).toHaveBeenCalledWith(command);
   });
 });

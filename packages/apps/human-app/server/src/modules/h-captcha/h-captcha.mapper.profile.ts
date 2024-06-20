@@ -1,6 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
-import { createMap, Mapper } from '@automapper/core';
+import {
+  CamelCaseNamingConvention,
+  createMap,
+  forMember,
+  mapFrom,
+  Mapper,
+  namingConventions,
+  SnakeCaseNamingConvention,
+} from '@automapper/core';
 import { JwtUserData } from '../../common/interfaces/jwt-token.model';
 import { EnableLabelingCommand } from './model/enable-labeling.model';
 import { DailyHmtSpentCommand } from './model/daily-hmt-spent.model';
@@ -15,9 +23,37 @@ export class HCaptchaMapperProfile extends AutomapperProfile {
   override get profile() {
     return (mapper: Mapper) => {
       createMap(mapper, JwtUserData, EnableLabelingCommand);
-      createMap(mapper, JwtUserData, DailyHmtSpentCommand);
-      createMap(mapper, JwtUserData, UserStatsCommand);
-      createMap(mapper, JwtUserData, VerifyTokenCommand);
+      createMap(
+        mapper,
+        JwtUserData,
+        DailyHmtSpentCommand,
+        namingConventions({
+          source: new SnakeCaseNamingConvention(),
+          destination: new CamelCaseNamingConvention(),
+        }),
+      );
+      createMap(
+        mapper,
+        JwtUserData,
+        UserStatsCommand,
+        namingConventions({
+          source: new SnakeCaseNamingConvention(),
+          destination: new CamelCaseNamingConvention(),
+        }),
+      );
+      createMap(
+        mapper,
+        JwtUserData,
+        VerifyTokenCommand,
+        forMember(
+          (destination) => destination.sitekey,
+          mapFrom((source) => source.site_key),
+        ),
+        forMember(
+          (destination) => destination.secret,
+          mapFrom((source) => source.address),
+        ),
+      );
     };
   }
 }
