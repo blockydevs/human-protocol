@@ -102,6 +102,15 @@ export class ReputationOracleProfile extends AutomapperProfile {
           destination: new SnakeCaseNamingConvention(),
         }),
       );
+      createMap(
+        mapper,
+        RestorePasswordCommand,
+        RestorePasswordData,
+        namingConventions({
+          source: new CamelCaseNamingConvention(),
+          destination: new SnakeCaseNamingConvention(),
+        }),
+      );
     };
   }
 }

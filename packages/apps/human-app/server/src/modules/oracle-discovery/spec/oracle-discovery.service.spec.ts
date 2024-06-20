@@ -59,7 +59,7 @@ describe('OracleDiscoveryService', () => {
     cacheManager = module.get<Cache>(CACHE_MANAGER);
   });
   afterEach(() => {
-    jest.resetAllMocks()
+    jest.resetAllMocks();
   });
   it('should be defined', () => {
     expect(oracleDiscoveryService).toBeDefined();

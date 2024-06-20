@@ -9,12 +9,10 @@ import {
 } from '@automapper/core';
 import {
   ForgotPasswordCommand,
-  ForgotPasswordData,
   ForgotPasswordDto,
 } from './model/forgot-password.model';
 import {
   RestorePasswordCommand,
-  RestorePasswordData,
   RestorePasswordDto,
 } from './model/restore-password.model';
 
@@ -27,7 +25,6 @@ export class PasswordResetProfile extends AutomapperProfile {
   override get profile() {
     return (mapper: Mapper) => {
       createMap(mapper, ForgotPasswordDto, ForgotPasswordCommand);
-      createMap(mapper, ForgotPasswordCommand, ForgotPasswordData);
 
       createMap(
         mapper,
@@ -36,15 +33,6 @@ export class PasswordResetProfile extends AutomapperProfile {
         namingConventions({
           source: new SnakeCaseNamingConvention(),
           destination: new CamelCaseNamingConvention(),
-        }),
-      );
-      createMap(
-        mapper,
-        RestorePasswordCommand,
-        RestorePasswordData,
-        namingConventions({
-          source: new CamelCaseNamingConvention(),
-          destination: new SnakeCaseNamingConvention(),
         }),
       );
     };
