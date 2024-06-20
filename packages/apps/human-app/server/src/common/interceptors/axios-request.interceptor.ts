@@ -18,9 +18,9 @@ export class AxiosRequestInterceptor {
         this.logger.log('NEW REQUEST:');
         this.logger.log(`Request URL: ${url}`);
         this.logger.log(`Method: ${method}`);
-        this.logger.log(`Params: ${JSON.stringify(params)}`);
-        this.logger.log(`Body: ${JSON.stringify(data)}`);
-        this.logger.log(`Headers: ${JSON.stringify(headers)}`);
+        this.logger.log(`Params: ${JSON.stringify(params ?? {})}`);
+        this.logger.log(`Body: ${JSON.stringify(data ?? {})}`);
+        this.logger.log(`Headers: ${JSON.stringify(headers ?? {})}`);
         return config;
       },
       (error) => {

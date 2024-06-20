@@ -26,11 +26,9 @@ export class EnvironmentConfigService {
       .toLowerCase();
   }
   get axiosRequestLoggingEnabled(): boolean {
-    const isLoggingEnabled = this.configService.get(
-      'IS_AXIOS_REQUEST_LOGGING_ENABLED',
-      undefined,
+    return (
+      this.configService.get('IS_AXIOS_REQUEST_LOGGING_ENABLED') === 'true'
     );
-    return !!(isLoggingEnabled && isLoggingEnabled === 'true');
   }
   get cachePort(): number {
     return this.configService.getOrThrow<number>('REDIS_PORT');
