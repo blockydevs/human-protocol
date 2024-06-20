@@ -40,9 +40,9 @@ export class UserStatsResponse {
   @AutoMap()
   verified: number;
   @AutoMap()
-  balance: BalanceStats; // what about this
+  balance: BalanceStats;
   @AutoMap()
   currentDateStats: DateValue;
   @AutoMap()
-  currentEarningsStats: DateValue; // what about this
+  currentEarningsStats: DateValue;
 }

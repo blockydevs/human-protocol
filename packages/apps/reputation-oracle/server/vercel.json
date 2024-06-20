@@ -50,9 +50,6 @@
     {
       "source": "/cron/(.*)",
       "destination": "/api/app.ts"
-    },
-    {
-
     }
   ],
   "crons": [
