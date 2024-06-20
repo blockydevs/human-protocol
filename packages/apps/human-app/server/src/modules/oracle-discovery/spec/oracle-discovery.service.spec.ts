@@ -30,7 +30,13 @@ describe('OracleDiscoveryService', () => {
         }),
       ],
       providers: [
-        EnvironmentConfigService,
+        {
+          provide: EnvironmentConfigService,
+          useValue: {
+            chainIdsEnabled: jest.fn().mockReturnValue(['4200', '4321']),
+            reputationOracleAddress: jest.fn().mockReturnValue('the_oracle'),
+          },
+        },
         OracleDiscoveryService,
         {
           provide: CACHE_MANAGER,
@@ -49,6 +55,12 @@ describe('OracleDiscoveryService', () => {
     );
     cacheManager = moduleRef.get<Cache>(CACHE_MANAGER);
   });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+    jest.resetAllMocks();
+  });
+
   it('should be defined', () => {
     expect(oracleDiscoveryService).toBeDefined();
   });
@@ -58,12 +70,17 @@ describe('OracleDiscoveryService', () => {
       { address: 'mockAddress1', role: 'validator' },
       { address: 'mockAddress2', role: 'validator' },
     ];
-    jest.spyOn(cacheManager, 'get').mockResolvedValue(mockData);
+    const chainIds = configService.chainIdsEnabled;
+    chainIds.forEach(async (chainId) => {
+      jest.spyOn(cacheManager, 'get').mockResolvedValue(mockData);
 
-    const result = await oracleDiscoveryService.processOracleDiscovery();
+      const result = await oracleDiscoveryService.processOracleDiscovery();
 
-    expect(result).toEqual(mockData);
-    expect(OperatorUtils.getReputationNetworkOperators).not.toHaveBeenCalled();
+      expect(result).toEqual(mockData);
+      expect(
+        OperatorUtils.getReputationNetworkOperators,
+      ).not.toHaveBeenCalled();
+    });
   });
 
   it('should fetch and cache data if not already cached', async () => {
@@ -72,7 +89,6 @@ describe('OracleDiscoveryService', () => {
       { address: 'mockAddress2', role: 'validator' },
     ];
     const chainIds = configService.chainIdsEnabled;
-    const reputationOracleAddress = configService.reputationOracleAddress;
     chainIds.forEach(async (chainId) => {
       jest.spyOn(cacheManager, 'get').mockResolvedValue(undefined);
       jest
@@ -90,7 +106,7 @@ describe('OracleDiscoveryService', () => {
       );
       expect(OperatorUtils.getReputationNetworkOperators).toHaveBeenCalledWith(
         Number(chainId),
-        reputationOracleAddress,
+        configService.reputationOracleAddress,
         EXCHANGE_ORACLE,
       );
     });

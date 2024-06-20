@@ -12,13 +12,21 @@ import {
 } from './statistics.fixtures';
 import { OracleStatisticsDto } from '../model/oracle-statistics.model';
 import { UserStatisticsDto } from '../model/user-statistics.model';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
+import { StatisticsProfile } from '../statistics.mapper.profile';
 
 describe('StatisticsController', () => {
   let controller: StatisticsController;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [StatisticsController],
-      providers: [StatisticsService],
+      imports: [
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
+      providers: [StatisticsService, StatisticsProfile],
     })
       .overrideProvider(StatisticsService)
       .useValue(statisticsServiceMock)
