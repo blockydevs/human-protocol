@@ -43,14 +43,17 @@ export class OracleDiscoveryService {
             this.logger.error(`Error processing chainId ${chainId}:`, error);
           }
         }
-        if (command.selectedJobTypes) {
-          return data?.filter((oracle) =>
-            oracle.jobTypes?.some((job) =>
-              command.selectedJobTypes?.includes(job),
-            ),
-          );
+        if (
+          !command.selectedJobTypes ||
+          command.selectedJobTypes.length === 0
+        ) {
+          return data;
         }
-        return data;
+        return data?.filter((oracle) =>
+          oracle.jobTypes?.some((job) =>
+            command.selectedJobTypes?.includes(job),
+          ),
+        );
       }),
     );
 
