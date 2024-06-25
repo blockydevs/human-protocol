@@ -13,17 +13,18 @@ export class AxiosRequestInterceptor {
     axios.interceptors.request.use(
       (config) => {
         const { url, method, params, data, headers } = config;
-        this.logger.debug(
-          `
----------------NEW REQUEST: -----------------------------------------------------------------------------
-            Request URL: ${url} 
-            Method: ${method}
-            Params: ${JSON.stringify(params ?? {})}
-            Body: ${JSON.stringify(data ?? {})}
-            Headers: ${JSON.stringify(headers ?? {})}
----------------------------------------------------------------------------------------------------------
-          `,
+        const message = JSON.stringify(
+          {
+            request_url: url,
+            method: method,
+            params: params ?? {},
+            body: data ?? {},
+            headers: headers ?? {},
+          },
+          null,
+          2,
         );
+        this.logger.debug(`Outgoing request:\n${message}`);
         return config;
       },
       (error) => {
