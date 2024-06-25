@@ -2,12 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import {
   CamelCaseNamingConvention,
-  createMap,
+  createMap, forMember, mapFrom,
   Mapper,
   namingConventions,
   SnakeCaseNamingConvention,
 } from '@automapper/core';
-import { OracleDiscoveryCommand, OracleDiscoveryDto } from './model/oracle-discovery.model';
+import {
+  OracleDiscoveryCommand,
+  OracleDiscoveryDto,
+} from './model/oracle-discovery.model';
 
 @Injectable()
 export class OracleDiscoveryProfile extends AutomapperProfile {
@@ -21,10 +24,14 @@ export class OracleDiscoveryProfile extends AutomapperProfile {
         mapper,
         OracleDiscoveryDto,
         OracleDiscoveryCommand,
-        namingConventions({
-          source: new SnakeCaseNamingConvention(),
-          destination: new CamelCaseNamingConvention(),
-        }),
+        forMember(
+          (destination) => destination.selectedJobTypes,
+          mapFrom((source) => source.selectedJobTypes),
+        ),
+        // namingConventions({
+        //   source: new SnakeCaseNamingConvention(),
+        //   destination: new CamelCaseNamingConvention(),
+        // }),
       );
     };
   }
