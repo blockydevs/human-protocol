@@ -26,12 +26,8 @@ export class OracleDiscoveryProfile extends AutomapperProfile {
         OracleDiscoveryCommand,
         forMember(
           (destination) => destination.selectedJobTypes,
-          mapFrom((source) => source.selectedJobTypes),
+          mapFrom((source) => source.selected_job_types),
         ),
-        // namingConventions({
-        //   source: new SnakeCaseNamingConvention(),
-        //   destination: new CamelCaseNamingConvention(),
-        // }),
       );
     };
   }

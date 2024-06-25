@@ -17,7 +17,7 @@ export class OracleDiscoveryResponse implements IOperator {
 export class OracleDiscoveryDto {
   @AutoMap()
   @ApiPropertyOptional()
-  selectedJobTypes?: string[];
+  selected_job_types?: string[];
 }
 export class OracleDiscoveryCommand {
   @AutoMap()

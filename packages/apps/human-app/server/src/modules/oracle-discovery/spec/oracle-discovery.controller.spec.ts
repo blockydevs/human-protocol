@@ -4,7 +4,11 @@ import { classes } from '@automapper/classes';
 import { OracleDiscoveryController } from '../oracle-discovery.controller';
 import { OracleDiscoveryService } from '../oracle-discovery.service';
 import { oracleDiscoveryServiceMock } from './oracle-discovery.service.mock';
-import { OracleDiscoveryCommand, OracleDiscoveryDto, OracleDiscoveryResponse } from '../model/oracle-discovery.model';
+import {
+  OracleDiscoveryCommand,
+  OracleDiscoveryDto,
+  OracleDiscoveryResponse,
+} from '../model/oracle-discovery.model';
 import { generateOracleDiscoveryResponseBody } from './oracle-discovery.fixture';
 import { OracleDiscoveryProfile } from '../oracle-discovery.mapper.profile';
 
@@ -39,7 +43,7 @@ describe('OracleDiscoveryController', () => {
   describe('oracle discovery', () => {
     it('oracle discovery should be return OracleDiscoveryData', async () => {
       const dtoFixture = {
-        selectedJobTypes: ['job-type-1', 'job-type-2'],
+        selected_job_types: ['job-type-1', 'job-type-2'],
       } as OracleDiscoveryDto;
       const commandFixture = {
         selectedJobTypes: ['job-type-1', 'job-type-2'],
