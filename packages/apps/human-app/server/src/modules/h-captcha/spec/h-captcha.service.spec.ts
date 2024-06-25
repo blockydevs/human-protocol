@@ -193,6 +193,7 @@ describe('HCaptchaService', () => {
       const result = await service.getDailyHmtSpent(command);
       expect(result).toEqual(dailyHmtSpentResponseFixture);
       expect(cacheManager.set).toHaveBeenCalledWith(
+        service.dailyHmtSpentCacheKey,
         dailyHmtSpentResponseFixture,
         configService.cacheTtlDailyHmtSpent,
       );

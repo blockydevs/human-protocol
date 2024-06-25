@@ -24,7 +24,9 @@ import { HCaptchaVerifyGateway } from '../../integrations/h-captcha-labeling/h-c
 export class HCaptchaService {
   BAD_REQUEST = 400;
   OK = 200;
-  DAILY_HMT_SPENT_CACHE_KEY = 'daily-hmt-spent-cache';
+  get dailyHmtSpentCacheKey() {
+    return 'daily-hmt-spent-cache';
+  }
   private readonly logger = new Logger(HCaptchaService.name);
   constructor(
     private configService: EnvironmentConfigService,
@@ -72,12 +74,12 @@ export class HCaptchaService {
   ): Promise<DailyHmtSpentResponse> {
     this.checkIfHcaptchaSitekeyPresent(command.siteKey);
     let dailyHmtSpent = await this.cacheManager.get<DailyHmtSpentResponse>(
-      this.DAILY_HMT_SPENT_CACHE_KEY,
+      this.dailyHmtSpentCacheKey
     );
     if (!dailyHmtSpent) {
       dailyHmtSpent = await this.hCaptchaLabelingGateway.fetchDailyHmtSpent();
       await this.cacheManager.set(
-        this.DAILY_HMT_SPENT_CACHE_KEY,
+        this.dailyHmtSpentCacheKey,
         dailyHmtSpent,
         this.configService.cacheTtlDailyHmtSpent,
       );
