@@ -23,40 +23,62 @@ export class OracleDiscoveryService {
     const address = this.configService.reputationOracleAddress;
     const chainIds = this.configService.chainIdsEnabled;
 
-    const allData = await Promise.all(
+    const filteredOracles = await Promise.all(
       chainIds.map(async (chainId) => {
-        let data: OracleDiscoveryResponse[] | undefined =
-          await this.cacheManager.get(chainId);
-        if (!data) {
-          try {
-            data = await OperatorUtils.getReputationNetworkOperators(
-              Number(chainId),
-              address,
-              this.EXCHANGE_ORACLE,
-            );
-            await this.cacheManager.set(
-              chainId,
-              data,
-              this.configService.cacheTtlOracleDiscovery,
-            );
-          } catch (error) {
-            this.logger.error(`Error processing chainId ${chainId}:`, error);
-          }
-        }
-        if (
-          !command.selectedJobTypes ||
-          command.selectedJobTypes.length === 0
-        ) {
-          return data;
-        }
-        return data?.filter((oracle) =>
-          oracle.jobTypes?.some((job) =>
-            command.selectedJobTypes?.includes(job),
+        return this.findOraclesByChainId(chainId, address).then((oracles) =>
+          this.getOraclesWithSelectedJobTypes(
+            oracles,
+            command.selectedJobTypes,
           ),
         );
       }),
     );
-
-    return allData.flat().filter(Boolean) as OracleDiscoveryResponse[];
+    return filteredOracles.flat().filter(Boolean) as OracleDiscoveryResponse[];
+  }
+  private async findOraclesByChainId(
+    chainId: string,
+    address: string,
+  ): Promise<OracleDiscoveryResponse[] | undefined> {
+    let receivedOracles: OracleDiscoveryResponse[] | undefined =
+      await this.cacheManager.get(chainId);
+    if (!receivedOracles) {
+      try {
+        receivedOracles = await OperatorUtils.getReputationNetworkOperators(
+          Number(chainId),
+          address,
+          this.EXCHANGE_ORACLE,
+        );
+        await this.cacheManager.set(
+          chainId,
+          receivedOracles,
+          this.configService.cacheTtlOracleDiscovery,
+        );
+      } catch (error) {
+        this.logger.error(`Error processing chainId ${chainId}:`, error);
+      }
+    }
+    return receivedOracles;
+  }
+  private getOraclesWithSelectedJobTypes(
+    foundOracles: OracleDiscoveryResponse[] | undefined,
+    selectedJobTypes: string[] | undefined,
+  ) {
+    if (
+      !selectedJobTypes ||
+      selectedJobTypes.length === 0 ||
+      !foundOracles ||
+      foundOracles.length === 0
+    ) {
+      return foundOracles;
+    }
+    return foundOracles?.filter((oracle) =>
+      this.areJobTypeSetsIntersect(oracle.jobTypes, selectedJobTypes),
+    );
+  }
+  private areJobTypeSetsIntersect(
+    oracleJobTypes: string[] | undefined,
+    requiredJobTypes: string[],
+  ) {
+    return oracleJobTypes?.some((job) => requiredJobTypes?.includes(job));
   }
 }
