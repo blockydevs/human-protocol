@@ -71,14 +71,16 @@ export class OracleDiscoveryService {
     ) {
       return foundOracles;
     }
-    return foundOracles?.filter((oracle) =>
-      this.areJobTypeSetsIntersect(oracle.jobTypes, selectedJobTypes),
+    return foundOracles.filter((oracle) =>
+      oracle.jobTypes && oracle.jobTypes.length > 0
+        ? this.areJobTypeSetsIntersect(oracle.jobTypes, selectedJobTypes)
+        : false,
     );
   }
   private areJobTypeSetsIntersect(
-    oracleJobTypes: string[] | undefined,
+    oracleJobTypes: string[],
     requiredJobTypes: string[],
   ) {
-    return oracleJobTypes?.some((job) => requiredJobTypes?.includes(job));
+    return oracleJobTypes.some((job) => requiredJobTypes.includes(job));
   }
 }
