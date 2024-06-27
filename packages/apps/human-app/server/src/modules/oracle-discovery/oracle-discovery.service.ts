@@ -68,7 +68,6 @@ export class OracleDiscoveryService {
       !foundOracles ||
       foundOracles.length === 0
     ) {
-      console.log('DUPA1');
       return foundOracles;
     }
     const filteredOracles = foundOracles.filter((oracle) =>
@@ -82,8 +81,6 @@ export class OracleDiscoveryService {
     oracleJobTypes: string[],
     requiredJobTypes: string[],
   ) {
-    console.log(requiredJobTypes);
-    console.log(oracleJobTypes);
     return oracleJobTypes.some((job) =>
       requiredJobTypes
         .map((requiredJob) => requiredJob.toLowerCase())
