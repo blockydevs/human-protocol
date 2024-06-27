@@ -24,7 +24,7 @@ export async function getOracles({
   selected_job_types: string[];
 }) {
   const queryParams = selected_job_types.length
-    ? `?${stringifyUrlQueryObject({ selected_job_types: selected_job_types.join(',') })}`
+    ? `?${stringifyUrlQueryObject({ selected_job_types })}`
     : '';
 
   return apiClient(`${apiPaths.worker.oracles.path}${queryParams}`, {
