@@ -70,12 +70,11 @@ export class OracleDiscoveryService {
     ) {
       return foundOracles;
     }
-    const filteredOracles = foundOracles.filter((oracle) =>
+    return foundOracles.filter((oracle) =>
       oracle.jobTypes && oracle.jobTypes.length > 0
         ? this.areJobTypeSetsIntersect(oracle.jobTypes, selectedJobTypes)
         : false,
     );
-    return filteredOracles;
   }
   private areJobTypeSetsIntersect(
     oracleJobTypes: string[],
