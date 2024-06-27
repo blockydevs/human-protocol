@@ -36,6 +36,7 @@ export class JobsDiscoveryParamsDto extends PageableDto {
   sort_field?: JobDiscoverySortField;
   @AutoMap()
   @IsString()
+  @IsOptional()
   @ApiPropertyOptional()
   job_type?: string;
   @AutoMap()
