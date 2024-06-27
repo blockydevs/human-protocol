@@ -1,7 +1,7 @@
 import { IOperator } from '@human-protocol/sdk';
 import { AutoMap } from '@automapper/classes';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsArray, IsOptional } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class OracleDiscoveryResponse implements IOperator {
@@ -17,7 +17,9 @@ export class OracleDiscoveryResponse implements IOperator {
   }
 }
 export class OracleDiscoveryDto {
-  @ApiPropertyOptional({ type: [String], isArray: true })
+  @ApiPropertyOptional({ type: [String] })
+  @IsArray()
+  @IsOptional()
   @Transform(({ value }) => (Array.isArray(value) ? value : Array(value)))
   selected_job_types?: string[];
 }
