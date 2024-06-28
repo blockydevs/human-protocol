@@ -11,7 +11,7 @@ export function HMTPrice() {
 			<div className="count">
 				{status === 'success' && data['human-protocol'].usd}
 				{status === 'pending' && '...'}
-				{status === 'error' && 'ND'}
+				{status === 'error' && 'No data'}
 			</div>
 		</div>
 	);
