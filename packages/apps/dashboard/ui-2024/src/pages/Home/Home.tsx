@@ -20,8 +20,13 @@ import lbank from '@assets/lbank.png';
 import cup from '@assets/cup.png';
 import Leaderboard from '@components/Home/Leaderboard';
 import GraphSwiper from '@components/Home/GraphSwiper';
+import { useStatistics } from '../../services/sdk/use-statistics';
+import { sumStatistics } from '@helpers/sumStatistics';
 
-const Home: React.FC = () => {	
+const Home: React.FC = () => {
+	const { data } = useStatistics();
+	const statisticsSum = sumStatistics(data);
+
 	return (
 		<PageWrapper violetHeader>
 			<div className="home-page-header">
@@ -56,7 +61,7 @@ const Home: React.FC = () => {
 							<Typography variant="h6" component="p">
 								Holders
 							</Typography>
-							<div className="count">32,306</div>
+							<div className="count">{statisticsSum.holders}</div>
 						</div>
 					</div>
 				</div>
@@ -84,7 +89,9 @@ const Home: React.FC = () => {
 								Total Transactions
 							</Typography>
 							<div className="count">
-								1,786,573 <span>(12.8 TPS)</span>
+								{statisticsSum.totalTransactions}
+								{/* TODO verify this value */}
+								{/* <span>(12.8 TPS)</span> */}
 							</div>
 						</div>
 					</div>
