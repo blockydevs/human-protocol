@@ -109,7 +109,7 @@ describe('OracleDiscoveryService', () => {
       );
     });
   });
-  it('should filter responses if selectedJobTypes not empty', async () => {
+  it('should filter responses if selectedJobTypes not empty, or url not set', async () => {
     const mockData: OracleDiscoveryResponse[] =
       generateOracleDiscoveryResponseBody();
 
