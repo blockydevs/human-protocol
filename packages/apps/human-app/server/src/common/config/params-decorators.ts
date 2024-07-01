@@ -1,11 +1,15 @@
-import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { createParamDecorator, ExecutionContext, HttpException, UnauthorizedException } from '@nestjs/common';
 import { jwtDecode } from 'jwt-decode';
 import { JwtUserData } from '../utils/jwt-token.model';
 
 export const Authorization = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
-    return request.headers['authorization'];
+    const token = request.headers['authorization'];
+    if(token) {
+      return token
+    }
+    throw new UnauthorizedException()
   },
 );
 export const JwtPayload = createParamDecorator(
