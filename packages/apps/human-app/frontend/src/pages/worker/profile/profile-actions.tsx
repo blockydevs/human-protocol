@@ -12,14 +12,11 @@ import { routerPaths } from '@/router/router-paths';
 import { startSynapsKyc } from '@/pages/worker/profile/start-synaps-kyc';
 import { RegisterAddressAction } from '@/pages/worker/profile/register-address-action';
 import { RequireWalletConnect } from '@/auth-web3/require-wallet-connect';
-import { useResendEmailVerificationWorkerMutation } from '@/api/servieces/worker/resend-email-verification';
 import { WalletConnectDone } from '@/pages/worker/profile/wallet-connect-done';
 import { useKycErrorNotifications } from '@/hooks/use-kyc-notification';
 
 export function ProfileActions() {
   const navigation = useNavigate();
-  const { mutate: resendEmailVerificationMutation } =
-    useResendEmailVerificationWorkerMutation();
   const onError = useKycErrorNotifications();
   const {
     data: kycSessionIdData,
@@ -52,10 +49,7 @@ export function ProfileActions() {
           <Button
             fullWidth
             onClick={() => {
-              resendEmailVerificationMutation({ email: user.email });
-              navigation(routerPaths.worker.sendEmailVerification, {
-                state: { routerState: { email: user.email } },
-              });
+              navigation(routerPaths.worker.resendEmailVerification);
             }}
             variant="contained"
           >

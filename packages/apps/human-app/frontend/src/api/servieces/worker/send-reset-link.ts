@@ -1,3 +1,4 @@
+/* eslint-disable camelcase -- ... */
 import { z } from 'zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +12,7 @@ export const sendResetLinkDtoSchema = z.object({
     .string()
     .min(1, t('worker.sendResetLinkForm.noEmailError'))
     .email(t('worker.sendResetLinkForm.invalidEmailError')),
+  h_captcha_token: z.string(),
 });
 
 export type SendResetLinkDto = z.infer<typeof sendResetLinkDtoSchema>;
