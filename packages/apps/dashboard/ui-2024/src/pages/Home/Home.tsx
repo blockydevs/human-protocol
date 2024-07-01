@@ -21,11 +21,13 @@ import cup from '@assets/cup.png';
 import Leaderboard from '@components/Home/Leaderboard';
 import GraphSwiper from '@components/Home/GraphSwiper';
 import { useStatistics } from '../../services/sdk/use-statistics';
+// import { useTransactionHistory } from '../../services/sdk/use-transaction-history';
 import { sumStatistics } from '@helpers/sumStatistics';
 
 const Home: React.FC = () => {
 	const { data } = useStatistics();
 	const statisticsSum = sumStatistics(data);
+	// useTransactionHistory();
 
 	return (
 		<PageWrapper violetHeader>

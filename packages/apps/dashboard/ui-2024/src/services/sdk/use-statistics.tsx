@@ -1,10 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { ChainId, NETWORKS, StatisticsClient } from '@human-protocol/sdk';
+import { StatisticsClient } from '@human-protocol/sdk';
 import { HMTStatistics } from '@human-protocol/sdk/dist/graphql';
-
-const VALID_NETWORKS = Object.entries(NETWORKS).filter(([chainId]) => {
-	return Number(chainId) !== ChainId.SKALE; // this chain causes timeout
-});
+import { VALID_NETWORKS } from './valid-networks';
 
 export type StatisticsResponse = {
 	chainId: string;
