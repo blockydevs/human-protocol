@@ -6,17 +6,19 @@ export const Authorization = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
     const token = request.headers['authorization'];
-    if(token) {
-      return token
+    if (token) {
+      return token;
     }
-    throw new UnauthorizedException()
+    throw new UnauthorizedException();
   },
 );
 export const JwtPayload = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): any => {
     const request = ctx.switchToHttp().getRequest();
     const token = request.headers['authorization']?.split(' ')[1];
-    if (!token) return null;
+    if (!token) {
+      throw new UnauthorizedException();
+    }
     try {
       const decoded = jwtDecode(token);
       return decoded as JwtUserData;
