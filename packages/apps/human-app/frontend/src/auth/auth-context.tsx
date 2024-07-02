@@ -9,6 +9,7 @@ const extendableUserDataSchema = z.object({
   site_key: z.string().optional().nullable(),
   kyc_status: z.string().optional().nullable(),
   address: z.string().optional().nullable(),
+  status: z.string().optional().nullable(),
 });
 
 const userDataSchema = z

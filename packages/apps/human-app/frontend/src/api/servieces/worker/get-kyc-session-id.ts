@@ -22,9 +22,9 @@ type KycSessionIdMutationResult =
   | (KycSessionIdSuccessSchema & { error?: never })
   | { session_id?: never; error: KycError };
 
-export function useKycSessionIdMutation(callbacks: {
+export function useKycSessionIdMutation(callbacks?: {
   onError?: (error: ResponseError) => void;
-  onSuccess?: () => void;
+  onSuccess?: (response: KycSessionIdMutationResult) => void;
 }) {
   const queryClient = useQueryClient();
   const { user } = useAuthenticatedUser();
@@ -96,11 +96,11 @@ export function useKycSessionIdMutation(callbacks: {
 
     onError: (error) => {
       void queryClient.invalidateQueries();
-      if (callbacks.onError) callbacks.onError(error);
+      if (callbacks?.onError) callbacks.onError(error);
     },
-    onSuccess: () => {
+    onSuccess: (response) => {
       void queryClient.invalidateQueries();
-      if (callbacks.onSuccess) callbacks.onSuccess();
+      if (callbacks?.onSuccess) callbacks.onSuccess(response);
     },
     mutationKey: ['kycSessionId', user.email],
   });
