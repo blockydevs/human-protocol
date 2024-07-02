@@ -10,13 +10,14 @@ import { Button } from '@/components/ui/button';
 import { colorPalette } from '@/styles/color-palette';
 import { useLocationState } from '@/hooks/use-location-state';
 import { env } from '@/shared/env';
-import type { SendResetLinkDto } from '@/api/servieces/worker/send-reset-link';
+import type { SendResetLinkHcaptcha } from '@/api/servieces/worker/send-reset-link';
 import {
-  sendResetLinkDtoSchema,
+  sendResetLinkHcaptchaDtoSchema,
   useSendResetLinkMutation,
 } from '@/api/servieces/worker/send-reset-link';
 import { Alert } from '@/components/ui/alert';
 import { defaultErrorMessage } from '@/shared/helpers/default-error-message';
+import { FormCaptcha } from '@/components/h-captcha';
 
 export function SendResetLinkWorkerSuccessPage() {
   const { t } = useTranslation();
@@ -26,17 +27,15 @@ export function SendResetLinkWorkerSuccessPage() {
   });
   const { mutate, error, isError, isPending } = useSendResetLinkMutation();
 
-  const handleWorkerSendResetLink = (dto: SendResetLinkDto) => {
-    if (email) {
-      mutate({ ...dto, email });
-    }
+  const handleWorkerSendResetLink = (dto: SendResetLinkHcaptcha) => {
+    mutate({ ...dto, email: email || '' });
   };
 
-  const methods = useForm<SendResetLinkDto>({
+  const methods = useForm<SendResetLinkHcaptcha>({
     defaultValues: {
       h_captcha_token: '',
     },
-    resolver: zodResolver(sendResetLinkDtoSchema),
+    resolver: zodResolver(sendResetLinkHcaptchaDtoSchema),
   });
 
   return (
@@ -78,6 +77,7 @@ export function SendResetLinkWorkerSuccessPage() {
                 values={{ email }}
               />
             </Typography>
+            <FormCaptcha name="h_captcha_token" />
             <Button
               disabled={!email}
               fullWidth
