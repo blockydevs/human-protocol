@@ -27,24 +27,33 @@ export class KvStoreGateway {
     if (cachedUrl) {
       return cachedUrl;
     }
+    let fetchedUrl: string;
     try {
-      const fetchedUrl = await this.kvStoreClient.get(address, KVStoreKeys.url);
+      fetchedUrl = await this.kvStoreClient.get(address, KVStoreKeys.url);
+    } catch (e) {
+      if (e.toString().includes('Error: Invalid address')) {
+        throw new HttpException(
+          `Unable to retrieve URL from address: ${address}`,
+          400,
+        );
+      } else {
+        throw new Error(
+          `Error, while fetching exchange oracle URL from kv-store: ${e}`,
+        );
+      }
+    }
+    if (!!fetchedUrl || fetchedUrl === '') {
+      throw new HttpException(
+        `Unable to retrieve URL from address: ${address}`,
+        400,
+      );
+    } else {
       await this.cacheManager.set(
         this.cachePrefix + address,
         fetchedUrl,
         this.configService.cacheTtlExchangeOracleUrl,
       );
       return fetchedUrl;
-    } catch (e) {
-      if (e.toString().includes('Error: Invalid address'))
-        throw new HttpException(
-          `Unable to retrieve URL from address: ${address}`,
-          400,
-        );
-      else
-        throw new Error(
-          `Error, while fetching exchange oracle URL from kv-store: ${e}`,
-        );
     }
   }
 }
