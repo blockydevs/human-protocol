@@ -74,7 +74,7 @@ async function addStakeMutationFn(
   return data;
 }
 
-export function useAddStakeMutation(onSuccess?: () => void) {
+export function useAddStakeMutation() {
   const {
     chainId,
     address,
@@ -93,7 +93,6 @@ export function useAddStakeMutation(onSuccess?: () => void) {
         chainId,
       }),
     onSuccess: async () => {
-      if (onSuccess) onSuccess();
       navigate(routerPaths.operator.addKeys);
       await queryClient.invalidateQueries();
     },
