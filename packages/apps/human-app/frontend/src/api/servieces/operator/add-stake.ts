@@ -7,12 +7,14 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { t } from 'i18next';
+import { useNavigate } from 'react-router-dom';
 import { stakingStake } from '@/smart-contracts/Staking/staking-stake';
 import type { ResponseError } from '@/shared/types/global.type';
 import { useConnectedWallet } from '@/auth-web3/use-connected-wallet';
 import { getContractAddress } from '@/smart-contracts/get-contract-address';
 import { hmTokenApprove } from '@/smart-contracts/HMToken/hm-token-approve';
 import type { ContractCallArguments } from '@/smart-contracts/types';
+import { routerPaths } from '@/router/router-paths';
 
 type AmountValidation = z.ZodEffects<
   z.ZodEffects<z.ZodString, string, string>,
@@ -72,13 +74,14 @@ async function addStakeMutationFn(
   return data;
 }
 
-export function useAddStakeMutation() {
+export function useAddStakeMutation(onSuccess?: () => void) {
   const {
     chainId,
     address,
     web3ProviderMutation: { data: web3data },
   } = useConnectedWallet();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: (data: AddStakeCallArguments) =>
@@ -90,6 +93,8 @@ export function useAddStakeMutation() {
         chainId,
       }),
     onSuccess: async () => {
+      if (onSuccess) onSuccess();
+      navigate(routerPaths.operator.addKeys);
       await queryClient.invalidateQueries();
     },
     onError: async () => {

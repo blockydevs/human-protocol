@@ -330,11 +330,12 @@
       "label": "Staked amount",
       "description": "Please add bellow the amount to stake",
       "actionBtn": "Add Stake",
-      "nextBtn": "Next"
+      "nextBtn": "Next",
+      "skipBtn": "Skip"
     },
     "stakeForm": {
       "formBtn": "Add Stake",
-      "backBtn": "Skip",
+      "skipBtn": "Skip",
       "nextBtn": "Next",
       "label": "Stake amount",
       "description": "Please add bellow the amount to stake",
