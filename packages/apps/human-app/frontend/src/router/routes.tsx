@@ -100,7 +100,7 @@ export const protectedRoutes: {
   },
   {
     routerProps: {
-      path: routerPaths.worker.jobs,
+      path: `${routerPaths.worker.jobs}/:address`,
       element: <JobsPage />,
     },
     pageHeaderProps: {
