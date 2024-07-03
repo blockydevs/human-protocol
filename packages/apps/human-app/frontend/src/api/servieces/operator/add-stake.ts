@@ -7,12 +7,15 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { t } from 'i18next';
+import { ethers } from 'ethers';
 import { stakingStake } from '@/smart-contracts/Staking/staking-stake';
 import type { ResponseError } from '@/shared/types/global.type';
 import { useConnectedWallet } from '@/auth-web3/use-connected-wallet';
 import { getContractAddress } from '@/smart-contracts/get-contract-address';
 import { hmTokenApprove } from '@/smart-contracts/HMToken/hm-token-approve';
 import type { ContractCallArguments } from '@/smart-contracts/types';
+import { hmTokenAllowance } from '@/smart-contracts/HMToken/hm-token-allowance';
+import { useHMTokenDecimals } from '@/api/servieces/operator/human-token-decimals';
 
 type AmountValidation = z.ZodEffects<
   z.ZodEffects<z.ZodString, string, string>,
@@ -48,6 +51,7 @@ async function addStakeMutationFn(
   data: AddStakeCallArguments & {
     address: string;
     amount: string;
+    decimals?: number;
   } & Omit<ContractCallArguments, 'contractAddress'>
 ) {
   const stakingContractAddress = getContractAddress({
@@ -60,15 +64,32 @@ async function addStakeMutationFn(
     contractName: 'HMToken',
   });
 
-  await hmTokenApprove({
+  const allowance = await hmTokenAllowance({
     spender: stakingContractAddress,
+    owner: data.address || 's',
     contractAddress: hmTokenContractAddress,
-    chainId: data.chainId,
     provider: data.provider,
     signer: data.signer,
-    amount: data.amount,
+    chainId: data.chainId,
   });
-  await stakingStake({ ...data, contractAddress: stakingContractAddress });
+
+  const amountBigInt = ethers.parseUnits(data.amount, data.decimals);
+
+  if (amountBigInt - allowance > 0) {
+    await hmTokenApprove({
+      spender: stakingContractAddress,
+      contractAddress: hmTokenContractAddress,
+      amount: amountBigInt.toString(),
+      provider: data.provider,
+      signer: data.signer,
+      chainId: data.chainId,
+    });
+  }
+  await stakingStake({
+    ...data,
+    amount: amountBigInt.toString(),
+    contractAddress: stakingContractAddress,
+  });
   return data;
 }
 
@@ -78,6 +99,8 @@ export function useAddStakeMutation() {
     address,
     web3ProviderMutation: { data: web3data },
   } = useConnectedWallet();
+  const { data: HMTDecimals } = useHMTokenDecimals();
+
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -88,6 +111,7 @@ export function useAddStakeMutation() {
         provider: web3data?.provider,
         signer: web3data?.signer,
         chainId,
+        decimals: HMTDecimals,
       }),
     onSuccess: async () => {
       await queryClient.invalidateQueries();
