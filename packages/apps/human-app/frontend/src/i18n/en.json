@@ -140,16 +140,19 @@
     "sendEmailVerification": {
       "title": "Verify Email",
       "btn": "Resend Verification Email",
-      "paragraph1": "We've sent an email to <1>{{email}}</1>, please check your inbox and verify your email.",
-      "paragraph2": "The verification link is valid for 24 hours.",
-      "paragraph3": "<1>Can't find our email?</1> If you can't find the email in your inbox please check the spam folder.",
-      "paragraph4": "<1>Having trouble?</1> Please <2>Contact Support</2>",
+      "paragraph1": "Your email address <1>{{email}}</1> is not verified.",
+      "paragraph2": "<1>Having trouble?</1> Please <2>Contact Support</2>",
       "successResent": "Verification email has been successfully resent."
     },
-    "sendEmailVerificationError": {
-      "title": "Verification failed",
-      "description": "An error occurred during email verification. Click button bellow to resend verification email.",
-      "btn": "Resend Verification Email"
+    "verifyEmail": {
+      "title": "Verify Email",
+      "btn": "Resend Verification Email",
+      "paragraph1": "We’ve sent an email to <1>{{email}}</1>, please check your inbox and verify your email.",
+      "paragraph2": "The verification link is valid for 24 hours.",
+      "paragraph3": "<1>Can't find our email?</1> If you can’t find the email in your inbox please check the spam folder.",
+      "paragraph4": "<1>Having trouble?</1> Please <2>Contact Support</2>",
+      "successResent": "Verification email has been successfully resent.",
+      "authError": "Log in before you resend email verification"
     },
     "emailVerification": {
       "title": "Email Verified",
