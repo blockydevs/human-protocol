@@ -35,7 +35,9 @@
     "errorWithStatusCode": "Error with status code: {{code}}",
     "unknown": "An error occurred, please try again.",
     "unknownNetwork": "Unknown network",
-    "jsonRpcError": "JSON-RPC error"
+    "jsonRpcError": "JSON-RPC error",
+    "unsupportedNetwork": "Network selected in wallet is unsupported.",
+    "unsupportedNetworkWithName": "Network '{{networkName}}' is unsupported."
   },
   "components": {
     "multiSelect": {
