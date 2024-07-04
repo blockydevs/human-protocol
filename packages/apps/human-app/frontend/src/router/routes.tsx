@@ -15,7 +15,7 @@ import { ResetPasswordWorkerPage } from '@/pages/worker/reset-password/reset-pas
 import { SendResetLinkWorkerPage } from '@/pages/worker/send-reset-link/send-reset-link.page';
 import { ResetPasswordWorkerSuccessPage } from '@/pages/worker/reset-password/reset-password-success.page';
 import { EmailVerificationWorkerPage } from '@/pages/worker/email-verification/email-verification.page';
-import { SendEmailVerificationWorkerPage } from '@/pages/worker/email-verification/send-email-verification.page';
+import { VerifyEmailWorkerPage } from '@/pages/worker/email-verification/verify-email.page';
 import { AddKeysOperatorPage } from '@/pages/operator/sign-up/add-keys/add-keys.page';
 import { EditExistingKeysSuccessPage } from '@/pages/operator/sign-up/add-keys/edit-existing-keys-success.page';
 import type { PageHeaderProps } from '@/components/layout/protected/page-header';
@@ -26,6 +26,7 @@ import { EnableLabeler } from '@/pages/worker/hcaptcha-labeling/enable-labeler.p
 import { HcaptchaLabelingPage } from '@/pages/worker/hcaptcha-labeling/hcaptcha-labeling/hcaptcha-labeling.page';
 import { UserStatsAccordion } from '@/pages/worker/hcaptcha-labeling/hcaptcha-labeling/user-stats-accordion';
 import { SetUpOperatorPage } from '@/pages/operator/sign-up/set-up-operator';
+import { ResendEmailVerificationWorkerPage } from '@/pages/worker/email-verification/resend-email-verification.page';
 
 export const unprotectedRoutes: RouteProps[] = [
   {
@@ -53,8 +54,12 @@ export const unprotectedRoutes: RouteProps[] = [
     element: <EmailVerificationWorkerPage />,
   },
   {
-    path: routerPaths.worker.sendEmailVerification,
-    element: <SendEmailVerificationWorkerPage />,
+    path: routerPaths.worker.verifyEmail,
+    element: <VerifyEmailWorkerPage />,
+  },
+  {
+    path: routerPaths.worker.resendEmailVerification,
+    element: <ResendEmailVerificationWorkerPage />,
   },
   {
     path: routerPaths.worker.sendResetLink,
@@ -100,7 +105,7 @@ export const protectedRoutes: {
   },
   {
     routerProps: {
-      path: routerPaths.worker.jobs,
+      path: `${routerPaths.worker.jobs}/:address`,
       element: <JobsPage />,
     },
     pageHeaderProps: {

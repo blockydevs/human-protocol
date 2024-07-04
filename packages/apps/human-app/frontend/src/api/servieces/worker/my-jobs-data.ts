@@ -73,7 +73,7 @@ export function useInfiniteGetMyJobsData() {
     queryKey: ['myJobsInfinite', filterParams],
     queryFn: () => getMyJobsTableData(filterParams),
     getNextPageParam: (pageParams) => {
-      return pageParams.total_pages === pageParams.page
+      return pageParams.total_pages - 1 <= pageParams.page
         ? undefined
         : pageParams.page;
     },

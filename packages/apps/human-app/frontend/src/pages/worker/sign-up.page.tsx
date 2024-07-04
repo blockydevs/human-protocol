@@ -98,7 +98,7 @@ export function SignUpWorkerPage() {
               label={t('worker.signUpForm.fields.confirmPassword')}
               name="confirmPassword"
             />
-            <FormCaptcha name="h_captcha_token" />
+            <FormCaptcha error={signUpWorkerError} name="h_captcha_token" />
             <Grid>
               <Typography fontSize="0.75rem" variant="textField">
                 <Trans i18nKey="worker.signUpForm.termsOfServiceAndPrivacyPolicy">

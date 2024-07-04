@@ -9,14 +9,11 @@ import { Button } from '@/components/ui/button';
 import { routerPaths } from '@/router/router-paths';
 import { RegisterAddressAction } from '@/pages/worker/profile/register-address-action';
 import { RequireWalletConnect } from '@/auth-web3/require-wallet-connect';
-import { useResendEmailVerificationWorkerMutation } from '@/api/servieces/worker/resend-email-verification';
 import { WalletConnectDone } from '@/pages/worker/profile/wallet-connect-done';
 import { StartKycButton } from '@/pages/worker/profile/start-kyc-btn';
 
 export function ProfileActions() {
   const navigation = useNavigate();
-  const { mutate: resendEmailVerificationMutation } =
-    useResendEmailVerificationWorkerMutation();
 
   const { user } = useAuthenticatedUser();
   const { t } = useTranslation();
@@ -31,10 +28,7 @@ export function ProfileActions() {
           <Button
             fullWidth
             onClick={() => {
-              resendEmailVerificationMutation({ email: user.email });
-              navigation(routerPaths.worker.sendEmailVerification, {
-                state: { routerState: { email: user.email } },
-              });
+              navigation(routerPaths.worker.resendEmailVerification);
             }}
             variant="contained"
           >

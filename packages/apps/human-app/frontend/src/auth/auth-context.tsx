@@ -18,6 +18,7 @@ const userDataSchema = z
     userId: z.number(),
     reputation_network: z.string(),
     email_notifications: z.boolean().optional(), // TODO that should be verified when email notifications feature is done
+    exp: z.number(),
   })
   .merge(extendableUserDataSchema);
 
