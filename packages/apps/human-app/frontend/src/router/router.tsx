@@ -56,7 +56,9 @@ export function Router() {
                       window.location.reload();
                     });
                   }}
-                  topMenuItems={workerDrawerTopMenuItems(!user?.address)}
+                  topMenuItems={workerDrawerTopMenuItems(
+                    Boolean(user?.address)
+                  )}
                 />
               )}
               renderHCaptchaStatisticsDrawer={(isOpen) => (

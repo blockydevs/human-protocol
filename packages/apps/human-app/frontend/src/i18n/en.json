@@ -35,7 +35,9 @@
     "errorWithStatusCode": "Error with status code: {{code}}",
     "unknown": "An error occurred, please try again.",
     "unknownNetwork": "Unknown network",
-    "jsonRpcError": "JSON-RPC error"
+    "jsonRpcError": "JSON-RPC error",
+    "unsupportedNetwork": "Network selected in wallet is unsupported.",
+    "unsupportedNetworkWithName": "Network '{{networkName}}' is unsupported."
   },
   "components": {
     "multiSelect": {
@@ -169,9 +171,9 @@
     },
     "sendResetLinkSuccess": {
       "title": "Reset password",
-      "paragraph1": "We’ve sent an email to <1>{{email}}</1> Please check your inbox and verify your email.",
+      "paragraph1": "We've sent an email to <1>{{email}}</1> Please check your inbox and verify your email.",
       "paragraph2": "The verification link is valid for 24 hours.",
-      "paragraph3": "<1>Can’t find our email?</1> Please check your spam folder, or click below and we will send you a new one.",
+      "paragraph3": "<1>Can't find our email?</1> Please check your spam folder, or click below and we will send you a new one.",
       "btn": "Resend Reset Password Email",
       "paragraph4": "<1>Having trouble?</1> Please <2>Contact Support</2>"
     },
@@ -333,11 +335,12 @@
       "label": "Staked amount",
       "description": "Please add bellow the amount to stake",
       "actionBtn": "Add Stake",
-      "nextBtn": "Next"
+      "nextBtn": "Next",
+      "skipBtn": "Skip"
     },
     "stakeForm": {
       "formBtn": "Add Stake",
-      "backBtn": "Skip",
+      "skipBtn": "Skip",
       "nextBtn": "Next",
       "label": "Stake amount",
       "description": "Please add bellow the amount to stake",

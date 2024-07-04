@@ -2,7 +2,7 @@
 import { t } from 'i18next';
 import { useEffect, useMemo, useState } from 'react';
 import Grid from '@mui/material/Grid';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import {
   MaterialReactTable,
   useMaterialReactTable,
@@ -27,7 +27,6 @@ import { MyJobsExpiresAtSort } from '@/pages/worker/jobs/components/my-jobs/desk
 import { MyJobsNetworkFilter } from '@/pages/worker/jobs/components/my-jobs/desktop/my-jobs-network-filter';
 import { TableButton } from '@/components/ui/table-button';
 import { useRejectTaskMutation } from '@/api/servieces/worker/reject-task';
-import { useJobsFilterStore } from '@/hooks/use-jobs-filter-store';
 import { RejectButton } from '@/pages/worker/jobs/components/reject-button';
 import { JOB_TYPES } from '@/shared/consts';
 import { parseJobStatusChipColor } from '../parse-job-status-chip-color';
@@ -199,9 +198,8 @@ export function MyJobsTable() {
   );
 
   const { mutate: rejectTaskMutation } = useRejectTaskMutation();
-  const {
-    filterParams: { oracle_address },
-  } = useJobsFilterStore();
+  const { address: oracle_address } = useParams<{ address: string }>();
+
   const [paginationState, setPaginationState] = useState({
     pageIndex: 0,
     pageSize: 5,
