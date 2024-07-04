@@ -9,6 +9,7 @@ const web3userDataSchema = z.object({
   userId: z.number(),
   address: z.string(),
   reputation_network: z.string(),
+  exp: z.number(),
 });
 
 type Web3UserData = z.infer<typeof web3userDataSchema>;
@@ -38,7 +39,6 @@ export function Web3AuthProvider({ children }: { children: React.ReactNode }) {
     status: AuthStatus;
   }>({ user: null, status: 'loading' });
 
-  // TODO update SignInSuccessResponse according to new endpoint web3/auth/signin
   const handleSignIn = () => {
     try {
       const accessToken = browserAuthProvider.getAccessToken();
