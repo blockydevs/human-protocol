@@ -7,6 +7,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { t } from 'i18next';
+import { useNavigate } from 'react-router-dom';
 import { ethers } from 'ethers';
 import { stakingStake } from '@/smart-contracts/Staking/staking-stake';
 import type { ResponseError } from '@/shared/types/global.type';
@@ -14,6 +15,7 @@ import { useConnectedWallet } from '@/auth-web3/use-connected-wallet';
 import { getContractAddress } from '@/smart-contracts/get-contract-address';
 import { hmTokenApprove } from '@/smart-contracts/HMToken/hm-token-approve';
 import type { ContractCallArguments } from '@/smart-contracts/types';
+import { routerPaths } from '@/router/router-paths';
 import { hmTokenAllowance } from '@/smart-contracts/HMToken/hm-token-allowance';
 import { useHMTokenDecimals } from '@/api/servieces/operator/human-token-decimals';
 
@@ -66,7 +68,7 @@ async function addStakeMutationFn(
 
   const allowance = await hmTokenAllowance({
     spender: stakingContractAddress,
-    owner: data.address || 's',
+    owner: data.address || '',
     contractAddress: hmTokenContractAddress,
     provider: data.provider,
     signer: data.signer,
@@ -102,6 +104,7 @@ export function useAddStakeMutation() {
   const { data: HMTDecimals } = useHMTokenDecimals();
 
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: (data: AddStakeCallArguments) =>
@@ -114,6 +117,7 @@ export function useAddStakeMutation() {
         decimals: HMTDecimals,
       }),
     onSuccess: async () => {
+      navigate(routerPaths.operator.addKeys);
       await queryClient.invalidateQueries();
     },
     onError: async () => {
