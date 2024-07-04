@@ -65,7 +65,7 @@ export function useInfiniteGetAvailableJobsData() {
     queryKey: ['availableJobsInfinite', dto],
     queryFn: () => getAvailableJobsTableData(dto),
     getNextPageParam: (pageParams) => {
-      return pageParams.total_pages === pageParams.page
+      return pageParams.total_pages - 1 <= pageParams.page
         ? undefined
         : pageParams.page;
     },
