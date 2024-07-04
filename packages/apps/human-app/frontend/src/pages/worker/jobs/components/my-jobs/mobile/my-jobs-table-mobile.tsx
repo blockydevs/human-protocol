@@ -2,7 +2,7 @@
 import { Grid, List, Paper, Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { colorPalette } from '@/styles/color-palette';
 import { Button } from '@/components/ui/button';
 import { SearchForm } from '@/pages/playground/table-example/table-search-form';
@@ -45,10 +45,8 @@ export function MyJobsTableMobile({
   } = useInfiniteGetMyJobsData();
 
   const { mutate: rejectTaskMutation } = useRejectTaskMutation();
-  const {
-    filterParams: { oracle_address },
-    setSearchEscrowAddress,
-  } = useJobsFilterStore();
+  const { setSearchEscrowAddress } = useJobsFilterStore();
+  const { address: oracle_address } = useParams<{ address: string }>();
 
   useEffect(() => {
     if (!tableData) return;
