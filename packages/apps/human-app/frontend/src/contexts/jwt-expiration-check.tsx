@@ -16,11 +16,17 @@ export function JWTExpirationCheck({
   const { mutate: getAccessTokenMutation } = useGetAccessTokenMutation();
 
   useEffect(() => {
-    if (web3Auth.user?.exp && web3Auth.user.exp < Date.now() / 1000) {
+    const web3TokenExpired = Boolean(
+      web3Auth.user?.exp && web3Auth.user.exp < Date.now() / 1000
+    );
+    if (web3TokenExpired) {
       getAccessTokenMutation('web3');
     }
 
-    if (web2Auth.user?.exp && web2Auth.user.exp < Date.now() / 1000) {
+    const web2TokenExpired = Boolean(
+      web2Auth.user?.exp && web2Auth.user.exp < Date.now() / 1000
+    );
+    if (web2TokenExpired) {
       getAccessTokenMutation('web2');
     }
   }, [
