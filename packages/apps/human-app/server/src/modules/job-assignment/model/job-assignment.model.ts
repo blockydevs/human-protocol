@@ -45,7 +45,7 @@ export class JobAssignmentData {
 }
 
 export class JobAssignmentResponse {
-  assignment_id: number;
+  assignment_id: string;
   escrow_address: string;
   chain_id: number;
   job_type: string;
@@ -65,9 +65,9 @@ export class JobsFetchParamsDto extends PageableDto {
   @AutoMap()
   @Type(() => Number)
   @IsOptional()
-  @IsNumber()
+  @IsString()
   @ApiPropertyOptional()
-  assignment_id: number;
+  assignment_id: string;
   @IsOptional()
   @AutoMap()
   @IsString()
@@ -108,7 +108,7 @@ export class JobsFetchParams extends PageableParams {
   @AutoMap()
   sortField: AssignmentSortField;
   @AutoMap()
-  assignmentId: number;
+  assignmentId: string;
 }
 export class JobsFetchParamsCommand {
   @AutoMap()
@@ -123,7 +123,7 @@ export class JobsFetchParamsData extends PageableData {
   @AutoMap()
   escrow_address: string;
   @AutoMap()
-  assignment_id: number;
+  assignment_id: string;
   @AutoMap()
   chain_id: number;
   @AutoMap()
@@ -135,7 +135,7 @@ export class JobsFetchParamsData extends PageableData {
 }
 
 export class JobsFetchResponseItem {
-  assignment_id: number;
+  assignment_id: string;
   escrow_address: string;
   chain_id: number;
   job_type: string;
@@ -158,21 +158,19 @@ export class ResignJobDto {
   @ApiProperty()
   oracle_address: string;
   @AutoMap()
-  @IsNumber()
+  @IsString()
   @ApiProperty()
-  assignment_id: number;
+  assignment_id: string;
 }
 
 export class ResignJobCommand {
   @AutoMap()
   oracleAddress: string;
   @AutoMap()
-  assignmentId: number;
+  assignmentId: string;
   token: string;
 }
 export class ResignJobData {
   @AutoMap()
-  @IsNumber()
-  @ApiProperty()
-  assignment_id: number;
+  assignment_id: string;
 }
