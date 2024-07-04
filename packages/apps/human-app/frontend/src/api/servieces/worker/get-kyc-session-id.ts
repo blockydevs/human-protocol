@@ -8,7 +8,6 @@ import { apiPaths } from '@/api/api-paths';
 import { signInSuccessResponseSchema } from '@/api/servieces/worker/sign-in';
 import { FetchError } from '@/api/fetcher';
 import { browserAuthProvider } from '@/shared/helpers/browser-auth-provider';
-import type { ResponseError } from '@/shared/types/global.type';
 import { useGetAccessTokenMutation } from '@/api/servieces/common/get-access-token';
 
 const kycSessionIdSchema = z.object({
@@ -22,10 +21,7 @@ type KycSessionIdMutationResult =
   | (KycSessionIdSuccessSchema & { error?: never })
   | { session_id?: never; error: KycError };
 
-export function useKycSessionIdMutation(callbacks: {
-  onError?: (error: ResponseError) => void;
-  onSuccess?: () => void;
-}) {
+export function useKycSessionIdMutation() {
   const queryClient = useQueryClient();
   const { user } = useAuthenticatedUser();
   const { mutateAsync: getAccessTokenMutation } = useGetAccessTokenMutation();
@@ -94,13 +90,11 @@ export function useKycSessionIdMutation(callbacks: {
       }
     },
 
-    onError: (error) => {
+    onError: () => {
       void queryClient.invalidateQueries();
-      if (callbacks.onError) callbacks.onError(error);
     },
     onSuccess: () => {
       void queryClient.invalidateQueries();
-      if (callbacks.onSuccess) callbacks.onSuccess();
     },
     mutationKey: ['kycSessionId', user.email],
   });
