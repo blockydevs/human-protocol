@@ -45,7 +45,7 @@ export class JobAssignmentData {
 }
 
 export class JobAssignmentResponse {
-  assignment_id: string;
+  assignment_id: number;
   escrow_address: string;
   chain_id: number;
   job_type: string;
@@ -61,7 +61,7 @@ export class JobAssignmentResponse {
 export class JobsFetchParamsDto extends PageableDto {
   @AutoMap()
   @ApiProperty()
-  address: string;
+  oracle_address: string;
   @AutoMap()
   @Type(() => Number)
   @IsOptional()
@@ -91,8 +91,8 @@ export class JobsFetchParamsDto extends PageableDto {
   status: AssignmentStatus;
   @AutoMap()
   @IsOptional()
-  @IsEnum(AssignmentSortField, { each: true })
-  @ApiPropertyOptional({ enum: AssignmentSortField, isArray: true })
+  @IsEnum(AssignmentSortField)
+  @ApiPropertyOptional({ enum: AssignmentSortField })
   sort_field: AssignmentSortField;
 }
 
@@ -112,7 +112,7 @@ export class JobsFetchParams extends PageableParams {
 }
 export class JobsFetchParamsCommand {
   @AutoMap()
-  address: string;
+  oracleAddress: string;
   @AutoMap()
   data: JobsFetchParams;
   @AutoMap()
@@ -135,7 +135,7 @@ export class JobsFetchParamsData extends PageableData {
 }
 
 export class JobsFetchResponseItem {
-  assignment_id: string;
+  assignment_id: number;
   escrow_address: string;
   chain_id: number;
   job_type: string;
@@ -156,9 +156,9 @@ export class ResignJobDto {
   @AutoMap()
   @IsString()
   @ApiProperty()
-  address: string;
+  oracle_address: string;
   @AutoMap()
-  @IsString()
+  @IsNumber()
   @ApiProperty()
   assignment_id: number;
 }
@@ -172,5 +172,7 @@ export class ResignJobCommand {
 }
 export class ResignJobData {
   @AutoMap()
+  @IsNumber()
+  @ApiProperty()
   assignment_id: number;
 }
