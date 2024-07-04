@@ -77,7 +77,7 @@ export function SendResetLinkWorkerSuccessPage() {
                 values={{ email }}
               />
             </Typography>
-            <FormCaptcha name="h_captcha_token" />
+            <FormCaptcha error={error} name="h_captcha_token" />
             <Button
               disabled={!email}
               fullWidth

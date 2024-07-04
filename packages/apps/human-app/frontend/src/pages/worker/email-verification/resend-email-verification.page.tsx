@@ -72,7 +72,7 @@ export function ResendEmailVerificationWorkerPage() {
                 values={{ email: user?.email || '' }}
               />
             </Typography>
-            <FormCaptcha name="h_captcha_token" />
+            <FormCaptcha error={mutationState?.error} name="h_captcha_token" />
             <Button fullWidth type="submit" variant="outlined">
               {t('worker.sendEmailVerification.btn')}
             </Button>

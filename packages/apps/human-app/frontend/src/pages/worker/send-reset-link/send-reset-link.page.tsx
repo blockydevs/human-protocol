@@ -66,7 +66,10 @@ export function SendResetLinkWorkerPage() {
               label={t('worker.sendResetLinkForm.fields.email')}
               name="email"
             />
-            <FormCaptcha name="h_captcha_token" />
+            <FormCaptcha
+              error={sendResetLinkWorkerError}
+              name="h_captcha_token"
+            />
             <Button
               fullWidth
               loading={isSendResetLinkWorkerPending}

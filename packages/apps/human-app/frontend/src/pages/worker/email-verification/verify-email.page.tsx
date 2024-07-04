@@ -91,7 +91,7 @@ export function VerifyEmailWorkerPage() {
                 i18nKey="worker.verifyEmail.paragraph3"
               />
             </Typography>
-            <FormCaptcha name="h_captcha_token" />
+            <FormCaptcha error={mutationState?.error} name="h_captcha_token" />
             <Button fullWidth type="submit" variant="outlined">
               {t('worker.verifyEmail.btn')}
             </Button>
