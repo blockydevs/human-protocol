@@ -39,7 +39,7 @@ export function useRegisterAddressOnChainMutation() {
 
   return useMutation({
     mutationFn: async (data: SignedAddressSuccess) => {
-      if (address !== user.address) {
+      if (address.toLowerCase() !== user.wallet_address?.toLowerCase()) {
         throw new Error(t('worker.profile.wrongWalletAddress'));
       }
 
@@ -55,6 +55,6 @@ export function useRegisterAddressOnChainMutation() {
     onError: async () => {
       await queryClient.invalidateQueries();
     },
-    mutationKey: [user.address],
+    mutationKey: [user.wallet_address],
   });
 }

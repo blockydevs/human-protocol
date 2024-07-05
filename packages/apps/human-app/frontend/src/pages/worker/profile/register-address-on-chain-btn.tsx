@@ -60,7 +60,8 @@ export function RegisterAddressOnChainButton() {
       return;
     }
     closeNotification();
-  }, [closeNotification, error, isError, setTopNotification]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- ...
+  }, [error, isError]);
 
   if (isPending) {
     return (
