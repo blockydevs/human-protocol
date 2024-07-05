@@ -57,7 +57,7 @@ export function Router() {
                     });
                   }}
                   topMenuItems={workerDrawerTopMenuItems(
-                    Boolean(user?.address)
+                    Boolean(user?.wallet_address)
                   )}
                 />
               )}
