@@ -36,8 +36,9 @@ export class StatisticsService {
     await this.cacheManager.set(
       this.cachePrefix + address,
       response,
-      this.configService.cacheTtlOracleStats,
-    );
+      {
+        ttl: this.configService.cacheTtlOracleStats,
+      } as any);
     return response;
   }
   async getUserStats(
@@ -51,11 +52,9 @@ export class StatisticsService {
     }
     const response =
       await this.exchangeOracleGateway.fetchUserStatistics(command);
-    await this.cacheManager.set(
-      userCacheKey,
-      response,
-      this.configService.cacheTtlUserStats,
-    );
+    await this.cacheManager.set(userCacheKey, response, {
+      ttl: this.configService.cacheTtlUserStats,
+    } as any);
     return response;
   }
 }
