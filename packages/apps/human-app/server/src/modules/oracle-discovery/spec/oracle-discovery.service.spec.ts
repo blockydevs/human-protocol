@@ -104,7 +104,7 @@ describe('OracleDiscoveryService', () => {
       expect(cacheManager.set).toHaveBeenCalledWith(
         chainId,
         [mockData[0]],
-        TTL,
+        { ttl: TTL },
       );
       expect(OperatorUtils.getReputationNetworkOperators).toHaveBeenCalledWith(
         Number(chainId),
