@@ -13,8 +13,6 @@ export type SignedAddressSuccess = z.infer<typeof signedAddressSuccessSchema>;
 const getSignedAddress = async () => {
   return apiClient(apiPaths.worker.signedAddress.path, {
     authenticated: true,
-    // TODO remove oracle url
-    baseUrl: 'https://stg-reputation-oracle-server.humanprotocol.org/',
     successSchema: signedAddressSuccessSchema,
     options: {
       method: 'GET',
