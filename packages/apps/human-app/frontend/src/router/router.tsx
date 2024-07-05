@@ -47,10 +47,11 @@ export function Router() {
           element={
             <LayoutProtected
               pageHeaderProps={pageHeaderProps}
-              renderDrawer={(open) => (
+              renderDrawer={(open, setDrawerOpen) => (
                 <DrawerNavigation
                   bottomMenuItems={workerDrawerBottomMenuItems}
                   open={open}
+                  setDrawerOpen={setDrawerOpen}
                   signOut={() => {
                     browserAuthProvider.signOut(() => {
                       window.location.reload();
@@ -83,10 +84,11 @@ export function Router() {
           element={
             <LayoutProtected
               pageHeaderProps={pageHeaderProps}
-              renderDrawer={(open) => (
+              renderDrawer={(open, setDrawerOpen) => (
                 <DrawerNavigation
                   bottomMenuItems={operatorDrawerBottomMenuItems}
                   open={open}
+                  setDrawerOpen={setDrawerOpen}
                   signOut={() => {
                     browserAuthProvider.signOut(() => {
                       window.location.reload();
