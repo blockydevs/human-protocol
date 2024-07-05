@@ -72,7 +72,6 @@ export function PageCard({
   }, []);
 
   const goBack = (path: string | -1) => {
-    console.log({ path });
     if (typeof path === 'string') {
       navigate(path);
       return;

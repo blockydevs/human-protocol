@@ -197,18 +197,21 @@
       "password": "Password",
       "resetPassword": "Reset Password",
       "completeKYC": "Complete KYC",
+      "KYCInProgress": "KYC in progress",
       "confirmEmail": "Confirm email",
       "kycCompleted": "KYC Completed",
       "connectWallet": "Connect Wallet",
       "walletConnected": "Wallet Connected ",
       "addKYCInfoOnChain": "Add KYC Info On-chain",
-      "kycInfoOnChainAdded": "KYC Info On-Chain Added ",
+      "wrongWalletAddress": "Selected wallet address doesn't match the address assigned to the account.",
+      "kycInfoOnChainAdded": "KYC Info On-Chain Added",
+      "registerAddress": "Register address",
       "emailNotifications": "Email Notifications",
       "notificationsConsent": "I would like to be notified about News and Offers",
       "topNotifications": {
         "noKYC": "Please complete your profile! You still need to complete KYC, connect your wallet and add KYC info on-chain.",
         "noWalletConnected": "Please complete your profile! You still need to connect your wallet and add KYC info on-chain.",
-        "noKYCOnChain": "Please complete your profile! You still need to add KYC info on-chain."
+        "registerAddress": "Register address"
       }
     },
     "oraclesTable": {
