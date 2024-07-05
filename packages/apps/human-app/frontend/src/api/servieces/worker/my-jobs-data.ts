@@ -9,7 +9,7 @@ import type { MyJobsFilterStoreProps } from '@/hooks/use-my-jobs-filter-store';
 import { useMyJobsFilterStore } from '@/hooks/use-my-jobs-filter-store';
 
 const myJobSchema = z.object({
-  assignment_id: z.number(),
+  assignment_id: z.string(),
   escrow_address: z.string(),
   chain_id: z.number(),
   job_type: z.string(),
