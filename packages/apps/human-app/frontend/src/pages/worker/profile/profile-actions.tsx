@@ -41,14 +41,47 @@ export function ProfileActions() {
   const emailVerified = user.status === 'ACTIVE';
   const kycApproved = user.kyc_status === 'APPROVED';
 
-  const isWalletConnectedAndAddressRegistered =
-    user.wallet_address && isWalletConnected;
-
-  const isAddressRegisteredAndWalletNotConnected =
-    user.wallet_address && !isWalletConnected;
-
-  const isWalletConnectedAndAddressNotRegistered =
-    !user.wallet_address && isWalletConnected;
+  const getConnectWalletBtn = () => {
+    switch (true) {
+      case !kycApproved:
+        return (
+          <Button disabled fullWidth variant="contained">
+            {t('components.wallet.connectBtn.connect')}
+          </Button>
+        );
+      case user.wallet_address && isWalletConnected:
+        return (
+          <DoneLabel>
+            <WalletConnectDone />
+          </DoneLabel>
+        );
+      case !user.wallet_address && !isWalletConnected:
+        return (
+          <Button
+            disabled={user.kyc_status !== 'APPROVED'}
+            fullWidth
+            loading={isRegisterAddressMutationPending}
+            onClick={() => {
+              modalWasOpened.current = true;
+              void openModal();
+            }}
+            variant="contained"
+          >
+            {t('components.wallet.connectBtn.connect')}
+          </Button>
+        );
+      case user.wallet_address && !isWalletConnected:
+        return <ConnectWalletBtn />;
+      case !user.wallet_address && isWalletConnected:
+        return (
+          <DoneLabel>
+            <WalletConnectDone />
+          </DoneLabel>
+        );
+      default:
+        return null;
+    }
+  };
 
   if (!emailVerified) {
     return (
@@ -69,33 +102,8 @@ export function ProfileActions() {
           <StartKycButton />
         )}
       </Grid>
-      <Grid>
-        {kycApproved && isWalletConnectedAndAddressRegistered ? (
-          <DoneLabel>
-            <WalletConnectDone />
-          </DoneLabel>
-        ) : (
-          <>
-            {isAddressRegisteredAndWalletNotConnected ? (
-              <ConnectWalletBtn fullWidth />
-            ) : (
-              <Button
-                disabled={user.kyc_status !== 'APPROVED'}
-                fullWidth
-                loading={isRegisterAddressMutationPending}
-                onClick={() => {
-                  modalWasOpened.current = true;
-                  void openModal();
-                }}
-                variant="contained"
-              >
-                {t('components.wallet.connectBtn.connect')}
-              </Button>
-            )}
-          </>
-        )}
-      </Grid>
-      {kycApproved && isWalletConnectedAndAddressNotRegistered ? (
+      <Grid>{getConnectWalletBtn()}</Grid>
+      {kycApproved && !user.wallet_address && isWalletConnected ? (
         <Grid>
           <RegisterAddressBtn />
         </Grid>
