@@ -24,7 +24,8 @@ import { routerPaths } from '@/router/router-paths';
 
 export function VerifyEmailWorkerPage() {
   const navigate = useNavigate();
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
+  const isAuthenticated = Boolean(user);
   const { t } = useTranslation();
   const { field: routerState } = useLocationState({
     keyInStorage: 'routerState',
@@ -99,10 +100,17 @@ export function VerifyEmailWorkerPage() {
                 i18nKey="worker.verifyEmail.paragraph3"
               />
             </Typography>
-            <FormCaptcha error={mutationState?.error} name="h_captcha_token" />
-            <Button fullWidth type="submit" variant="outlined">
-              {t('worker.verifyEmail.btn')}
-            </Button>
+            {isAuthenticated ? (
+              <>
+                <FormCaptcha
+                  error={mutationState?.error}
+                  name="h_captcha_token"
+                />
+                <Button fullWidth type="submit" variant="outlined">
+                  {t('worker.verifyEmail.btn')}
+                </Button>
+              </>
+            ) : null}
             <Typography variant="body1">
               <Trans
                 components={{
