@@ -26,7 +26,6 @@ import { EnableLabeler } from '@/pages/worker/hcaptcha-labeling/enable-labeler.p
 import { HcaptchaLabelingPage } from '@/pages/worker/hcaptcha-labeling/hcaptcha-labeling/hcaptcha-labeling.page';
 import { UserStatsAccordion } from '@/pages/worker/hcaptcha-labeling/hcaptcha-labeling/user-stats-accordion';
 import { SetUpOperatorPage } from '@/pages/operator/sign-up/set-up-operator';
-import { ResendEmailVerificationWorkerPage } from '@/pages/worker/email-verification/resend-email-verification.page';
 
 export const unprotectedRoutes: RouteProps[] = [
   {
@@ -56,10 +55,6 @@ export const unprotectedRoutes: RouteProps[] = [
   {
     path: routerPaths.worker.verifyEmail,
     element: <VerifyEmailWorkerPage />,
-  },
-  {
-    path: routerPaths.worker.resendEmailVerification,
-    element: <ResendEmailVerificationWorkerPage />,
   },
   {
     path: routerPaths.worker.sendResetLink,
