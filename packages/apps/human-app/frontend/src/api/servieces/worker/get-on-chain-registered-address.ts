@@ -37,9 +37,7 @@ export function useGetOnChainRegisteredAddress() {
         chainId,
       });
 
-      return {
-        registeredAddressOnChain,
-      };
+      return registeredAddressOnChain;
     },
     retry: 0,
     refetchInterval: 0,

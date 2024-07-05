@@ -202,7 +202,9 @@
       "connectWallet": "Connect Wallet",
       "walletConnected": "Wallet Connected ",
       "addKYCInfoOnChain": "Add KYC Info On-chain",
-      "kycInfoOnChainAdded": "KYC Info On-Chain Added ",
+      "wrongWalletAddress": "Selected wallet address doesn't match the address assigned to the account.",
+      "kycInfoOnChainAdded": "KYC Info On-Chain Added",
+      "registerAddress": "Register address",
       "emailNotifications": "Email Notifications",
       "notificationsConsent": "I would like to be notified about News and Offers",
       "topNotifications": {
