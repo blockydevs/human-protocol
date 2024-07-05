@@ -32,7 +32,7 @@ import { JOB_TYPES } from '@/shared/consts';
 import { parseJobStatusChipColor } from '../parse-job-status-chip-color';
 
 const getColumnsDefinition = (
-  resignJob: (assignment_id: number) => void
+  resignJob: (assignment_id: string) => void
 ): MRT_ColumnDef<MyJob>[] => [
   {
     accessorKey: 'escrow_address',
@@ -206,7 +206,7 @@ export function MyJobsTable() {
   });
 
   const rejectTask = (address: string) => {
-    return (assignment_id: number) => {
+    return (assignment_id: string) => {
       rejectTaskMutation({ address, assignment_id });
     };
   };
