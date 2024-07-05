@@ -8,7 +8,7 @@ import { browserAuthProvider } from '@/shared/helpers/browser-auth-provider';
 const extendableUserDataSchema = z.object({
   site_key: z.string().optional().nullable(),
   kyc_status: z.string().optional().nullable(),
-  address: z.string().optional().nullable(),
+  wallet_address: z.string().optional().nullable(),
   status: z.string().optional().nullable(),
 });
 

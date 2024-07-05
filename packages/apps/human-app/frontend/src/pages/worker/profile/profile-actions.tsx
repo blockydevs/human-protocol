@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Grid';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 import { useAuthenticatedUser } from '@/auth/use-authenticated-user';
 import { useWalletConnect } from '@/hooks/use-wallet-connect';
@@ -37,33 +37,29 @@ export function ProfileActions() {
       registerAddressMutation();
     }
   }, [address, isWalletConnected, registerAddressMutation]);
-  const navigation = useNavigate();
   const { user } = useAuthenticatedUser();
   const { t } = useTranslation();
   const emailVerified = user.status === 'ACTIVE';
   const kycApproved = user.kyc_status === 'APPROVED';
   const isWalletConnectedAndAddressRegistered =
-    kycApproved && (user.address || isWalletConnected);
+    kycApproved && (user.wallet_address || isWalletConnected);
   const isWalletConnectedAndAddressNotRegistered =
-    kycApproved && !user.address && isWalletConnected;
+    kycApproved && !user.wallet_address && isWalletConnected;
+
+  if (!emailVerified) {
+    return (
+      <Navigate
+        replace
+        state={{ routerState: { email: user.email } }}
+        to={routerPaths.worker.verifyEmail}
+      />
+    );
+  }
 
   return (
     <Grid container flexDirection="column" gap="1rem">
       <Grid>
-        {!emailVerified && (
-          <Button
-            fullWidth
-            onClick={() => {
-              navigation(routerPaths.worker.resendEmailVerification);
-            }}
-            variant="contained"
-          >
-            {t('worker.profile.confirmEmail')}
-          </Button>
-        )}
-      </Grid>
-      <Grid>
-        {kycApproved && emailVerified ? (
+        {kycApproved ? (
           <DoneLabel>{t('worker.profile.kycCompleted')}</DoneLabel>
         ) : (
           <StartKycButton />

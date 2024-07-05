@@ -45,7 +45,7 @@ export function useGetOnChainRegisteredAddress() {
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     queryKey: [
-      user.address,
+      user.wallet_address,
       user.reputation_network,
       chainId,
       address,

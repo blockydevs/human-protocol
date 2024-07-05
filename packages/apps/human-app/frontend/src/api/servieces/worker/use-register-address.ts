@@ -74,6 +74,6 @@ export function useRegisterAddressMutation(callbacks?: {
       }
       await queryClient.invalidateQueries();
     },
-    mutationKey: [user.address],
+    mutationKey: [user.wallet_address],
   });
 }

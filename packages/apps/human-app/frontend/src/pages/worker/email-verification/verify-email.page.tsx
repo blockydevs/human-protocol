@@ -1,7 +1,7 @@
 /* eslint-disable camelcase -- ...*/
 import { Grid, Typography } from '@mui/material';
 import { Trans, useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -19,8 +19,12 @@ import { Alert } from '@/components/ui/alert';
 import { defaultErrorMessage } from '@/shared/helpers/default-error-message';
 import { FormCaptcha } from '@/components/h-captcha';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/auth/use-auth';
+import { routerPaths } from '@/router/router-paths';
 
 export function VerifyEmailWorkerPage() {
+  const navigate = useNavigate();
+  const { signOut } = useAuth();
   const { t } = useTranslation();
   const { field: routerState } = useLocationState({
     keyInStorage: 'routerState',
@@ -62,6 +66,10 @@ export function VerifyEmailWorkerPage() {
           </Alert>
         ) : undefined
       }
+      cancelRouterPathOrCallback={() => {
+        signOut();
+        navigate(routerPaths.homePage);
+      }}
       title={t('worker.verifyEmail.title')}
     >
       <FormProvider {...methods}>
