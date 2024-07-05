@@ -71,7 +71,7 @@ export function ProfileActions() {
           </Button>
         );
       case user.wallet_address && !isWalletConnected:
-        return <ConnectWalletBtn />;
+        return <ConnectWalletBtn fullWidth />;
       case !user.wallet_address && isWalletConnected:
         return (
           <DoneLabel>

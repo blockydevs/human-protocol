@@ -32,7 +32,7 @@ export function useGetOnChainRegisteredAddress() {
       const registeredAddressOnChain = await ethKVStoreGetKycData({
         contractAddress,
         accountAddress: address,
-        kycKey: `KYC-${user.wallet_address}`,
+        kycKey: `KYC-${user.reputation_network}`,
         signer: web3ProviderMutation.data?.signer,
         chainId,
       });
