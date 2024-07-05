@@ -7,7 +7,7 @@ import { browserAuthProvider } from '@/shared/helpers/browser-auth-provider';
 
 const web3userDataSchema = z.object({
   userId: z.number(),
-  address: z.string(),
+  wallet_address: z.string(),
   reputation_network: z.string(),
   exp: z.number(),
 });
