@@ -26,6 +26,7 @@ export class StatisticsService {
     command: OracleStatisticsCommand,
   ): Promise<OracleStatisticsResponse> {
     const address = command.oracleAddress;
+    const key = this.cachePrefix + address;
     const cachedStatistics: OracleStatisticsResponse | undefined =
       await this.cacheManager.get(this.cachePrefix + address);
     if (cachedStatistics) {
@@ -33,10 +34,7 @@ export class StatisticsService {
     }
     const response: OracleStatisticsResponse =
       await this.exchangeOracleGateway.fetchOracleStatistics(command);
-    await this.cacheManager.set(
-      this.cachePrefix + address,
-      response,
-      {
+    await this.cacheManager.set(key, response, {
         ttl: this.configService.cacheTtlOracleStats,
       } as any);
     return response;
