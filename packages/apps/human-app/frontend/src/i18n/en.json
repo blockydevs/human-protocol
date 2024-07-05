@@ -197,6 +197,7 @@
       "password": "Password",
       "resetPassword": "Reset Password",
       "completeKYC": "Complete KYC",
+      "KYCInProgress": "KYC in progress",
       "confirmEmail": "Confirm email",
       "kycCompleted": "KYC Completed",
       "connectWallet": "Connect Wallet",
