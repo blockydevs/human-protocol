@@ -24,5 +24,5 @@ export class ForgotPasswordData {
   @AutoMap()
   email: string;
   @AutoMap()
-  hCaptchaToken: string;
+  h_captcha_token: string;
 }

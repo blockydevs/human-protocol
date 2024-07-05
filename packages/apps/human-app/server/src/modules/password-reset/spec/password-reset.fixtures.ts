@@ -26,7 +26,7 @@ export const forgotPasswordCommandFixture: ForgotPasswordCommand = {
 
 export const forgotPasswordDataFixture: ForgotPasswordData = {
   email: EMAIL,
-  hCaptchaToken: H_CAPTCHA_TOKEN,
+  h_captcha_token: H_CAPTCHA_TOKEN,
 };
 
 export const restorePasswordDtoFixture: RestorePasswordDto = {
