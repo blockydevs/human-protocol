@@ -63,7 +63,6 @@ export class JobsFetchParamsDto extends PageableDto {
   @ApiProperty()
   oracle_address: string;
   @AutoMap()
-  @Type(() => Number)
   @IsOptional()
   @IsString()
   @ApiPropertyOptional()
