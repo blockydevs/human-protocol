@@ -207,7 +207,7 @@ export function MyJobsTable() {
 
   const rejectTask = (address: string) => {
     return (assignment_id: string) => {
-      rejectTaskMutation({ address, assignment_id });
+      rejectTaskMutation({ oracle_address: address, assignment_id });
     };
   };
   useEffect(() => {
