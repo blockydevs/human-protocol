@@ -34,7 +34,6 @@ import { HttpMethod } from '../../common/enums/http-method';
 import { toCleanObjParams } from '../../common/utils/gateway-common.utils';
 import { KvStoreGateway } from '../kv-store/kv-store.gateway';
 import { EscrowUtilsGateway } from '../escrow/escrow-utils-gateway.service';
-import { JobStatus } from '../../common/enums/global-common';
 
 @Injectable()
 export class ExchangeOracleGateway {
@@ -49,7 +48,7 @@ export class ExchangeOracleGateway {
   ): Promise<T> {
     try {
       const response = await lastValueFrom(this.httpService.request(options));
-      return response.data;
+      return response.data as T;
     } catch (e) {
       console.error(
         `Error, while executing exchange oracle API call with options: ${JSON.stringify(options)}, error details: ${e}`,
@@ -170,11 +169,6 @@ export class ExchangeOracleGateway {
         Accept: 'application/json',
       },
     };
-    const apiResponse =
-      await this.callExternalHttpUtilRequest<JobsDiscoveryResponse>(options);
-    apiResponse.results = apiResponse.results.filter(
-      (entry) => entry.status === JobStatus.ACTIVE,
-    );
-    return apiResponse;
+    return this.callExternalHttpUtilRequest<JobsDiscoveryResponse>(options);
   }
 }

@@ -30,11 +30,7 @@ import { HttpMethod } from '../../../common/enums/http-method';
 import { KvStoreGateway } from '../../kv-store/kv-store.gateway';
 import { EscrowUtilsGateway } from '../../escrow/escrow-utils-gateway.service';
 import { ResignJobData } from '../../../modules/job-assignment/model/job-assignment.model';
-import {
-  JobsDiscoveryParamsData,
-  JobsDiscoveryResponse,
-  JobsDiscoveryResponseItem,
-} from '../../../modules/jobs-discovery/model/jobs-discovery.model';
+import { JobsDiscoveryParamsData } from '../../../modules/jobs-discovery/model/jobs-discovery.model';
 import { AxiosResponse } from 'axios';
 
 describe('ExchangeOracleApiGateway', () => {
@@ -229,7 +225,7 @@ describe('ExchangeOracleApiGateway', () => {
       nock(jobAssignmentOracleUrl)
         .get(`/assignment${paramsDataFixtureAsString}`)
         .reply(200, responseFixture);
-      const response = await gateway.fetchJobs(command);
+      await gateway.fetchJobs(command);
       expect(httpService.request).toHaveBeenCalledWith(
         expect.objectContaining({
           url: EXCHANGE_ORACLE_ADR + '/job',
@@ -241,12 +237,6 @@ describe('ExchangeOracleApiGateway', () => {
           },
         }),
       );
-      const expectedResponse: JobsDiscoveryResponse = response;
-      expectedResponse.results = [
-        response.results[0],
-        response.results[2],
-      ] as JobsDiscoveryResponseItem[];
-      expect(response).toEqual(expectedResponse);
     });
   });
 
