@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { AxiosRequestConfig } from 'axios';
 import { lastValueFrom } from 'rxjs';
 import {
@@ -34,6 +34,7 @@ import { HttpMethod } from '../../common/enums/http-method';
 import { toCleanObjParams } from '../../common/utils/gateway-common.utils';
 import { KvStoreGateway } from '../kv-store/kv-store.gateway';
 import { EscrowUtilsGateway } from '../escrow/escrow-utils-gateway.service';
+import { JobStatus } from '../../common/enums/global-common';
 
 @Injectable()
 export class ExchangeOracleGateway {
@@ -149,7 +150,9 @@ export class ExchangeOracleGateway {
     return this.callExternalHttpUtilRequest(options);
   }
 
-  async fetchJobs(command: JobsDiscoveryParamsCommand) {
+  async fetchJobs(
+    command: JobsDiscoveryParamsCommand,
+  ): Promise<JobsDiscoveryResponse> {
     const jobsDiscoveryParamsData = this.mapper.map(
       command.data,
       JobsDiscoveryParams,
@@ -167,6 +170,11 @@ export class ExchangeOracleGateway {
         Accept: 'application/json',
       },
     };
-    return this.callExternalHttpUtilRequest<JobsDiscoveryResponse>(options);
+    const apiResponse =
+      await this.callExternalHttpUtilRequest<JobsDiscoveryResponse>(options);
+    apiResponse.results = apiResponse.results.filter(
+      (entry) => entry.status === JobStatus.ACTIVE,
+    );
+    return apiResponse;
   }
 }
