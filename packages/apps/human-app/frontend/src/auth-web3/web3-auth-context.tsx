@@ -10,6 +10,7 @@ const web3userDataSchema = z.object({
   wallet_address: z.string(),
   reputation_network: z.string(),
   exp: z.number(),
+  status: z.string().nullable().optional(),
 });
 
 type Web3UserData = z.infer<typeof web3userDataSchema>;
