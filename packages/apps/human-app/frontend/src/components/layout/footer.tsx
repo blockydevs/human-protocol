@@ -7,9 +7,10 @@ import { Chat } from '@/pages/homepage/components/chat';
 import { breakpoints } from '@/styles/theme';
 
 interface FooterProps {
+  displayChatIcon?: boolean;
   isProtected?: boolean;
 }
-export function Footer({ isProtected }: FooterProps) {
+export function Footer({ isProtected, displayChatIcon = true }: FooterProps) {
   const { t } = useTranslation();
   const isMobile = useIsMobile('md');
 
@@ -115,7 +116,7 @@ export function Footer({ isProtected }: FooterProps) {
         }}
         xs={isMobile ? 12 : 1}
       >
-        <Chat />
+        <Chat displayChatIcon={displayChatIcon} />
       </Grid>
     </Grid>
   );

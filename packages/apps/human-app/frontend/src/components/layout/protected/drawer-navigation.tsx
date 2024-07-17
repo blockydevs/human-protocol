@@ -67,7 +67,7 @@ export function DrawerNavigation({
         variant="persistent"
       >
         {!isMobile && (
-          <Stack alignItems="center">
+          <Stack alignItems="flex-start" sx={{ paddingLeft: '60px' }}>
             <HumanLogoNavbarIcon />
           </Stack>
         )}
@@ -179,7 +179,7 @@ export function DrawerNavigation({
                     direction="row"
                     justifyContent="center"
                     sx={{
-                      px: isMobile ? '12px' : paddingX,
+                      ml: isMobile ? '28px' : paddingX,
                     }}
                   >
                     {icon}

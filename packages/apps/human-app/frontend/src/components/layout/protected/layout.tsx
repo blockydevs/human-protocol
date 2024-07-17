@@ -76,12 +76,12 @@ export function Layout({
     }
   }, [isMobile]);
 
+  const setNotificationWidth = () => {
+    if (layoutElementRef.current) {
+      setNotificationWith(layoutElementRef.current.clientWidth);
+    }
+  };
   useEffect(() => {
-    const setNotificationWidth = () => {
-      if (layoutElementRef.current) {
-        setNotificationWith(layoutElementRef.current.clientWidth);
-      }
-    };
     setNotificationWidth();
     window.addEventListener('resize', () => {
       setNotificationWidth();
@@ -90,6 +90,10 @@ export function Layout({
       window.removeEventListener('resize', setNotificationWidth);
     };
   }, []);
+
+  useEffect(() => {
+    setNotificationWidth();
+  }, [notification]);
 
   return (
     <ProtectedLayoutContext.Provider
@@ -151,6 +155,7 @@ export function Layout({
               sx={{
                 height: '3.2rem',
                 [breakpoints.mobile]: {
+                  height: 'unset',
                   position: 'absolute',
                   zIndex: 2000,
                   top: '0',
@@ -205,7 +210,7 @@ export function Layout({
             </Grid>
           </Grid>
         </Main>
-        <Footer isProtected />
+        <Footer displayChatIcon={!isMobile || !drawerOpen} isProtected />
       </Grid>
     </ProtectedLayoutContext.Provider>
   );
