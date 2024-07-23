@@ -1,10 +1,8 @@
 import { useHMTPrice } from '../../services/api/use-hmt-price';
 import Typography from '@mui/material/Typography';
-import { handleErrorMessage } from '../../services/handle-error-messsage';
 
 export function HMTPrice() {
-	const { data, status, error } = useHMTPrice();
-	console.log(handleErrorMessage(error));
+	const { data, status } = useHMTPrice();
 	return (
 		<div>
 			<Typography variant="h6" component="p">
