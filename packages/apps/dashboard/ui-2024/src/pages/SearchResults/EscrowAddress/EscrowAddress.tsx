@@ -18,8 +18,6 @@ const EscrowAddress = ({
 		exchangeOracle,
 		recordingOracle,
 		reputationOracle,
-		manifest,
-		finalResultsUrl,
 	},
 }: {
 	data: AddressDetailsEscrowSchema;
@@ -48,7 +46,7 @@ const EscrowAddress = ({
 							color={colorPalette.fog.main}
 							component="span"
 						>
-							{token}
+							HMT
 						</Typography>
 					</Typography>
 				</TitleSectionWrapper>
@@ -142,21 +140,6 @@ const EscrowAddress = ({
 					}}
 				>
 					<Typography>{reputationOracle}</Typography>
-				</TitleSectionWrapper>
-
-				{manifest ? (
-					<TitleSectionWrapper
-						title="Manifest Oracle"
-						tooltip={{
-							description: 'Metadata file containing job information',
-						}}
-					>
-						<Typography>{manifest}</Typography>
-					</TitleSectionWrapper>
-				) : null}
-
-				<TitleSectionWrapper title="Results">
-					<Typography>{finalResultsUrl}</Typography>
 				</TitleSectionWrapper>
 			</Stack>
 		</Card>
