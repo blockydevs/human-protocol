@@ -19,7 +19,7 @@ const App: React.FC = () => {
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="/graph" element={<Graph />} />
-					<Route path="/search/:tokenId" element={<SearchResults />} />
+					<Route path="/search/:chainId/:address" element={<SearchResults />} />
 					<Route path="*" element={<div>Not find</div>} />
 				</Routes>
 			</Router>

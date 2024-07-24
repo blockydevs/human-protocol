@@ -16,10 +16,10 @@ import IconButton from '@mui/material/IconButton';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import SimpleBar from 'simplebar-react';
 import AbbreviateClipboard from '@components/SearchResults/AbbreviateClipboard';
+import { AddressDetailsWallet } from '@services/api/use-address-details';
+import { useHMTPrice } from '@services/api/use-hmt-price';
 
 const HARDCODED_WALLET_ADDRESS = {
-	balance: '111.739994404040404',
-	hmtPrice: '0.057',
 	stake: '3e-18',
 	key: 'Value',
 	role: 'Job Launcher',
@@ -104,7 +104,44 @@ const renderMethod = (method: 'complete' | 'payout') => {
 	);
 };
 
-const WalletAddress = () => {
+const HmtPrice = () => {
+	const {
+		data: hmtPrice,
+		isError: isHmtPriceError,
+		isPending: isHmtPricePending,
+	} = useHMTPrice();
+
+	if (isHmtPriceError) {
+		return <TitleSectionWrapper title="HMT Price">N/A</TitleSectionWrapper>;
+	}
+
+	if (isHmtPricePending) {
+		return <TitleSectionWrapper title="HMT Price">...</TitleSectionWrapper>;
+	}
+
+	return (
+		<TitleSectionWrapper title="HMT Price">
+			<Typography>
+				<>{hmtPrice.hmtPrice}</>
+				<Typography
+					sx={{
+						marginLeft: 0.5,
+					}}
+					color={colorPalette.fog.main}
+					component="span"
+				>
+					HMT
+				</Typography>
+			</Typography>
+		</TitleSectionWrapper>
+	);
+};
+
+const WalletAddress = ({
+	data: { balance },
+}: {
+	data: AddressDetailsWallet;
+}) => {
 	return (
 		<>
 			<Card
@@ -116,42 +153,20 @@ const WalletAddress = () => {
 			>
 				<Stack gap={4}>
 					<TitleSectionWrapper title="Balance">
-						{HARDCODED_WALLET_ADDRESS.balance ? (
-							<Typography>
-								{HARDCODED_WALLET_ADDRESS.balance}
-								<Typography
-									sx={{
-										marginLeft: 0.5,
-									}}
-									color={colorPalette.fog.main}
-									component="span"
-								>
-									HMT
-								</Typography>
+						<Typography>
+							{balance}
+							<Typography
+								sx={{
+									marginLeft: 0.5,
+								}}
+								color={colorPalette.fog.main}
+								component="span"
+							>
+								HMT
 							</Typography>
-						) : (
-							<Typography>N/A</Typography>
-						)}
+						</Typography>
 					</TitleSectionWrapper>
-
-					<TitleSectionWrapper title="HMT Price">
-						{HARDCODED_WALLET_ADDRESS.hmtPrice ? (
-							<Typography>
-								${HARDCODED_WALLET_ADDRESS.hmtPrice}
-								<Typography
-									sx={{
-										marginLeft: 0.5,
-									}}
-									color={colorPalette.fog.main}
-									component="span"
-								>
-									HMT
-								</Typography>
-							</Typography>
-						) : (
-							<Typography>N/A</Typography>
-						)}
-					</TitleSectionWrapper>
+					<HmtPrice />
 					<TitleSectionWrapper
 						title="Stake"
 						tooltip={{
@@ -292,7 +307,7 @@ const WalletAddress = () => {
 										</Stack>
 									</TableCell>
 									<TableCell>
-											<Typography fontWeight={600}>Escrow Address</Typography>
+										<Typography fontWeight={600}>Escrow Address</Typography>
 									</TableCell>
 								</TableRow>
 							</TableHead>
