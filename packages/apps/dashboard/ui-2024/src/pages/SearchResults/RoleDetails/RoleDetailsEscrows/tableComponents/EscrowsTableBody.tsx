@@ -47,7 +47,7 @@ export const EscrowsTableBody = ({
 	if (!data.results.length) {
 		return (
 			<EscrowsTableBodyContainer>
-				<div>No data</div>
+				<div>No escrows launched yet</div>
 			</EscrowsTableBodyContainer>
 		);
 	}
