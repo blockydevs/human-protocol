@@ -59,7 +59,7 @@ export const TransactionsTableBody = () => {
 							p: 0,
 						}}
 					>
-						<AbbreviateClipboard value={elem.from} />
+						<AbbreviateClipboard value={elem.txHash} />
 					</TableCell>
 					<TableCell>
 						<TransactionTableCellMethod method={elem.method} />
