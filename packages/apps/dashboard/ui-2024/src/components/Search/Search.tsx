@@ -38,6 +38,7 @@ const Search: FC<{ className?: string; displaySearchBar?: boolean }> = ({
 
 	const handleClearClick = () => {
 		setInputValue('');
+		setAddress('');
 	};
 
 	const handleInputBlur = () => {
@@ -91,6 +92,10 @@ const Search: FC<{ className?: string; displaySearchBar?: boolean }> = ({
 							border: 'none',
 						},
 					},
+					'& .MuiInputBase-input': {
+						overflow: 'hidden',
+						textOverflow: 'ellipsis',
+					},
 				}}
 				InputProps={{
 					sx: {
@@ -102,6 +107,7 @@ const Search: FC<{ className?: string; displaySearchBar?: boolean }> = ({
 							color: `${colorPalette.sky.main}`,
 							opacity: 1,
 						},
+						padding: '0 5px',
 					},
 					startAdornment: (
 						<InputAdornment
@@ -113,6 +119,7 @@ const Search: FC<{ className?: string; displaySearchBar?: boolean }> = ({
 								width: displaySearchBar ? '100px' : '220px',
 								height: '100%',
 								backgroundColor: `${colorPalette.white}`,
+								marginLeft: '1rem',
 							}}
 						>
 							<MuiSelect
@@ -162,17 +169,31 @@ const Search: FC<{ className?: string; displaySearchBar?: boolean }> = ({
 						</InputAdornment>
 					),
 					endAdornment: inputValue && (
-						<InputAdornment position="end">
+						<InputAdornment
+							sx={{
+								display: 'flex',
+								justifyContent: 'center',
+								alignItems: 'center',
+								gap: '0.7rem',
+							}}
+							position="end"
+						>
 							<IconButton onClick={handleClearClick} edge="end">
 								<CloseIcon color={`${focus ? 'textSecondary' : 'primary'}`} />
+							</IconButton>
+							<IconButton
+								className="search-button"
+								type="submit"
+								aria-label="search"
+							>
+								<SearchIcon
+									color={`${displaySearchBar ? 'textSecondary' : 'white'}`}
+								/>
 							</IconButton>
 						</InputAdornment>
 					),
 				}}
 			/>
-			<IconButton className="search-button" type="submit" aria-label="search">
-				<SearchIcon color={`${displaySearchBar ? 'textSecondary' : 'white'}`} />
-			</IconButton>
 		</form>
 	);
 };
