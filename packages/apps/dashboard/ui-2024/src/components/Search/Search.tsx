@@ -50,7 +50,9 @@ const Search: FC<{ className?: string; displaySearchBar?: boolean }> = ({
 
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		navigate(`/search/${filterParams.chainId}/${filterParams.address}`);
+		navigate(
+			`/search/${filterParams.chainId || -1}/${filterParams.address || '0x0'}`
+		);
 	};
 
 	useEffect(() => {
@@ -108,7 +110,7 @@ const Search: FC<{ className?: string; displaySearchBar?: boolean }> = ({
 								root: {
 									backgroundColor: 'red',
 								},
-								width: '220px',
+								width: displaySearchBar ? '100px' : '220px',
 								height: '100%',
 								backgroundColor: `${colorPalette.white}`,
 							}}
@@ -118,7 +120,7 @@ const Search: FC<{ className?: string; displaySearchBar?: boolean }> = ({
 								displayEmpty
 								sx={{
 									backgroundColor: `${colorPalette.white}`,
-									width: '220px',
+									width: displaySearchBar ? '100px' : '220px',
 									fontSize: '16px',
 									boxShadow: 'none',
 									'.MuiOutlinedInput-notchedOutline': { border: 0 },
