@@ -3,6 +3,10 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { colorPalette } from '@assets/styles/color-palette';
+import {
+	TIME_PERIOD_OPTIONS,
+	useGraphPageChartParams,
+} from '@utils/hooks/use-graph-page-chart-params';
 
 export const StyledToggleButtonGroup = styled(ToggleButtonGroup)({
 	'.MuiToggleButtonGroup-grouped': {
@@ -13,29 +17,21 @@ export const StyledToggleButtonGroup = styled(ToggleButtonGroup)({
 	},
 });
 
-interface ToggleButtonsProps {
-	buttonOptions: { name: string; value: string }[];
-	selectedValue: string;
-	onValueChange: (
-		_event: React.MouseEvent<HTMLElement>,
-		value: string | null
-	) => void;
-}
-
-const ToggleButtons = ({
-	selectedValue,
-	onValueChange,
-	buttonOptions,
-}: ToggleButtonsProps) => {
+const ToggleButtons = () => {
+	const { setTimePeriod, selectedTimePeriod, dateRangeParams } =
+		useGraphPageChartParams();
 	return (
 		<StyledToggleButtonGroup
-			value={selectedValue}
+			value={selectedTimePeriod}
 			aria-label="text-alignment"
-			onChange={onValueChange}
 			exclusive
 		>
-			{buttonOptions.map((elem) => (
+			{TIME_PERIOD_OPTIONS.map((elem) => (
 				<ToggleButton
+					onClick={() => {
+						setTimePeriod(elem);
+					}}
+					selected={elem.value.isSame(dateRangeParams.from)}
 					key={elem.name}
 					sx={{
 						'.MuiTypography-root': {
@@ -50,7 +46,7 @@ const ToggleButtons = ({
 							backgroundColor: colorPalette.primary.main,
 						},
 					}}
-					value={elem.value}
+					value={elem.name}
 				>
 					<Typography fontWeight={600}>{elem.name}</Typography>
 				</ToggleButton>

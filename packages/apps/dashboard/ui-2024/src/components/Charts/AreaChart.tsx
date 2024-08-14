@@ -8,7 +8,7 @@ import {
 	ResponsiveContainer,
 } from 'recharts';
 import CustomChartTooltip from './CustomChartTooltip';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Card from '@mui/material/Card';
 import { Typography } from '@mui/material';
 import Stack from '@mui/material/Stack';
@@ -16,105 +16,14 @@ import { colorPalette } from '@assets/styles/color-palette';
 import CustomXAxisTick from '@components/Charts/CustomXAxisTick';
 import DatePicker from '@components/DataEntry/DatePicker';
 import ToggleButtons from '@components/DataEntry/ToggleButtons';
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 import ToggleCharts from '@components/Charts/ToggleCharts';
 import { formatNumber } from '@helpers/formatNumber';
-
-const HARDCODED_CHART_DATA = [
-	{
-		name: '2024-01-01',
-		transferAmount: 100,
-		transactionsCount: 2000,
-		uniqueReceivers: 3000,
-		uniqueSenders: 200,
-	},
-	{
-		name: '2024-01-02',
-		transferAmount: 150,
-		transactionsCount: 2200,
-		uniqueReceivers: 3200,
-		uniqueSenders: 250,
-	},
-	{
-		name: '2024-01-03',
-		transferAmount: 200,
-		transactionsCount: 2500,
-		uniqueReceivers: 3500,
-		uniqueSenders: 300,
-	},
-	{
-		name: '2024-01-04',
-		transferAmount: 120,
-		transactionsCount: 2100,
-		uniqueReceivers: 3100,
-		uniqueSenders: 220,
-	},
-	{
-		name: '2024-01-05',
-		transferAmount: 180,
-		transactionsCount: 2300,
-		uniqueReceivers: 3400,
-		uniqueSenders: 270,
-	},
-	{
-		name: '2024-01-06',
-		transferAmount: 130,
-		transactionsCount: 2400,
-		uniqueReceivers: 3300,
-		uniqueSenders: 230,
-	},
-	{
-		name: '2024-01-07',
-		transferAmount: 170,
-		transactionsCount: 2600,
-		uniqueReceivers: 3600,
-		uniqueSenders: 280,
-	},
-	{
-		name: '2024-01-08',
-		transferAmount: 140,
-		transactionsCount: 2700,
-		uniqueReceivers: 3700,
-		uniqueSenders: 2400,
-	},
-	{
-		name: '2024-01-09',
-		transferAmount: 160,
-		transactionsCount: 2800,
-		uniqueReceivers: 3800,
-		uniqueSenders: 2900,
-	},
-	{
-		name: '2024-01-10',
-		transferAmount: 190,
-		transactionsCount: 600,
-		uniqueReceivers: 1000,
-		uniqueSenders: 5000,
-	},
-];
-
-const TIME_PERIOD_OPTIONS = [
-	{
-		value: '1W',
-		name: '1W',
-	},
-	{
-		value: '1M',
-		name: '1M',
-	},
-	{
-		value: '6M',
-		name: '6M',
-	},
-	{
-		value: '1Y',
-		name: '1Y',
-	},
-	{
-		value: 'All',
-		name: 'All',
-	},
-];
+import {
+	GraphPageChartData,
+	useGraphPageChartData,
+} from '@services/api/use-graph-page-chart-data';
+import { useGraphPageChartParams } from '@utils/hooks/use-graph-page-chart-params';
 
 const CHECKED_CHARTS_DEFAULT_STATE = {
 	transferAmount: true,
@@ -129,11 +38,15 @@ const HOVERED_CHARTS_DEFAULT_STATE = {
 	uniqueSenders: false,
 };
 
-export const AreaChart = () => {
-	const [chartData] = useState(HARDCODED_CHART_DATA);
-	const [selectedTimePeriod, selectTimePeriod] = useState<string>('1W');
-	const [fromDate, setFromDate] = useState<Dayjs>(dayjs(new Date()));
-	const [toDate, setToDate] = useState<Dayjs>(dayjs(new Date()));
+export const AreaChart = ({ chartData }: { chartData: GraphPageChartData }) => {
+	const {
+		setFromDate,
+		setToDate,
+		clearTimePeriod,
+		dateRangeParams: { from, to },
+	} = useGraphPageChartParams();
+
+	const lastIndex = chartData.length - 1;
 	const [checkedCharts, setCheckedCharts] = useState(
 		CHECKED_CHARTS_DEFAULT_STATE
 	);
@@ -157,15 +70,6 @@ export const AreaChart = () => {
 		if (value) setToDate(value);
 	};
 
-	const handleTimePeriod = (
-		_event: React.MouseEvent<HTMLElement>,
-		value: string | null
-	) => {
-		if (value !== null) {
-			selectTimePeriod(value);
-		}
-	};
-
 	const onChartHover = (name: string) => {
 		setCurrentHoveredChart((prevState) => ({
 			...prevState,
@@ -181,17 +85,15 @@ export const AreaChart = () => {
 		const currentRef = chartRef.current;
 		if (currentRef) {
 			const handleScrollChangeDate = (event: WheelEvent) => {
+				event.preventDefault();
+				clearTimePeriod();
 				if (event.deltaY < 0) {
-					setFromDate((prevState) => {
-						if (prevState.isAfter(toDate) || prevState.isSame(toDate)) {
-							return prevState;
-						}
-						return prevState.add(1, 'day');
-					});
+					if (from.add(1, 'day').isAfter(to) || from.add(1, 'day').isSame(to)) {
+						return;
+					}
+					setFromDate(from.add(1, 'day'));
 				} else if (event.deltaY > 0) {
-					setFromDate((prevState) => {
-						return prevState.subtract(1, 'day');
-					});
+					setFromDate(from.subtract(1, 'day'));
 				}
 			};
 
@@ -201,7 +103,7 @@ export const AreaChart = () => {
 				currentRef.removeEventListener('wheel', handleScrollChangeDate);
 			};
 		}
-	}, [toDate]);
+	}, [clearTimePeriod, from, setFromDate, to]);
 
 	return (
 		<Card
@@ -215,22 +117,18 @@ export const AreaChart = () => {
 				direction={{ xs: 'column', md: 'row' }}
 				gap={{ xs: 6, md: 8 }}
 			>
-				<ToggleButtons
-					buttonOptions={TIME_PERIOD_OPTIONS}
-					onValueChange={handleTimePeriod}
-					selectedValue={selectedTimePeriod}
-				/>
+				<ToggleButtons />
 				<Stack direction="row" alignItems="center" gap={2}>
-					<DatePicker onChange={onFromDateChange} value={fromDate} />
+					<DatePicker onChange={onFromDateChange} value={from} />
 					<Typography>-</Typography>
-					<DatePicker onChange={onToDateChange} value={toDate} />
+					<DatePicker onChange={onToDateChange} value={to} />
 				</Stack>
 			</Stack>
 			<ResponsiveContainer ref={chartRef} height={300}>
 				<AreaChartRecharts data={chartData}>
 					<defs>
 						<linearGradient
-							id="colorTransferAmount"
+							id="colorTotalTransactionAmount"
 							x1="0"
 							y1="0"
 							x2="0"
@@ -248,7 +146,7 @@ export const AreaChart = () => {
 							/>
 						</linearGradient>
 						<linearGradient
-							id="colorTransactionsCount"
+							id="colorTotalTransactionCount"
 							x1="0"
 							y1="0"
 							x2="0"
@@ -266,7 +164,7 @@ export const AreaChart = () => {
 							/>
 						</linearGradient>
 						<linearGradient
-							id="colorUniqueRecievers"
+							id="colorDailyUniqueReceivers"
 							x1="0"
 							y1="0"
 							x2="0"
@@ -283,7 +181,13 @@ export const AreaChart = () => {
 								stopOpacity={currentHoveredChart.uniqueReceivers ? 1 : 0}
 							/>
 						</linearGradient>
-						<linearGradient id="colorUniqueSenders" x1="0" y1="0" x2="0" y2="1">
+						<linearGradient
+							id="colorDailyUniqueSenders"
+							x1="0"
+							y1="0"
+							x2="0"
+							y2="1"
+						>
 							<stop
 								offset={currentHoveredChart.uniqueSenders ? '20%' : '30%'}
 								stopColor="#0AD39780"
@@ -317,7 +221,7 @@ export const AreaChart = () => {
 					{checkedCharts.transferAmount && (
 						<Area
 							type="monotone"
-							dataKey="transferAmount"
+							dataKey="totalTransactionAmount"
 							stroke={colorPalette.primary.main}
 							fillOpacity={1}
 							fill="url(#colorTransferAmount)"
@@ -326,7 +230,7 @@ export const AreaChart = () => {
 					{checkedCharts.transactionsCount && (
 						<Area
 							type="monotone"
-							dataKey="transactionsCount"
+							dataKey="totalTransactionCount"
 							stroke={colorPalette.secondary.main}
 							fillOpacity={1}
 							fill="url(#colorTransactionsCount)"
@@ -335,7 +239,7 @@ export const AreaChart = () => {
 					{checkedCharts.uniqueReceivers && (
 						<Area
 							type="monotone"
-							dataKey="uniqueReceivers"
+							dataKey="dailyUniqueReceivers"
 							stroke={colorPalette.error.main}
 							fillOpacity={1}
 							fill="url(#colorUniqueRecievers)"
@@ -344,7 +248,7 @@ export const AreaChart = () => {
 					{checkedCharts.uniqueSenders && (
 						<Area
 							type="monotone"
-							dataKey="uniqueSenders"
+							dataKey="dailyUniqueSenders"
 							stroke={colorPalette.success.main}
 							fillOpacity={1}
 							fill="url(#colorUniqueSenders)"
@@ -368,26 +272,26 @@ export const AreaChart = () => {
 						{
 							title: 'Transfer Amount',
 							isAreaChart: true,
-							name: 'transferAmount',
-							amount: chartData[chartData.length - 1].transferAmount,
+							name: 'totalTransactionAmount',
+							amount: chartData[lastIndex]?.totalTransactionAmount,
 							color: colorPalette.primary.main,
 						},
 						{
 							title: 'Transactions Count',
-							name: 'transactionsCount',
-							amount: chartData[chartData.length - 1].transactionsCount,
+							name: 'totalTransactionCount',
+							amount: chartData[lastIndex]?.totalTransactionCount,
 							color: colorPalette.secondary.main,
 						},
 						{
 							title: 'Unique Receivers',
-							name: 'uniqueReceivers',
-							amount: chartData[chartData.length - 1].uniqueReceivers,
+							name: 'dailyUniqueReceivers',
+							amount: chartData[lastIndex]?.dailyUniqueReceivers,
 							color: colorPalette.error.main,
 						},
 						{
 							title: 'Unique Senders',
-							name: 'uniqueSenders',
-							amount: chartData[chartData.length - 1].uniqueSenders,
+							name: 'dailyUniqueSenders',
+							amount: chartData[lastIndex]?.dailyUniqueSenders,
 							color: colorPalette.success.main,
 						},
 					]}
