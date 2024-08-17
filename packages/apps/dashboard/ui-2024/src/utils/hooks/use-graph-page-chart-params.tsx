@@ -12,7 +12,7 @@ const oneWeekAgo = dayjs().subtract(1, 'week');
 const oneMonthAgo = dayjs().subtract(1, 'month');
 const sixMonthsAgo = dayjs().subtract(6, 'months');
 const oneYearAgo = dayjs().subtract(1, 'year');
-const allTime = dayjs().subtract(10, 'years');
+export const initialAllTime = dayjs().subtract(10, 'years');
 
 export const TIME_PERIOD_OPTIONS: TimePeriod[] = [
 	{
@@ -32,7 +32,7 @@ export const TIME_PERIOD_OPTIONS: TimePeriod[] = [
 		name: '1Y',
 	},
 	{
-		value: allTime,
+		value: initialAllTime,
 		name: 'ALL',
 	},
 ];
@@ -42,11 +42,13 @@ export interface GraphPageChartParams {
 		from: Dayjs;
 		to: Dayjs;
 	};
+	effectiveFromAllTimeDate?: Dayjs;
 	selectedTimePeriod: GraphPageChartPeriodName | null;
 	setTimePeriod: (timePeriod: TimePeriod) => void;
 	clearTimePeriod: () => void;
 	setFromDate: (fromDate: Dayjs | null) => void;
 	setToDate: (toDate: Dayjs | null) => void;
+	setEffectiveFromAllTimeDate: (date: Dayjs) => void;
 }
 
 export const useGraphPageChartParams = create<GraphPageChartParams>((set) => ({
@@ -54,18 +56,21 @@ export const useGraphPageChartParams = create<GraphPageChartParams>((set) => ({
 		from: oneWeekAgo,
 		to: dayjs(),
 	},
+	effectiveFromAllTimeDate: undefined,
 	selectedTimePeriod: '1W',
 	setFromDate: (fromDate: Dayjs | null) => {
 		if (!fromDate) {
-			return null;
+			return;
 		}
-		set((state) => ({
-			...state,
-			dateRangeParams: {
-				...state.dateRangeParams,
-				from: fromDate,
-			},
-		}));
+		set((state) => {
+			return {
+				...state,
+				dateRangeParams: {
+					...state.dateRangeParams,
+					from: fromDate,
+				},
+			};
+		});
 	},
 	setToDate: (toDate: Dayjs | null) => {
 		if (!toDate) {
@@ -80,16 +85,29 @@ export const useGraphPageChartParams = create<GraphPageChartParams>((set) => ({
 		}));
 	},
 	setTimePeriod: (timePeriod: TimePeriod) => {
-		set((state) => ({
-			...state,
-			selectedTimePeriod: timePeriod.name,
-			dateRangeParams: {
-				...state.dateRangeParams,
-				from: timePeriod.value,
-			},
-		}));
+		set((state) => {
+			const newFromDate =
+				state.effectiveFromAllTimeDate && timePeriod.name === 'ALL'
+					? state.effectiveFromAllTimeDate
+					: timePeriod.value;
+
+			return {
+				...state,
+				selectedTimePeriod: timePeriod.name,
+				dateRangeParams: {
+					...state.dateRangeParams,
+					from: newFromDate,
+				},
+			};
+		});
 	},
 	clearTimePeriod: () => {
 		set((state) => ({ ...state, selectedTimePeriod: null }));
+	},
+	setEffectiveFromAllTimeDate: (date: Dayjs) => {
+		set((state) => ({
+			...state,
+			effectiveFromAllTimeDate: date,
+		}));
 	},
 }));

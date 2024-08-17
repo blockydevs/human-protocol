@@ -5,6 +5,8 @@ import { apiPaths } from '../api-paths';
 import { validateResponse } from '@services/validate-response';
 import { useGraphPageChartParams } from '@utils/hooks/use-graph-page-chart-params';
 import { useDebounce } from 'use-debounce';
+import { useMemo } from 'react';
+import dayjs from 'dayjs';
 
 const hmtDailyStatSchemaResponseSchema = z.object({
 	from: z.string().optional(),
@@ -59,24 +61,61 @@ const mergeResponses = (
 	hcaptchaStatsResults: HcaptchaDailyStat[],
 	hmtStatsResults: HMTDailyStat[]
 ): GraphPageChartData => {
-	const result: GraphPageChartData = [];
-	// console.log({ hcaptchaStatsResults: , hmtStatsResults });
+	const longerCollection =
+		hcaptchaStatsResults.length > hmtStatsResults.length
+			? hcaptchaStatsResults
+			: hmtStatsResults;
 
-	for (let i = 0; i < hcaptchaStatsResults.length; i++) {
-		result.push({ ...hcaptchaStatsResults[i], ...hmtStatsResults[i] });
-		console.log(i);
-	}
-	return result;
+	const hcaptchaStatsResultsMap = new Map<string, HcaptchaDailyStat>();
+	const hmtStatsResultsMap = new Map<string, HMTDailyStat>();
+
+	hcaptchaStatsResults.forEach((entry) => {
+		hcaptchaStatsResultsMap.set(entry.date, entry);
+	});
+
+	hmtStatsResults.forEach((entry) => {
+		hmtStatsResultsMap.set(entry.date, entry);
+	});
+
+	return longerCollection.map(({ date }) => {
+		const hmtStatsEntry: HMTDailyStat = hmtStatsResultsMap.get(date) || {
+			dailyUniqueReceivers: 0,
+			dailyUniqueSenders: 0,
+			date: date,
+			totalTransactionAmount: 0,
+			totalTransactionCount: 0,
+		};
+
+		const hcaptchaStatsEntry: HcaptchaDailyStat = hcaptchaStatsResultsMap.get(
+			date
+		) || {
+			date: date,
+			served: 0,
+			solved: 0,
+		};
+
+		return { ...hmtStatsEntry, ...hcaptchaStatsEntry };
+	});
 };
 
 const DEBOUNCE_MS = 300;
 
 export function useGraphPageChartData() {
-	const { dateRangeParams } = useGraphPageChartParams();
-	const queryParams = {
-		from: dateRangeParams.from.format('YYYY-MM-DD'),
-		to: dateRangeParams.to.format('YYYY-MM-DD'),
-	};
+	const {
+		dateRangeParams,
+		selectedTimePeriod,
+		effectiveFromAllTimeDate,
+		setEffectiveFromAllTimeDate,
+		setFromDate,
+	} = useGraphPageChartParams();
+	const queryParams = useMemo(
+		() => ({
+			from: dateRangeParams.from.format('YYYY-MM-DD'),
+			to: dateRangeParams.to.format('YYYY-MM-DD'),
+		}),
+		[dateRangeParams.from, dateRangeParams.to]
+	);
+
 	const [debouncedQueryParams] = useDebounce(queryParams, DEBOUNCE_MS);
 
 	return useQuery({
@@ -104,10 +143,26 @@ export function useGraphPageChartData() {
 				hcaptchaDailyStatsResponseSchema
 			);
 
-			return mergeResponses(
+			const mergedResponses = mergeResponses(
 				validHcaptchaGeneralStats.results,
 				validHmtDailyStats.results
 			);
+
+			const latestDate = mergedResponses[0]?.date
+				? dayjs(new Date(validHcaptchaGeneralStats.results[0]?.date))
+				: null;
+
+			if (
+				(selectedTimePeriod === 'ALL' &&
+					!effectiveFromAllTimeDate &&
+					latestDate) ||
+				(!effectiveFromAllTimeDate && latestDate?.isAfter(dateRangeParams.from))
+			) {
+				setEffectiveFromAllTimeDate(latestDate);
+				setFromDate(latestDate);
+			}
+
+			return mergedResponses;
 		},
 		staleTime: DEBOUNCE_MS,
 		queryKey: ['useGraphPageChartData', debouncedQueryParams],

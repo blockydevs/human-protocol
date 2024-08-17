@@ -4,7 +4,9 @@ import { styled } from '@mui/material';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { colorPalette } from '@assets/styles/color-palette';
 import {
+	initialAllTime,
 	TIME_PERIOD_OPTIONS,
+	TimePeriod,
 	useGraphPageChartParams,
 } from '@utils/hooks/use-graph-page-chart-params';
 
@@ -18,8 +20,21 @@ export const StyledToggleButtonGroup = styled(ToggleButtonGroup)({
 });
 
 const ToggleButtons = () => {
-	const { setTimePeriod, selectedTimePeriod, dateRangeParams } =
-		useGraphPageChartParams();
+	const {
+		setTimePeriod,
+		selectedTimePeriod,
+		dateRangeParams,
+		effectiveFromAllTimeDate,
+	} = useGraphPageChartParams();
+
+	const checkIfSelected = (element: TimePeriod) => {
+		if (element.name !== 'ALL' || !effectiveFromAllTimeDate) {
+			return element.value.isSame(dateRangeParams.from);
+		}
+
+		return dateRangeParams.from.isSame(effectiveFromAllTimeDate);
+	};
+
 	return (
 		<StyledToggleButtonGroup
 			value={selectedTimePeriod}
@@ -31,7 +46,7 @@ const ToggleButtons = () => {
 					onClick={() => {
 						setTimePeriod(elem);
 					}}
-					selected={elem.value.isSame(dateRangeParams.from)}
+					selected={checkIfSelected(elem)}
 					key={elem.name}
 					sx={{
 						'.MuiTypography-root': {

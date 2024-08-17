@@ -8,7 +8,7 @@ import {
 	ResponsiveContainer,
 } from 'recharts';
 import CustomChartTooltip from './CustomChartTooltip';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Card from '@mui/material/Card';
 import { Typography } from '@mui/material';
 import Stack from '@mui/material/Stack';
@@ -25,28 +25,63 @@ import {
 } from '@services/api/use-graph-page-chart-data';
 import { useGraphPageChartParams } from '@utils/hooks/use-graph-page-chart-params';
 
-const CHECKED_CHARTS_DEFAULT_STATE = {
-	transferAmount: true,
-	transactionsCount: true,
-	uniqueReceivers: true,
-	uniqueSenders: true,
+export type GraphPageChartDataConfigObject<T> = Partial<
+	Record<keyof GraphPageChartData[number], T>
+>;
+
+const CHECKED_CHARTS_DEFAULT_STATE: GraphPageChartDataConfigObject<boolean> = {
+	totalTransactionAmount: true,
+	totalTransactionCount: true,
+	solved: true,
+	dailyUniqueReceivers: true,
+	dailyUniqueSenders: true,
 };
-const HOVERED_CHARTS_DEFAULT_STATE = {
-	transferAmount: false,
-	transactionsCount: false,
-	uniqueReceivers: false,
-	uniqueSenders: false,
+const HOVERED_CHARTS_DEFAULT_STATE: GraphPageChartDataConfigObject<boolean> = {
+	totalTransactionAmount: false,
+	totalTransactionCount: false,
+	solved: false,
+	dailyUniqueReceivers: false,
+	dailyUniqueSenders: false,
 };
 
-export const AreaChart = ({ chartData }: { chartData: GraphPageChartData }) => {
+type SumOfNumericChartDataProperties = Record<
+	keyof Omit<GraphPageChartData[number], 'date' | 'served'>,
+	number
+>;
+
+const sumNumericProperties = (
+	chartData: GraphPageChartData
+): SumOfNumericChartDataProperties => {
+	return chartData.reduce(
+		(acc, chartEntry) => {
+			acc.dailyUniqueReceivers += chartEntry.dailyUniqueReceivers;
+			acc.dailyUniqueSenders += chartEntry.dailyUniqueSenders;
+			acc.solved += chartEntry.solved;
+			acc.totalTransactionAmount += chartEntry.totalTransactionAmount;
+			acc.totalTransactionCount += chartEntry.totalTransactionCount;
+			return acc;
+		},
+		{
+			dailyUniqueReceivers: 0,
+			dailyUniqueSenders: 0,
+			solved: 0,
+			totalTransactionAmount: 0,
+			totalTransactionCount: 0,
+		}
+	);
+};
+
+export const AreaChart = () => {
+	const { data } = useGraphPageChartData();
+	const chartData = data || [];
 	const {
 		setFromDate,
 		setToDate,
 		clearTimePeriod,
 		dateRangeParams: { from, to },
+		effectiveFromAllTimeDate,
 	} = useGraphPageChartParams();
-
-	const lastIndex = chartData.length - 1;
+	const sum = sumNumericProperties(chartData);
 	const [checkedCharts, setCheckedCharts] = useState(
 		CHECKED_CHARTS_DEFAULT_STATE
 	);
@@ -88,11 +123,14 @@ export const AreaChart = ({ chartData }: { chartData: GraphPageChartData }) => {
 				event.preventDefault();
 				clearTimePeriod();
 				if (event.deltaY < 0) {
-					if (from.add(1, 'day').isAfter(to) || from.add(1, 'day').isSame(to)) {
+					if (from.add(1, 'day').isAfter(to)) {
 						return;
 					}
 					setFromDate(from.add(1, 'day'));
 				} else if (event.deltaY > 0) {
+					if (effectiveFromAllTimeDate?.isSame(from)) {
+						return;
+					}
 					setFromDate(from.subtract(1, 'day'));
 				}
 			};
@@ -103,7 +141,7 @@ export const AreaChart = ({ chartData }: { chartData: GraphPageChartData }) => {
 				currentRef.removeEventListener('wheel', handleScrollChangeDate);
 			};
 		}
-	}, [clearTimePeriod, from, setFromDate, to]);
+	}, [clearTimePeriod, effectiveFromAllTimeDate, from, setFromDate, to]);
 
 	return (
 		<Card
@@ -119,9 +157,24 @@ export const AreaChart = ({ chartData }: { chartData: GraphPageChartData }) => {
 			>
 				<ToggleButtons />
 				<Stack direction="row" alignItems="center" gap={2}>
-					<DatePicker onChange={onFromDateChange} value={from} />
+					<DatePicker
+						onChange={onFromDateChange}
+						value={from}
+						customProps={{
+							disableFuture: true,
+							maxDate: to,
+							minDate: effectiveFromAllTimeDate,
+						}}
+					/>
 					<Typography>-</Typography>
-					<DatePicker onChange={onToDateChange} value={to} />
+					<DatePicker
+						onChange={onToDateChange}
+						value={to}
+						customProps={{
+							disableFuture: true,
+							minDate: from,
+						}}
+					/>
 				</Stack>
 			</Stack>
 			<ResponsiveContainer ref={chartRef} height={300}>
@@ -135,14 +188,20 @@ export const AreaChart = ({ chartData }: { chartData: GraphPageChartData }) => {
 							y2="1"
 						>
 							<stop
-								offset={currentHoveredChart.transferAmount ? '20%' : '30%'}
+								offset={
+									currentHoveredChart.totalTransactionAmount ? '20%' : '30%'
+								}
 								stopColor="#330B8D33"
-								stopOpacity={currentHoveredChart.transferAmount ? 1 : 0.2}
+								stopOpacity={
+									currentHoveredChart.totalTransactionAmount ? 1 : 0.2
+								}
 							/>
 							<stop
-								offset={currentHoveredChart.transferAmount ? '90%' : '60%'}
+								offset={
+									currentHoveredChart.totalTransactionAmount ? '90%' : '60%'
+								}
 								stopColor="#330B8D00"
-								stopOpacity={currentHoveredChart.transferAmount ? 1 : 0}
+								stopOpacity={currentHoveredChart.totalTransactionAmount ? 1 : 0}
 							/>
 						</linearGradient>
 						<linearGradient
@@ -153,14 +212,20 @@ export const AreaChart = ({ chartData }: { chartData: GraphPageChartData }) => {
 							y2="1"
 						>
 							<stop
-								offset={currentHoveredChart.transactionsCount ? '20%' : '30%'}
+								offset={
+									currentHoveredChart.totalTransactionCount ? '20%' : '30%'
+								}
 								stopColor="#6309FF26"
-								stopOpacity={currentHoveredChart.transactionsCount ? 1 : 0.2}
+								stopOpacity={
+									currentHoveredChart.totalTransactionCount ? 1 : 0.2
+								}
 							/>
 							<stop
-								offset={currentHoveredChart.transactionsCount ? '90%' : '60%'}
+								offset={
+									currentHoveredChart.totalTransactionCount ? '90%' : '60%'
+								}
 								stopColor="#6309FF00"
-								stopOpacity={currentHoveredChart.transactionsCount ? 1 : 0}
+								stopOpacity={currentHoveredChart.totalTransactionCount ? 1 : 0}
 							/>
 						</linearGradient>
 						<linearGradient
@@ -171,14 +236,18 @@ export const AreaChart = ({ chartData }: { chartData: GraphPageChartData }) => {
 							y2="1"
 						>
 							<stop
-								offset={currentHoveredChart.uniqueReceivers ? '20%' : '30%'}
+								offset={
+									currentHoveredChart.dailyUniqueReceivers ? '20%' : '30%'
+								}
 								stopColor="#F20D5F33"
-								stopOpacity={currentHoveredChart.uniqueReceivers ? 1 : 0.2}
+								stopOpacity={currentHoveredChart.dailyUniqueReceivers ? 1 : 0.2}
 							/>
 							<stop
-								offset={currentHoveredChart.uniqueReceivers ? '90%' : '60%'}
+								offset={
+									currentHoveredChart.dailyUniqueReceivers ? '90%' : '60%'
+								}
 								stopColor="#F20D5F00"
-								stopOpacity={currentHoveredChart.uniqueReceivers ? 1 : 0}
+								stopOpacity={currentHoveredChart.dailyUniqueReceivers ? 1 : 0}
 							/>
 						</linearGradient>
 						<linearGradient
@@ -189,14 +258,14 @@ export const AreaChart = ({ chartData }: { chartData: GraphPageChartData }) => {
 							y2="1"
 						>
 							<stop
-								offset={currentHoveredChart.uniqueSenders ? '20%' : '30%'}
+								offset={currentHoveredChart.dailyUniqueSenders ? '20%' : '30%'}
 								stopColor="#0AD39780"
-								stopOpacity={currentHoveredChart.uniqueSenders ? 1 : 0.2}
+								stopOpacity={currentHoveredChart.dailyUniqueSenders ? 1 : 0.2}
 							/>
 							<stop
-								offset={currentHoveredChart.uniqueSenders ? '90%' : '70%'}
+								offset={currentHoveredChart.dailyUniqueSenders ? '90%' : '70%'}
 								stopColor="#0AD39700"
-								stopOpacity={currentHoveredChart.uniqueSenders ? 1 : 0}
+								stopOpacity={currentHoveredChart.dailyUniqueSenders ? 1 : 0}
 							/>
 						</linearGradient>
 					</defs>
@@ -214,11 +283,11 @@ export const AreaChart = ({ chartData }: { chartData: GraphPageChartData }) => {
 						height={50}
 						stroke={colorPalette.fog.dark}
 						tickSize={20}
-						dataKey="name"
+						dataKey="date"
 						tickMargin={10}
 					/>
 					<Tooltip content={<CustomChartTooltip />} />
-					{checkedCharts.transferAmount && (
+					{checkedCharts.totalTransactionAmount && (
 						<Area
 							type="monotone"
 							dataKey="totalTransactionAmount"
@@ -227,7 +296,7 @@ export const AreaChart = ({ chartData }: { chartData: GraphPageChartData }) => {
 							fill="url(#colorTransferAmount)"
 						/>
 					)}
-					{checkedCharts.transactionsCount && (
+					{checkedCharts.totalTransactionCount && (
 						<Area
 							type="monotone"
 							dataKey="totalTransactionCount"
@@ -236,7 +305,16 @@ export const AreaChart = ({ chartData }: { chartData: GraphPageChartData }) => {
 							fill="url(#colorTransactionsCount)"
 						/>
 					)}
-					{checkedCharts.uniqueReceivers && (
+					{checkedCharts.solved && (
+						<Area
+							type="monotone"
+							dataKey="solved"
+							stroke={colorPalette.ocean.dark}
+							fillOpacity={1}
+							fill="url(#colorTransactionsCount)"
+						/>
+					)}
+					{checkedCharts.dailyUniqueReceivers && (
 						<Area
 							type="monotone"
 							dataKey="dailyUniqueReceivers"
@@ -245,7 +323,7 @@ export const AreaChart = ({ chartData }: { chartData: GraphPageChartData }) => {
 							fill="url(#colorUniqueRecievers)"
 						/>
 					)}
-					{checkedCharts.uniqueSenders && (
+					{checkedCharts.dailyUniqueSenders && (
 						<Area
 							type="monotone"
 							dataKey="dailyUniqueSenders"
@@ -273,25 +351,31 @@ export const AreaChart = ({ chartData }: { chartData: GraphPageChartData }) => {
 							title: 'Transfer Amount',
 							isAreaChart: true,
 							name: 'totalTransactionAmount',
-							amount: chartData[lastIndex]?.totalTransactionAmount,
+							amount: `${sum.totalTransactionAmount.toFixed()}`,
 							color: colorPalette.primary.main,
 						},
 						{
 							title: 'Transactions Count',
 							name: 'totalTransactionCount',
-							amount: chartData[lastIndex]?.totalTransactionCount,
+							amount: sum.totalTransactionCount,
 							color: colorPalette.secondary.main,
+						},
+						{
+							title: 'Number of Tasks',
+							name: 'solved',
+							amount: sum.solved,
+							color: colorPalette.ocean.dark,
 						},
 						{
 							title: 'Unique Receivers',
 							name: 'dailyUniqueReceivers',
-							amount: chartData[lastIndex]?.dailyUniqueReceivers,
+							amount: sum.dailyUniqueReceivers,
 							color: colorPalette.error.main,
 						},
 						{
 							title: 'Unique Senders',
 							name: 'dailyUniqueSenders',
-							amount: chartData[lastIndex]?.dailyUniqueSenders,
+							amount: sum.dailyUniqueSenders,
 							color: colorPalette.success.main,
 						},
 					]}
