@@ -228,6 +228,18 @@ export const AreaChart = () => {
 								stopOpacity={currentHoveredChart.totalTransactionCount ? 1 : 0}
 							/>
 						</linearGradient>
+						<linearGradient id="colorSolved" x1="0" y1="0" x2="0" y2="1">
+							<stop
+								offset={currentHoveredChart.solved ? '20%' : '30%'}
+								stopColor="#03a9f480"
+								stopOpacity={currentHoveredChart.solved ? 1 : 0.2}
+							/>
+							<stop
+								offset={currentHoveredChart.solved ? '90%' : '60%'}
+								stopColor="#03a9f400"
+								stopOpacity={currentHoveredChart.solved ? 1 : 0}
+							/>
+						</linearGradient>
 						<linearGradient
 							id="colorDailyUniqueReceivers"
 							x1="0"
@@ -293,7 +305,7 @@ export const AreaChart = () => {
 							dataKey="totalTransactionAmount"
 							stroke={colorPalette.primary.main}
 							fillOpacity={1}
-							fill="url(#colorTransferAmount)"
+							fill="url(#colorTotalTransactionAmount)"
 						/>
 					)}
 					{checkedCharts.totalTransactionCount && (
@@ -302,7 +314,7 @@ export const AreaChart = () => {
 							dataKey="totalTransactionCount"
 							stroke={colorPalette.secondary.main}
 							fillOpacity={1}
-							fill="url(#colorTransactionsCount)"
+							fill="url(#colorTotalTransactionCount)"
 						/>
 					)}
 					{checkedCharts.solved && (
@@ -311,16 +323,16 @@ export const AreaChart = () => {
 							dataKey="solved"
 							stroke={colorPalette.ocean.dark}
 							fillOpacity={1}
-							fill="url(#colorTransactionsCount)"
+							fill="url(#colorSolved)"
 						/>
 					)}
 					{checkedCharts.dailyUniqueReceivers && (
 						<Area
 							type="monotone"
 							dataKey="dailyUniqueReceivers"
-							stroke={colorPalette.error.main}
+							stroke={colorPalette.error.light}
 							fillOpacity={1}
-							fill="url(#colorUniqueRecievers)"
+							fill="url(#colorDailyUniqueReceivers)"
 						/>
 					)}
 					{checkedCharts.dailyUniqueSenders && (
@@ -329,7 +341,7 @@ export const AreaChart = () => {
 							dataKey="dailyUniqueSenders"
 							stroke={colorPalette.success.main}
 							fillOpacity={1}
-							fill="url(#colorUniqueSenders)"
+							fill="url(#colorDailyUniqueSenders)"
 						/>
 					)}
 				</AreaChartRecharts>
@@ -351,7 +363,7 @@ export const AreaChart = () => {
 							title: 'Transfer Amount',
 							isAreaChart: true,
 							name: 'totalTransactionAmount',
-							amount: `${sum.totalTransactionAmount.toFixed()}`,
+							amount: `${Number(sum.totalTransactionAmount.toFixed())}`,
 							color: colorPalette.primary.main,
 						},
 						{
@@ -370,7 +382,7 @@ export const AreaChart = () => {
 							title: 'Unique Receivers',
 							name: 'dailyUniqueReceivers',
 							amount: sum.dailyUniqueReceivers,
-							color: colorPalette.error.main,
+							color: colorPalette.error.light,
 						},
 						{
 							title: 'Unique Senders',
