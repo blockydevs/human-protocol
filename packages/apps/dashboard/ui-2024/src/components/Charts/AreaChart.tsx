@@ -71,7 +71,11 @@ const sumNumericProperties = (
 	);
 };
 
-export const AreaChart = () => {
+export const AreaChart = ({
+	changeDateOnScroll = false,
+}: {
+	changeDateOnScroll?: boolean;
+}) => {
 	const { data } = useGraphPageChartData();
 	const chartData = data || [];
 	const {
@@ -117,6 +121,9 @@ export const AreaChart = () => {
 	};
 
 	useEffect(() => {
+		if (!changeDateOnScroll) {
+			return;
+		}
 		const currentRef = chartRef.current;
 		if (currentRef) {
 			const handleScrollChangeDate = (event: WheelEvent) => {
@@ -141,7 +148,14 @@ export const AreaChart = () => {
 				currentRef.removeEventListener('wheel', handleScrollChangeDate);
 			};
 		}
-	}, [clearTimePeriod, effectiveFromAllTimeDate, from, setFromDate, to]);
+	}, [
+		changeDateOnScroll,
+		clearTimePeriod,
+		effectiveFromAllTimeDate,
+		from,
+		setFromDate,
+		to,
+	]);
 
 	return (
 		<Card

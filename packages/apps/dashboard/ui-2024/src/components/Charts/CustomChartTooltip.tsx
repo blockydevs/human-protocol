@@ -24,7 +24,6 @@ const CustomChartTooltip = ({
 	label,
 	active,
 }: TooltipProps<number, string>) => {
-	console.log({ payload, label });
 	if (active) {
 		return (
 			<Card

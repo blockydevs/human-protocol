@@ -42,7 +42,6 @@ const hcaptchaDailyStatsResponseSchema = z.object({
 	to: z.string().optional(),
 	results: z.array(
 		z.object({
-			served: z.number(),
 			solved: z.number(),
 			date: z.string(),
 		})
@@ -90,7 +89,6 @@ const mergeResponses = (
 			date
 		) || {
 			date: date,
-			served: 0,
 			solved: 0,
 		};
 
