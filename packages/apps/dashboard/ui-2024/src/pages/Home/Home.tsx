@@ -17,7 +17,7 @@ import bing from '@assets/bing.png';
 import coinlist from '@assets/coinlist.png';
 import lbank from '@assets/lbank.png';
 import cup from '@assets/cup.png';
-import Leaderboard from '@components/Home/Leaderboard';
+import Leaderboard from '@components/Home/Leaderboard/Leaderboard';
 import GraphSwiper from '@components/Home/GraphSwiper';
 import { HMTPrice } from '@pages/Home/HMTPrice';
 import { TotalNumberOfTasks } from '@pages/Home/TotalNumberOfTasks';
@@ -134,7 +134,7 @@ const Home: React.FC = () => {
 				img={cup}
 			/>
 
-			<Leaderboard pagination />
+			<Leaderboard />
 		</PageWrapper>
 	);
 };
