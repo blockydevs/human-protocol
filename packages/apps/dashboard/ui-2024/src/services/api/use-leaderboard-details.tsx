@@ -18,7 +18,7 @@ const leaderBoardEntity = z.object({
 			});
 		}
 
-		return valueAsNumber;
+		return valueAsNumber / 10 ** 18;
 	}),
 	reputation: z.union([z.string(), z.number()]).transform((value) => {
 		return `${value}`;

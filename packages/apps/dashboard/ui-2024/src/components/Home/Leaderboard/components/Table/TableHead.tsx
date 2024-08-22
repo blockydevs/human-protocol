@@ -11,6 +11,8 @@ import {
 	SortableFieldsInLeaderBoardData,
 } from '@components/Home/Leaderboard/components/Table/sorting';
 import { SelectNetwork } from '@components/Home/Leaderboard/components/SelectNetwork';
+import { colorPalette } from '@assets/styles/color-palette';
+import { useBreakPoints } from '@utils/hooks/use-is-mobile';
 
 interface TableHeadProps {
 	onRequestSort: (
@@ -27,6 +29,7 @@ export const TableHead = ({
 	order,
 	onRequestSort,
 }: TableHeadProps) => {
+	const { mobile } = useBreakPoints();
 	const createSortHandler =
 		(property: SortableFieldsInLeaderBoardData) =>
 		(event: React.MouseEvent<unknown>) => {
@@ -35,8 +38,23 @@ export const TableHead = ({
 
 	return (
 		<MuiTableHead>
-			<TableRow className="home-page-table-header">
-				<TableCell key="id" sortDirection={orderBy === 'role' ? order : false}>
+			<TableRow
+				sx={{ whiteSpace: 'nowrap' }}
+				className="home-page-table-header"
+			>
+				{mobile.isMobile ? null : <TableCell></TableCell>}
+				<TableCell
+					sx={{
+						[mobile.mediaQuery]: {
+							position: 'sticky',
+							left: 0,
+							zIndex: 2,
+							backgroundColor: colorPalette.whiteSolid,
+						},
+					}}
+					key="id"
+					sortDirection={orderBy === 'role' ? order : false}
+				>
 					<TableSortLabel
 						active={orderBy === 'role'}
 						direction={orderBy === 'role' ? order : 'asc'}
