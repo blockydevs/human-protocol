@@ -9,7 +9,6 @@ import { AddressDetailsLeader } from '@services/api/use-address-details';
 import { useEscrowDetailsDto } from '@utils/hooks/use-escrows-details-dto';
 import { useWalletSearch } from '@utils/hooks/use-wallet-search';
 import { useNavigate } from 'react-router-dom';
-import { Stack, TableRow } from '@mui/material';
 import { Stack } from '@mui/material';
 import { TableRowWithCustomContextMenu } from '@components/TableRowWithCustomContextMenu/TableRowWithCustomContextMenu';
 
