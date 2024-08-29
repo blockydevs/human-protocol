@@ -10,6 +10,8 @@ import { useEscrowDetailsDto } from '@utils/hooks/use-escrows-details-dto';
 import { useWalletSearch } from '@utils/hooks/use-wallet-search';
 import { useNavigate } from 'react-router-dom';
 import { Stack, TableRow } from '@mui/material';
+import { Stack } from '@mui/material';
+import { TableRowWithCustomContextMenu } from '@components/TableRowWithCustomContextMenu/TableRowWithCustomContextMenu';
 
 export const EscrowsTableBody = ({
 	role,
@@ -63,7 +65,10 @@ export const EscrowsTableBody = ({
 	return (
 		<MuiTableBody>
 			{data.results.map((elem, idx) => (
-				<TableRow key={idx}>
+				<TableRowWithCustomContextMenu
+					newTabLink={`/search/${filterParams.chainId}/${elem.address}`}
+					key={idx}
+				>
 					<TableCell
 						sx={{
 							padding: '0 0 24px 0',
@@ -92,7 +97,7 @@ export const EscrowsTableBody = ({
 							</a>
 						</Stack>
 					</TableCell>
-				</TableRow>
+				</TableRowWithCustomContextMenu>
 			))}
 		</MuiTableBody>
 	);
