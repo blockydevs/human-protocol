@@ -93,29 +93,6 @@ const HARDCODED_CHART_DATA = [
 	},
 ];
 
-const TIME_PERIOD_OPTIONS = [
-	{
-		value: '1W',
-		name: '1W',
-	},
-	{
-		value: '1M',
-		name: '1M',
-	},
-	{
-		value: '6M',
-		name: '6M',
-	},
-	{
-		value: '1Y',
-		name: '1Y',
-	},
-	{
-		value: 'All',
-		name: 'All',
-	},
-];
-
 const CHECKED_CHARTS_DEFAULT_STATE = {
 	transferAmount: true,
 	transactionsCount: true,
@@ -125,7 +102,6 @@ const CHECKED_CHARTS_DEFAULT_STATE = {
 
 export const LineChart = () => {
 	const [chartData] = useState(HARDCODED_CHART_DATA);
-	const [selectedTimePeriod, selectTimePeriod] = useState<string>('1W');
 	const [fromDate, setFromDate] = useState<Dayjs>(dayjs(new Date()));
 	const [toDate, setToDate] = useState<Dayjs>(dayjs(new Date()));
 	const [checkedCharts, setCheckedCharts] = useState(
@@ -146,15 +122,6 @@ export const LineChart = () => {
 
 	const onToDateChange = (value: Dayjs | null) => {
 		if (value) setToDate(value);
-	};
-
-	const handleTimePeriod = (
-		_event: React.MouseEvent<HTMLElement>,
-		value: string | null
-	) => {
-		if (value !== null) {
-			selectTimePeriod(value);
-		}
 	};
 
 	useEffect(() => {
@@ -195,11 +162,7 @@ export const LineChart = () => {
 				direction={{ xs: 'column', md: 'row' }}
 				gap={{ xs: 6, md: 8 }}
 			>
-				<ToggleButtons
-					buttonOptions={TIME_PERIOD_OPTIONS}
-					onValueChange={handleTimePeriod}
-					selectedValue={selectedTimePeriod}
-				/>
+				<ToggleButtons />
 				<Stack direction="row" alignItems="center" gap={2}>
 					<DatePicker onChange={onFromDateChange} value={fromDate} />
 					<Typography>-</Typography>
