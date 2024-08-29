@@ -9,8 +9,7 @@ import { AddressDetailsLeader } from '@services/api/use-address-details';
 import { useEscrowDetailsDto } from '@utils/hooks/use-escrows-details-dto';
 import { useWalletSearch } from '@utils/hooks/use-wallet-search';
 import { useNavigate } from 'react-router-dom';
-import { Stack } from '@mui/material';
-import { TableRowWithCustomContextMenu } from '@components/TableRowWithCustomContextMenu/TableRowWithCustomContextMenu';
+import { Stack, TableRow } from '@mui/material';
 
 export const EscrowsTableBody = ({
 	role,
@@ -64,30 +63,36 @@ export const EscrowsTableBody = ({
 	return (
 		<MuiTableBody>
 			{data.results.map((elem, idx) => (
-				<TableRowWithCustomContextMenu
-					newTabLink={`/search/${filterParams.chainId}/${elem.address}`}
-					key={idx}
-				>
+				<TableRow key={idx}>
 					<TableCell
 						sx={{
 							padding: '0 0 24px 0',
 						}}
 					>
 						<Stack
-							component="a"
 							sx={{
 								':hover': {
 									cursor: 'pointer',
 								},
 							}}
-							onClick={() => {
+							onClick={(e) => {
+								e.stopPropagation();
+								e.preventDefault();
 								navigate(`/search/${filterParams.chainId}/${elem.address}`);
 							}}
 						>
-							{elem.address}
+							<a
+								target="_blank"
+								href={`/search/${filterParams.chainId}/${elem.address}`}
+								style={{
+									textDecoration: 'unset',
+								}}
+							>
+								{elem.address}
+							</a>
 						</Stack>
 					</TableCell>
-				</TableRowWithCustomContextMenu>
+				</TableRow>
 			))}
 		</MuiTableBody>
 	);
